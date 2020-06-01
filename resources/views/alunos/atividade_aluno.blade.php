@@ -137,7 +137,6 @@
             @endif
         </div>
     </div>
-    <br>
-    <a href="/aluno/disciplinas" class="btn btn-success">Voltar</a>
-    <!--<a href="/produtos/pdf" target="_blank" class="btn btn-success">Gerar PDF</a>-->
+    <br/>
+    <a href="/aluno/disciplinas" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

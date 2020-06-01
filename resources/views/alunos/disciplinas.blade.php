@@ -1,9 +1,9 @@
-@extends('layouts.app', ["current"=>"home"])
+@extends('layouts.app', ["current"=>"atividade"])
 
 @section('body')
     <div class="card border">
         <div class="card-body">
-            <h5 class="card-title">Disciplinas - Turma: {{$turma->serie}} º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</h5>
+            <h5 class="card-title">Disciplinas - Turma: {{$turma->serie}} º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif) - Atividades</h5>
             @if(count($turmaDiscs)==0)
                 <div class="alert alert-danger" role="alert">
                     Sem disciplinas cadastradas!
@@ -34,5 +34,6 @@
             @endif
         </div>
     </div>
-    <a href="/aluno" class="btn btn-success">Voltar</a>
+    <br/>
+    <a href="/aluno" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

@@ -116,7 +116,7 @@
                                   <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y", strtotime($atividade->data_criacao))}} @if($atividade->data_publicacao!="") | Data Publicação: {{date("d/m/Y", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y", strtotime($atividade->data_expiracao))}}@endif</p>
                                   <a href="{{$atividade->link}}" target="_blank" class="btn btn-primary">Link Vídeo-Aula</a>
                                   <a type="button" class="btn btn-success" href="/prof/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-danger" href="/prof/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
-                                  @if($atividade->retorno=="sim") <a href="/prof/atividade/retornos/{{$atividade->id}}" target="_blank" class="btn btn-primary">Retornos</a> @endif
+                                  @if($atividade->retorno=="sim") <a href="/prof/atividade/retornos/{{$atividade->id}}" target="_blank" class="btn btn-info">Retornos</a> @endif
                                 </div>
                             </div>
                         </td>
