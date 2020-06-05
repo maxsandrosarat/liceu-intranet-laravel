@@ -163,7 +163,7 @@
                 <form method="POST" action="/outro/file" enctype="multipart/form-data">
                     @csrf
                     <h5>Baixe o modelo de importação.</h5>
-                    <a type="button" class="btn btn-info" href="{{ url('/templates/import_outro.xlsx')}}">Baixar modelo</a>
+                    <a type="button" class="btn btn-info" href="/admin/templates/download/outro">Baixar modelo</a>
                     <h5>Nenhum campo pode ficar sem preencher.</h5>
                     <h5>No campo login não esqueça de adicionar @liceu (senão usuário não conseguirá fazer login)</h5>
                     <h5></h5>

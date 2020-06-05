@@ -196,7 +196,7 @@
                     @csrf
                     <ul>
                         <li><h5>Baixe o modelo de importação.</h5></li>
-                        <a type="button" class="btn btn-info" href="{{ url('/templates/import_aluno.xlsx')}}">Baixar modelo</a>
+                        <a type="button" class="btn btn-info" href="/admin/templates/download/aluno">Baixar modelo</a>
                         <li><h5>Nenhum campo pode ficar sem preencher.</h5></li>
                         <li><h5>No campo login não esqueça de adicionar @liceu (senão usuário não conseguirá fazer login)</h5></li>
                         <li><h5>Após envio do Arquivo aguarde tempo de processamento!</h5></li>

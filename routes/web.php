@@ -15,6 +15,7 @@ Route::get('/admin/administrativo', function () {
 Route::get('/admin/pedagogico', function () {
     return view('admin.home_pedagogico');
 })->middleware('auth:admin');
+Route::get('/admin/templates/download/{nome}', 'AdminController@templates');
 Route::get('/admin', 'AdminController@index')->name('admin.dashboard');
 Route::get('/admin/novo', 'AdminController@create');
 Route::post('/admin', 'AdminController@store');

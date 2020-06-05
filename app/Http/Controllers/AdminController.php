@@ -45,6 +45,24 @@ class AdminController extends Controller
         $adm->save();
         return redirect('/admin');
     }
+	
+	public function templates($nome){
+        if($nome=="aluno"){
+            $nameFile = "import_alunos";
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix("templates/import_alunos.xlsx");
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        } else if($nome=="outro"){
+            $nameFile = "import_outro";
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix("templates/import_outro.xlsx");
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        } else {
+            return back();
+        }
+    }
 
     public function painel_lista_atividade($data){
         $lafund = ListaAtividade::where('dia', "$data")->where('ensino','fund')->count();
@@ -245,25 +263,25 @@ class AdminController extends Controller
         if(isset($turma)){
             if(isset($descricao)){
                 if(isset($data)){
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
                 } else {
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
                 }
             } else {
-                $atividades = Atividade::where('turma_id',"$turma")->orderBy('id','desc')->get();
+                $atividades = Atividade::where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
             }
         } else {
             if(isset($descricao)){
                 if(isset($data)){
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
                 } else {
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('descricao','like',"%$descricao%")->orderBy('id','desc')->paginate(50);
                 }
             } else {
                 if(isset($data)){
-                    $atividades = Atividade::where('data_criacao',"$data")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
                 } else {
-                    $atividades = Atividade::orderBy('id','desc')->get();
+                    $atividades = Atividade::orderBy('id','desc')->paginate(50);
                 }
             }
         }

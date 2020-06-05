@@ -82,11 +82,12 @@
                                     <!--@if (Route::has('register'))
                                         <a href="{{ route('register') }}">Cadastre-se</a>
                                     @endif-->
-                                        <a href="{{ route('aluno.login') }}">Login (Aluno)</a>
-                                        <a href="{{ route('prof.login') }}">Login (Professor)</a>
-                                        <a href="{{ route('outro.login') }}">Login (Outro)</a>
-                                        <!--<a href="{{ route('login') }}">Login (Usuário)</a>-->
-                                        <a href="{{ route('admin.login') }}">Login (Admin)</a>
+                                    <h4>FAÇA LOGIN COMO</h4>
+                                    <h4><a href="{{ route('aluno.login') }}" class="badge badge-dark">ALUNO</a>
+                                    <a href="{{ route('prof.login') }}" class="badge badge-dark">PROFESSOR</a>
+                                    <a href="{{ route('outro.login') }}" class="badge badge-dark">COLABORADOR</a>
+                                    <!--<a href="{{ route('login') }}" class="badge badge-dark">USUÁRIO</a>-->
+                                    <a href="{{ route('admin.login') }}" class="badge badge-dark">ADMIN</a></h4>
                                 @endauth
                             @endauth
                         @endauth
