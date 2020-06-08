@@ -16,7 +16,7 @@
                         Sem ocorrências cadastradas!
                         @else @if($busca=="sim")
                         Sem resultados da busca!
-                        <a href="/admin/educacional" class="btn btn-success">Voltar</a>
+                        <a href="/admin/ocorrencias" class="btn btn-success">Voltar</a>
                         @endif
                         @endif
                     </div>
