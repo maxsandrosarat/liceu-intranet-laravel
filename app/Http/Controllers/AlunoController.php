@@ -107,7 +107,6 @@ class AlunoController extends Controller
         $path = $request->file('foto')->store('fotos_perfil','public');
         $aluno->foto = $path;
         }
-        $aluno->turma_id = $request->input('turma');
         $aluno->save();
         return redirect('/aluno/consulta');
     }

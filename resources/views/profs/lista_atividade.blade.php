@@ -37,9 +37,9 @@
                                                     <div class="modal-body">
                                                         <form method="POST" action="/prof/listaAtividade/anexar/{{$laFund->id}}" enctype="multipart/form-data">
                                                             @csrf
-                                                        <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
+                                                        <input type="file" id="arquivo" name="arquivo" accept=".pdf" required>
                                                         <br/>
-                                                        <b style="font-size: 60%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
+                                                        <b style="font-size: 60%;">Aceito apenas extensão PDF (".pdf")</b>
                                                     </div>
                                                     <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Enviar</button>
@@ -92,9 +92,9 @@
                                                     <div class="modal-body">
                                                         <form method="POST" action="/prof/listaAtividade/anexar/{{$laMedio->id}}" enctype="multipart/form-data">
                                                             @csrf
-                                                        <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
+                                                        <input type="file" id="arquivo" name="arquivo" accept=".pdf" required>
                                                         <br/>
-                                                        <b style="font-size: 60%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
+                                                        <b style="font-size: 60%;">Aceito apenas extensão PDF (".pdf")</b>
                                                     </div>
                                                     <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Enviar</button>
