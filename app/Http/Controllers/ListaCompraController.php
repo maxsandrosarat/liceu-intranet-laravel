@@ -49,8 +49,9 @@ class ListaCompraController extends Controller
 
     public function gerarPdf($lista_id)
     {
-        $rels = CompraProduto::where('lista_compra_id',"$lista_id")->get();
-        $pdf = PDF::loadView('admin.compras_pdf', compact('rels'));
-        return $pdf->setPaper('a4')->stream('ListaCompra.pdf');
+        $lista = ListaCompra::find($lista_id);
+        $produtos = CompraProduto::where('lista_compra_id',"$lista_id")->get();
+        $pdf = PDF::loadView('admin.compras_pdf', compact('lista','produtos'));
+        return $pdf->setPaper('a4')->stream('ListaCompra'.date("d-m-Y", strtotime($lista->data)).'.pdf');
     }
 }

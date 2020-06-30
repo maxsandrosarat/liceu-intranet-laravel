@@ -40,6 +40,30 @@
                         <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-06-22" class="btn btn-primary">22/06/2020</a></td>
                         <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-06-29" class="btn btn-primary">29/06/2020</a></td>
                     </tr>
+					<tr>
+                        <td style="text-align: center;">Julho</td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-07-06" class="btn btn-primary">06/07/2020</a></td>
+                        <td style="text-align: center;"><a href="#" class="btn btn-primary">13/07/2020</a></td>
+                        <td style="text-align: center;"><a href="#" class="btn btn-primary">20/07/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-07-27" class="btn btn-primary">27/07/2020</a></td>
+                        <td style="text-align: center;"><a href="#" class="btn btn-primary"></a></td>
+                    </tr>
+					<tr>
+                        <td style="text-align: center;">Agosto</td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-08-03" class="btn btn-primary">03/08/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-08-10" class="btn btn-primary">10/08/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-08-17" class="btn btn-primary">17/08/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-08-24" class="btn btn-primary">24/08/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-08-31" class="btn btn-primary">31/08/2020</a></td>
+                    </tr>
+					<tr>
+                        <td style="text-align: center;">Setembro</td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-09-07" class="btn btn-primary">07/09/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-09-14" class="btn btn-primary">14/09/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-09-21" class="btn btn-primary">21/09/2020</a></td>
+                        <td style="text-align: center;"><a href="/admin/listaAtividade/painel/2020-09-28" class="btn btn-primary">28/09/2020</a></td>
+                        <td style="text-align: center;"><a href="#" class="btn btn-primary"></a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

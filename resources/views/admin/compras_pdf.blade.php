@@ -1,11 +1,14 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>Lista de Compras - {{date("d/m/Y", strtotime($lista->data))}}</title>
+        <link rel="shortcut icon" href="/storage/logos/favicon.png"/>
     </head>
     <body>
     <div class="card border">
         <div class="card-body">
-            <h3 class="card-title">Lista de Compras</h3>
+            <h4 class="card-title">Lista de Compras - {{date("d/m/Y", strtotime($lista->data))}}</h4>
+            <h5>Solicitante: {{$lista->usuario}}</h5>
             <table class="table table-striped table-sm">
                 <thead class="thead-dark">
                     <tr>
@@ -14,10 +17,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($rels as $rel)
+                    @foreach ($produtos as $prod)
                     <tr>
-                        <td>{{$rel->produto->nome}}</td>
-                        <td style="text-align: center;">{{$rel->estoque}}</td>
+                        <td>{{$prod->produto->nome}}</td>
+                        <td style="text-align: center;">{{$prod->estoque}}</td>
                     </tr>
                     @endforeach
                 </tbody>
