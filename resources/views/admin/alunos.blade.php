@@ -33,8 +33,8 @@
                 <h5>Filtros: </h5>
             <form class="form-inline my-2 my-lg-0" method="GET" action="/aluno/filtro">
                 @csrf
-                <input class="form-control mr-sm-2" type="text" placeholder="Nome do Aluno" name="nome">
-                <select id="turma" name="turma">
+                <input class="form-control" type="text" placeholder="Nome do Aluno" name="nome">
+                <select class="custom-select" id="turma" name="turma">
                     <option value="">Selecione uma turma</option>
                     @foreach ($turmas as $turma)
                         <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
@@ -45,6 +45,7 @@
             </div>
             <br>
             <h5>Exibindo {{$alunos->count()}} de {{$alunos->total()}} de Aluno(s) ({{$alunos->firstItem()}} a {{$alunos->lastItem()}})</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -65,7 +66,7 @@
                         <td>{{$aluno->email}}</td>
                         <td>{{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$aluno->id}}">
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$aluno->id}}">
                                 Editar
                             </button>
                             
@@ -83,8 +84,7 @@
                                         <div class="card-body">
                                             <form method="POST" action="/aluno/editar/{{$aluno->id}}" enctype="multipart/form-data">
                                                 @csrf
-                                                <div class="form-group row">
-                                                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                                                    <label for="name">{{ __('Name') }}</label>
                         
                                                     <div>
                                                         <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{$aluno->name}}" required autocomplete="name" autofocus>
@@ -95,10 +95,8 @@
                                                             </span>
                                                         @enderror
                                                     </div>
-                                                </div>
                         
-                                                <div class="form-group row">
-                                                    <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                                                    <label for="email">{{ __('E-Mail Address') }}</label>
                         
                                                     <div>
                                                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{$aluno->email}}" required autocomplete="email">
@@ -109,10 +107,8 @@
                                                             </span>
                                                         @enderror
                                                     </div>
-                                                </div>
                         
-                                                <div class="form-group row">
-                                                    <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                                                    <label for="password">{{ __('Password') }}</label>
                         
                                                     <div>
                                                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
@@ -123,34 +119,31 @@
                                                             </span>
                                                         @enderror
                                                     </div>
-                                                </div>
                         
-                                                <div class="form-group row">
-                                                    <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                                                    <label for="password-confirm">{{ __('Confirm Password') }}</label>
                         
                                                     <div>
                                                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
                                                     </div>
-                                                </div>
                         
-                                                <div class="form-group row">
-                                                    <label for="turma" class="col-md-4 col-form-label text-md-right">{{ __('Turma') }}</label>
+                                                    <label for="turma">{{ __('Turma') }}</label>
                         
                                                     <div>
-                                                        <select id="turma" name="turma" required>
-                                                            <option value="{{$aluno->turma->id}}">Selecione</option>
+                                                        <select class="custom-select" id="turma" name="turma" required>
+                                                            <option value="{{$aluno->turma->id}}">{{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                                                             @foreach ($turmas as $turma)
+                                                                @if($aluno->turma->id==$turma->id)
+                                                                @else
                                                                 <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                                                @endif
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                </div>
 
                                                 <label for="foto">{{ __('Foto') }}</label>
 
                                                 <div>
-                                                    <input type="file" id="foto" name="foto" accept=".jpg,.png,.jpeg">
-                                                    <br/>
+                                                    <input class="form-control" type="file" id="foto" name="foto" accept=".jpg,.png,.jpeg">
                                                     <b style="font-size: 80%;">Aceito apenas Imagens JPG e PNG (".jpg" e ".png")</b>
                                                 </div>
 
@@ -178,6 +171,7 @@
             <div class="card-footer">
                 {{$alunos->links() }}
             </div>
+            </div>
             @endif
         </div>
     </div>
@@ -192,7 +186,7 @@
             </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="/aluno/file" enctype="multipart/form-data">
+                <form method="POST" id="form-importar-excel" action="/aluno/file" enctype="multipart/form-data">
                     @csrf
                     <ul>
                         <li><h5>Baixe o modelo de importação.</h5></li>
@@ -204,9 +198,8 @@
                     <input type="file" id="arquivo" name="arquivo" accept=".xls,.xlsx" required>
                     <br/>
                     <b style="font-size: 80%;">Aceito apenas extensões do Excel (".xls e .xlsx")</b>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                <div class="modal-footer" id="processamento">
+                    <button type="submit" class="btn btn-primary" onclick="processar()">Enviar</button>
                 </div>
             </form>
             </div>
@@ -261,7 +254,8 @@
                             <label for="password">{{ __('Senha') }}</label>
 
                             <div>
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                <input id="senhaForca" onkeyup="validarSenhaForca()" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                <p style="font-size: 70%">(Mínimo de 8 caracteres)</p>
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -270,7 +264,10 @@
                                 @enderror
                             </div>
 
-
+                            <label for="erroSenhaForca">Força Senha</label>
+                            <div>
+                                <div name="erroSenhaForca" id="erroSenhaForca"></div>
+                            </div>
 
                             <label for="password-confirm">{{ __('Confirmação Senha') }}</label>
 
@@ -283,7 +280,7 @@
                             <label for="turma">{{ __('Turma') }}</label>
 
                             <div>
-                                <select id="turma" name="turma" required>
+                                <select class="custom-select" id="turma" name="turma" required>
                                     <option value="">Selecione</option>
                                     @foreach ($turmas as $turma)
                                         <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>

@@ -33,11 +33,12 @@
                 <h5>Filtros: </h5>
             <form class="form-inline my-2 my-lg-0" method="GET" action="/outro/filtro">
                 @csrf
-                <input class="form-control mr-sm-2" type="text" placeholder="Nome do Usuário" name="nome">
+                <input class="form-control" type="text" placeholder="Nome do Usuário" name="nome">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
             </form>
             </div>
             <h5>Exibindo {{$outros->count()}} de {{$outros->total()}} de Usuários ({{$outros->firstItem()}} a {{$outros->lastItem()}})</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -145,6 +146,7 @@
             </table>
             <div class="card-footer">
                 {{$outros->links() }}
+            </div>
             </div>
             @endif
         </div>

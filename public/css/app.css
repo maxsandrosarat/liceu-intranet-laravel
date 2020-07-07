@@ -1,3 +1,49 @@
+.link-ocorrencia{
+    text-decoration:none;
+}
+
+ul li{
+    text-align: left;
+}
+
+body{
+    padding: 20px;
+    background-color: #cccccc; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.container{
+    margin-top: 20px;
+}
 table tbody tr td{
     text-align: center;
+}
+table thead tr th{
+    text-align: center;
+}
+#navLogin {
+    color:red;
+}
+.float-button{
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+}
+.material-icons.blue { 
+    color:#0000CD;
+}
+
+.material-icons.white { 
+    color: white;
+}
+
+.material-icons.md-60 { 
+    font-size: 60px; 
+}
+
+.material-icons.md-18 { font-size: 14px; }
+
+.centralizado {
+    margin: 5px;
 }

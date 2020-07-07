@@ -13,11 +13,12 @@
                     Sem disciplinas para as turmas cadastradas!
                 </div>
             @else
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
                         <th>Turma</th>
-                        <th>Disciplina</th>
+                        <th>Disciplinas</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -26,18 +27,39 @@
                     <tr>
                         <td>{{$turmaDisc->serie}}º ANO {{$turmaDisc->turma}} (@if($turmaDisc->turno=='M') Matutino @else @if($turmaDisc->turno=='V') Vespertino @else Noturno @endif @endif)</td>
                         <td>
-                            <ul>
-                            @foreach ($turmaDisc->disciplinas as $disciplina)
-                            <li>{{$disciplina->nome}} <a href="/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Apagar</a></li>
-                            <br/>
-                            @endforeach
-                            </ul>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$turmaDisc->id}}">
+                            Disciplinas
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal{{$turmaDisc->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Disciplinas da Turma: {{$turmaDisc->serie}}º ANO {{$turmaDisc->turma}} (@if($turmaDisc->turno=='M') Matutino @else @if($turmaDisc->turno=='V') Vespertino @else Noturno @endif @endif)</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul>
+                                        @foreach ($turmaDisc->disciplinas as $disciplina)
+                                        <li>{{$disciplina->nome}} <a href="/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Apagar</a></li>
+                                        <br/>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
                         </td>
                         <td></td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
+            <div>
             @endif
         </div>
     <br>
@@ -58,7 +80,7 @@
                                 <div class="form-group">
                                     <label for="turma" class="col-md-4 col-form-label text-md-right">Turma</label>
                                     <br/>
-                                    <select id="turma" name="turma" required>
+                                    <select class="custom-select" id="turma" name="turma" required>
                                         <option value="">Selecione a turma</option>
                                         @foreach ($turmas as $turma)
                                         <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>

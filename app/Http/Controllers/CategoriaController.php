@@ -14,7 +14,7 @@ class CategoriaController extends Controller
     
     public function index()
     {
-        $cats = Categoria::all();
+        $cats = Categoria::where('ativo',true)->get();
         return view('admin.categorias',compact('cats'));
     }
 
@@ -40,8 +40,9 @@ class CategoriaController extends Controller
     {
         $cat = Categoria::find($id);
         if(isset($cat)){
-            $cat->delete();
+            $cat->ativo = false;
+            $cat->save();
         }
-        return redirect('/categorias');
+        return back();
     }
 }

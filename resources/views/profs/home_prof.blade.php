@@ -4,31 +4,48 @@
 <div class="jumbotron bg-light border border-secondary">
     <div class="row">
         <div class="card-deck">
-            <div class="card border border-primary">
-                <div class="card-body">
-                    <h5>Lista de Atividades</h5>
-                    <p class="card-text">
-                        Anexar e baixar os arquivos de Listas de Atividades
-                    </p>
-                    <a href="/prof/listaAtividade" class="btn btn-primary">Lista Atividades</a>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Lista de Atividades</h5>
+                        <p class="card-text">
+                            Gerenciar as Lista de Atividades
+                        </p>
+                        <a href="/prof/listaAtividade" class="btn btn-primary">LAs</a>
+                    </div>
                 </div>
             </div>
-            <div class="card border border-primary">
-                <div class="card-body">
-                    <h5>Ocorrências</h5>
-                    <p class="card-text">
-                        Anexar e baixar os arquivos de Atividades
-                    </p>
-                    <a href="/prof/ocorrencias" class="btn btn-primary">Ocorrências</a>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Ocorrências</h5>
+                        <p class="card-text">
+                            Lançar as Ocorrências
+                        </p>
+                        <a href="/prof/ocorrencias" class="btn btn-primary">Ocorrências</a>
+                    </div>
                 </div>
             </div>
-            <div class="card border border-primary">
-                <div class="card-body">
-                    <h5>Conteúdos</h5>
-                    <p class="card-text">
-                        Anexar e baixar os conteúdos
-                    </p>
-                    <a href="/prof/conteudos/{{date("Y")}}" class="btn btn-primary">Atividades</a>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Conteúdos</h5>
+                        <p class="card-text">
+                            Anexar e baixar os conteúdos
+                        </p>
+                        <a href="/prof/conteudos/{{date("Y")}}" class="btn btn-primary">Conteúdos</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Atividades</h5>
+                        <p class="card-text">
+                            Gerenciar as Atividades
+                        </p>
+                        <a href="/prof/disciplinasAtividades" class="btn btn-primary">Atividades</a>
+                    </div>
                 </div>
             </div>
         </div>

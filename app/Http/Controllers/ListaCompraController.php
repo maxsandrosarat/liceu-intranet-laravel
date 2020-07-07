@@ -18,8 +18,13 @@ class ListaCompraController extends Controller
     }
     
     public function index(){
-        $prods = Produto::orderBy('nome')->get();
-        return view('admin.lista_compra', compact('prods'));
+        $listaProds = ListaCompra::with('produtos')->orderBy('created_at','desc')->paginate(10);
+        return view('admin.lista_compra', compact('listaProds'));
+    }
+
+    public function selecionar(){
+        $prods = Produto::where('ativo',true)->orderBy('nome')->get();
+        return view('admin.lista_compra_selecionar', compact('prods'));
     }
 
     public function store(Request $request){

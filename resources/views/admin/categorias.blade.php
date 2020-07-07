@@ -27,7 +27,6 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
-                        <button type="cancel" class="btn btn-danger btn-sn">Cancelar</button>
                     </div>
                 </form>
                 </div>
@@ -38,6 +37,7 @@
                     Sem categorias cadastradas!
                 </div>
             @else
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -52,7 +52,7 @@
                         <td>{{$cat->id}}</td>
                         <td>{{$cat->nome}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$cat->id}}">
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal{{$cat->id}}">
                                 Editar
                             </button>
                             
@@ -75,7 +75,6 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
-                                        <button type="cancel" class="btn btn-danger btn-sn">Cancelar</button>
                                     </div>
                                 </form>
                                 </div>
@@ -87,6 +86,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
             @endif
         </div>
 

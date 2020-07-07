@@ -82,6 +82,15 @@ return [
             'provider' => 'outros',
             'hash' => false,
         ],
+        'responsavel' => [
+            'driver' => 'session',
+            'provider' => 'responsaveis',
+        ],
+        'responsavel-api' => [
+            'driver' => 'token',
+            'provider' => 'responsaveis',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -121,6 +130,10 @@ return [
         'outros' => [
             'driver' => 'eloquent',
             'model' => App\Outro::class,
+        ],
+        'responsaveis' => [
+            'driver' => 'eloquent',
+            'model' => App\Responsavel::class,
         ],
         // 'users' => [
         //     'driver' => 'database',
@@ -170,6 +183,12 @@ return [
         ],
         'outros' => [
             'provider' => 'outros',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'responsaveis' => [
+            'provider' => 'responsaveis',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

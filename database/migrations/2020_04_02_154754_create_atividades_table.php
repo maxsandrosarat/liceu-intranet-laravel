@@ -21,9 +21,8 @@ class CreateAtividadesTable extends Migration
             $table->foreign('turma_id')->references('id')->on('turmas');
             $table->unsignedBigInteger('disciplina_id');
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
-            $table->date('data_criacao');
-            $table->date('data_publicacao')->nullable();
-            $table->date('data_expiracao')->nullable();
+            $table->dateTime('data_publicacao')->nullable();
+            $table->dateTime('data_expiracao')->nullable();
             $table->string('descricao')->nullable();
             $table->integer('visualizacoes');
             $table->string('retorno');

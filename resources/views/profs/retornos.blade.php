@@ -14,7 +14,7 @@
                     <tr>
                         <th>Aluno</th>
                         <th>Data Retorno</th>
-                        <th>Cometário</th>
+                        <th>Comentário</th>
                         <th>Arquivo</th>
                     </tr>
                 </thead>

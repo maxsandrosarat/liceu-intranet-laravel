@@ -26,30 +26,32 @@
                     <form method="POST" action="/prof/atividade" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="disciplina" value="{{$disciplina->id}}">
-                        <label for="turma" class="col-md-4 col-form-label text-md-right">Turma</label>
-                        <select id="turma" name="turma" required>
+                        <label for="turma">Turma</label>
+                        <select class="custom-select" id="turma" name="turma" required>
                             <option value="">Selecione</option>
                             @foreach ($turmas as $turma)
                             <option value="{{$turma->turma->id}}">{{$turma->turma->serie}}º ANO {{$turma->turma->turma}} (@if($turma->turma->turno=='M') Matutino @else @if($turma->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                             @endforeach
                         </select>
-                        <br/>
-                        <label for="dataPublicacao" class="col-md-4 col-form-label text-md-right">Data Publicação</label>
+                        <br/><br/>
+                        <label for="dataPublicacao">Publicação</label>
                         <input type="date" name="dataPublicacao" id="dataPublicacao" required>
+                        <input type="time" name="horaPublicacao" id="horaPublicacao" required>
                         <br/>
-                        <label for="dataExpiracao" class="col-md-4 col-form-label text-md-right">Data Expiração</label>
+                        <label for="dataExpiracao">Expiração</label>
                         <input type="date" name="dataExpiracao" id="dataExpiracao" required>
+                        <input type="time" name="horaExpiracao" id="horaExpiracao" required>
                         <br/>
-                        <label for="descricao" class="col-md-4 col-form-label text-md-right">Descrição</label>
-                        <input type="text" name="descricao" id="descricao" required>
+                        <label for="descricao">Descrição</label>
+                        <input class="form-control" type="text" name="descricao" id="descricao" required>
                         <br/>
-                        <label for="link" class="col-md-4 col-form-label text-md-right">Link Vídeo-Aula</label>
-                        <input type="text" name="link" id="link">
+                        <label for="link">Link Videoaula</label>
+                        <input class="form-control" type="text" name="link" id="link">
                         <br/>
-                        <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
+                        <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
                         <br/>
                         <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
-                        <br/>
+                        <br/><br/>
                         <h6>Permitir que os alunos dêem retorno desta Atividade?</h6>
                         <input type="radio" id="sim" name="retorno" value="sim" required>
                         <label for="sim">Sim</label>
@@ -57,7 +59,6 @@
                         <label for="nao">Não</label>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
@@ -81,7 +82,7 @@
                     <form class="form-inline my-2 my-lg-0" method="GET" action="/prof/atividade/filtro/{{$disciplina->id}}">
                         @csrf
                         <label for="turma">Turma</label>
-                            <select id="turma" name="turma">
+                            <select class="custom-select" id="turma" name="turma">
                                 <option value="">Selecione</option>
                                 @foreach ($turmas as $turma)
                                 <option value="{{$turma->turma->id}}">{{$turma->turma->serie}}º ANO {{$turma->turma->turma}} (@if($turma->turma->turno=='M') Matutino @else @if($turma->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
@@ -96,6 +97,7 @@
                 </div>
             </div>
             <h5>Exibindo {{$atividades->count()}} de {{$atividades->total()}} de Atividades ({{$atividades->firstItem()}} a {{$atividades->lastItem()}}) de {{$disciplina->nome}}</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
@@ -113,7 +115,7 @@
                                     {{$atividade->descricao}} (Retorno: @if($atividade->retorno=="sim") Sim @else Não @endif)
                                 </div>
                                 <div class="card-body">
-                                  <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y", strtotime($atividade->data_criacao))}} @if($atividade->data_publicacao!="") | Data Publicação: {{date("d/m/Y", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y", strtotime($atividade->data_expiracao))}}@endif</p>
+                                  <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}} @if($atividade->data_publicacao!="") | Data Publicação: {{date("d/m/Y H:i", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y H:i", strtotime($atividade->data_expiracao))}}@endif</p>
                                   <a href="{{$atividade->link}}" target="_blank" class="btn btn-primary">Link Vídeo-Aula</a>
                                   <a type="button" class="btn btn-success" href="/prof/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-danger" href="/prof/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
                                   @if($atividade->retorno=="sim") <a href="/prof/atividade/retornos/{{$atividade->id}}" target="_blank" class="btn btn-info">Retornos</a> @endif
@@ -126,40 +128,48 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Editar Atividade</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>    
                                     </div>
                                     <div class="modal-body">
                                         <form method="POST" action="/prof/atividade/editar/{{$atividade->id}}" enctype="multipart/form-data">
                                         @csrf
                                         <input type="hidden" name="disciplina" value="{{$disciplina->id}}">
                                         <label for="turma" class="col-md-4 col-form-label text-md-right">Turma</label>
-                                        <select id="turma" name="turma" required>
-                                            <option value="{{$atividade->turma_id}}">Selecione</option>
+                                        <select class="custom-select" id="turma" name="turma" required>
+                                            <option value="{{$atividade->turma_id}}">{{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}} (@if($atividade->turma->turno=='M') Matutino @else @if($atividade->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                                             @foreach ($turmas as $turma)
+                                            @if($turma->turma->id==$atividade->turma_id)
+                                            @else
                                             <option value="{{$turma->turma->id}}">{{$turma->turma->serie}}º ANO {{$turma->turma->turma}} (@if($turma->turma->turno=='M') Matutino @else @if($turma->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                            @endif
                                             @endforeach
                                         </select>
+                                        <br/><br/>
+                                        <label for="dataPublicacao">Data Publicação</label><br/>
+                                        <input type="date" name="dataPublicacao" id="dataPublicacao" value="{{date("Y-m-d", strtotime($atividade->data_publicacao))}}">
+                                        <input type="time" name="horaPublicacao" id="horaPublicacao" value="{{date("H:i", strtotime($atividade->data_publicacao))}}">
                                         <br/>
-                                        <label for="dataPublicacao" class="col-md-4 col-form-label text-md-right">Data Publicação</label>
-                                        <input type="date" name="dataPublicacao" id="dataPublicacao" value="{{$atividade->data_publicacao}}">
+                                        <label for="dataExpiracao">Data Expiração</label><br/>
+                                        <input type="date" name="dataExpiracao" id="dataExpiracao" value="{{date("Y-m-d", strtotime($atividade->data_expiracao))}}" required>
+                                        <input type="time" name="horaExpiracao" id="horaExpiracao" value="{{date("H:i", strtotime($atividade->data_expiracao))}}" required>
+                                        <br/><br/>
+                                        <label for="descricao">Descrição</label>
+                                        <input class="form-control" type="text" name="descricao" id="descricao" value="{{$atividade->descricao}}" required>
                                         <br/>
-                                        <label for="dataExpiracao" class="col-md-4 col-form-label text-md-right">Data Expiração</label>
-                                        <input type="date" name="dataExpiracao" id="dataExpiracao" value="{{$atividade->data_expiracao}}">
-                                        <br/>
-                                        <label for="descricao" class="col-md-4 col-form-label text-md-right">Descrição</label>
-                                        <input type="text" name="descricao" id="descricao" value="{{$atividade->descricao}}" required>
-                                        <br/>
-                                        <label for="link" class="col-md-4 col-form-label text-md-right">Link da Vídeo-Aula</label>
-                                        <input type="text" name="link" id="link" value="{{$atividade->link}}">
-                                        <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf">
-                                        <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
+                                        <label for="link">Link da Videoaula</label>
+                                        <input class="form-control" type="text" name="link" id="link" value="{{$atividade->link}}"><br/>
+                                        <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf"><br/>
+                                        <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b><br/><br/>
                                         <h6>Permitir que os alunos dêem retorno desta Atividade?</h6>
                                         <input type="radio" id="sim" name="retorno" value="sim" required @if($atividade->retorno=="sim") checked @endif>
                                         <label for="sim">Sim</label>
                                         <input type="radio" id="nao" name="retorno" value="nao" required @if($atividade->retorno=="nao") checked @endif>
                                         <label for="nao">Não</label>
+                                        
                                     </div>
                                     <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                                     <button type="submit" class="btn btn-primary">Enviar</button>
                                     </div>
                                 </form>
@@ -172,6 +182,7 @@
             </table>
             <div class="card-footer">
                 {{$atividades->links() }}
+            </div>
             </div>
             @endif
         </div>

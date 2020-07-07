@@ -44,6 +44,24 @@ Route::post('/admin/conteudos/gerar', 'AdminController@gerar_conteudo');
 Route::post('/admin/conteudos/anexar/{id}', 'AdminController@anexar_conteudo');
 Route::get('/admin/conteudos/download/{id}', 'AdminController@download_conteudo');
 Route::get('/admin/conteudos/apagar/{id}', 'AdminController@apagar_conteudo');
+
+
+Route::group(['prefix' => 'admin'], function() {
+    Route::group(['prefix' => 'recados'], function() {
+        Route::get('/', 'AdminController@indexRecados');
+        Route::post('/', 'AdminController@novoRecado');
+        Route::get('/filtro', 'AdminController@filtroRecados');
+        Route::post('/editar/{id}', 'AdminController@editarRecado');
+        Route::get('/apagar/{id}', 'AdminController@apagarRecado');
+    });
+
+    Route::group(['prefix' => 'ocorrencias'], function() {
+        Route::get('/aprovar/{id}', 'AdminController@aprovarOcorrencia');
+        Route::get('/reprovar/{id}', 'AdminController@reprovarOcorrencia');
+    });
+});
+
+
 Route::get('/atividadeExtra', function () {
     return view('admin.home_aes');
 })->middleware('auth:admin');
@@ -62,11 +80,23 @@ Route::get('/aluno/filtro', 'AlunoController@filtro')->middleware('auth:admin');
 Route::post('/aluno/editar/{id}', 'AlunoController@update')->middleware('auth:admin');
 Route::get('/aluno/apagar/{id}', 'AlunoController@destroy')->middleware('auth:admin');
 Route::post('/aluno/file', 'AlunoController@file')->middleware('auth:admin');
-Route::get('/aluno/disciplinas', 'AlunoController@disciplinas')->middleware('auth:aluno');
+Route::get('/aluno/atividade/disciplinas', 'AlunoController@disciplinasAtividades')->middleware('auth:aluno');
 Route::get('/aluno/atividade/{d}', 'AlunoController@painelAtividades')->middleware('auth:aluno');
 Route::get('/aluno/atividade/download/{id}', 'AlunoController@downloadAtividade')->middleware('auth:aluno');
 Route::post('/aluno/atividade/retorno/{id}', 'AlunoController@retornoAtividade')->middleware('auth:aluno');
 Route::post('/aluno/atividade/retorno/editar/{id}', 'AlunoController@editarRetornoAtividade')->middleware('auth:aluno');
+
+
+Route::group(['prefix' => 'aluno'], function() {
+    
+
+    Route::group(['prefix' => 'conteudos'], function() {
+        Route::get('/{a}', 'AlunoController@painelConteudos')->middleware('auth:aluno');
+        Route::get('/painel/{a}/{b}/{t}', 'AlunoController@conteudos')->middleware('auth:aluno');
+        Route::get('/download/{id}', 'AlunoController@downloadConteudo')->middleware('auth:aluno');
+    });
+});
+
 
 Route::get('/prof/consulta', 'ProfController@consultaProf')->middleware('auth:admin');
 Route::post('/prof', 'ProfController@novoProf')->middleware('auth:admin');
@@ -137,6 +167,7 @@ Route::get('/entradaSaida/filtro_entradaSaida', 'EntradaSaidaController@filtro_e
 Route::get('/entradaSaida/pdf', 'EntradaSaidaController@gerarPdf');
 
 Route::get('/listaCompras', 'ListaCompraController@index');
+Route::get('/listaCompras/nova', 'ListaCompraController@selecionar');
 Route::post('/listaCompras', 'ListaCompraController@store');
 Route::get('/listaCompras/pdf/{id}', 'ListaCompraController@gerarPdf');
 
@@ -160,3 +191,19 @@ Route::get('/tiposOcorrencias/apagar/{id}', 'AdminController@tipoOcorrenciaDelet
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+
+Route::group(['prefix' => 'responsavel'], function() {
+    Route::get('/login', 'Auth\ResponsavelLoginController@index')->name('responsavel.login');
+    Route::post('/login', 'Auth\ResponsavelLoginController@login')->name('responsavel.login.submit');
+    Route::get('/', 'ResponsavelController@index')->name('responsavel.dashboard')->middleware('auth:responsavel');
+    Route::get('/consulta', 'ResponsavelController@consulta')->middleware('auth:admin');
+    Route::post('/', 'ResponsavelController@novo')->middleware('auth:admin');
+    Route::get('/filtro', 'ResponsavelController@filtro')->middleware('auth:admin');
+    Route::post('/editar/{id}', 'ResponsavelController@editar')->middleware('auth:admin');
+    Route::get('/apagar/{id}', 'ResponsavelController@apagar')->middleware('auth:admin');
+    Route::post('/vincular/{id}', 'ResponsavelController@vincular')->middleware('auth:admin');
+    Route::get('desvincular/{r}/{a}', 'ResponsavelController@desvincular')->middleware('auth:admin');
+    Route::get('/ocorrencias', 'ResponsavelController@ocorrencias')->middleware('auth:responsavel');
+    Route::get('/ocorrencias/ciente/{id}', 'ResponsavelController@cienteOcorrencia')->middleware('auth:responsavel');
+    Route::get('/recados', 'ResponsavelController@recados')->middleware('auth:responsavel');
+});

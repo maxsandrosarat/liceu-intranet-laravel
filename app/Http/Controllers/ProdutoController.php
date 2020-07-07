@@ -18,8 +18,8 @@ class ProdutoController extends Controller
     
     public function index()
     {
-        $cats = Categoria::all();
-        $prods = Produto::orderBy('nome')->paginate(10);
+        $cats = Categoria::where('ativo',true)->get();
+        $prods = Produto::where('ativo',true)->orderBy('nome')->paginate(10);
         return view('admin.produtos', compact('cats','prods'));
     }
 
@@ -29,13 +29,13 @@ class ProdutoController extends Controller
         $cat = $request->input('categoria');
         if(isset($nomeProd)){
             if(isset($cat)){
-                $prods = Produto::where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(10);
+                $prods = Produto::where('ativo',true)->where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(10);
             } else {
-                $prods = Produto::where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(10);
+                $prods = Produto::where('ativo',true)->where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(10);
             }
         } else {
             if(isset($cat)){
-                $prods = Produto::where('categoria_id',"$cat")->orderBy('nome')->paginate(10);;
+                $prods = Produto::where('ativo',true)->where('categoria_id',"$cat")->orderBy('nome')->paginate(10);;
             } else {
                 return redirect('produtos');
             }
@@ -69,9 +69,10 @@ class ProdutoController extends Controller
     {
         $prod = Produto::find($id);
         if(isset($prod)){
-            $prod->delete();
+            $prod->ativo = false;
+            $prod->save();
         }
-        return redirect('/produtos');
+        return back();
     }
 
     public function gerarPdf(){

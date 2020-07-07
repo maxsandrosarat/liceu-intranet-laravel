@@ -24,24 +24,32 @@
                         @csrf
                         <div class="form-group">
                             <br>
-                            <input type="radio" id="entrada" name="tipo" value="entrada">
-                            <label for="entrada">Entrada</label>
-                            <input type="radio" id="saida" name="tipo" value="saida">
-                            <label for="saida">Saída</label>
-                            <br><br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" type="radio" id="entrada" name="tipo" value="entrada">
+                                <label class="form-check-label" for="entrada">
+                                Entrada
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" type="radio" id="saida" name="tipo" value="saida">
+                                <label class="form-check-label" for="entrada">
+                                Saída
+                                </label>
+                            </div>
+                            <br>
                             <label for="produtos">Produto</label>
-                            <select id="produtos" name="produto" required>
+                            <select class="custom-select" id="produtos" name="produto" required>
                                 <option value="">Selecione</option>
                                 @foreach ($prods as $prod)
-                                    <option value="{{$prod->id}}">{{$prod->nome}}</option>
+                                    <option value="{{$prod->id}}">{{$prod->nome}} - Estoque: {{$prod->estoque}}</option>
                                 @endforeach
                             </select>
                             <br><br>
                             <label for="qtd">Quantidade</label>
-                            <input type="number" class="form-control" name="qtd" id="qtd" placeholder="Digite a quantidade">
+                            <input class="form-control" type="number" class="form-control" name="qtd" id="qtd" placeholder="Digite a quantidade">
                             <br>
                             <label for="req">Requisitante</label>
-                            <input type="text" class="form-control" name="req" id="req" placeholder="Digite o requisitante">
+                            <input class="form-control" type="text" class="form-control" name="req" id="req" placeholder="Digite o requisitante">
                             <br>
                         </div>
                 </div>
@@ -58,7 +66,7 @@
                         Sem movimentos cadastrados!
                         @else @if($busca=="sim")
                         Sem resultados da busca!
-                        <a href="/entradaSaidaRel" class="btn btn-success">Voltar</a>
+                        <a href="/entradaSaida" class="btn btn-success">Voltar</a>
                         @endif
                         @endif
                     </div>
@@ -68,31 +76,36 @@
             <form class="form-inline my-2 my-lg-0" method="GET" action="/entradaSaida/filtro_entradaSaida">
                 @csrf
                 <label for="tipo">Tipo</label>
-                <select id="tipo" name="tipo">
+                <select class="custom-select" id="tipo" name="tipo">
                     <option value="">Selecione o tipo</option>
                     <option value="entrada">Entrada</option>
                     <option value="saida">Saída</option>
                 </select>
-                <label for="produto">Produto</label>
-                <input class="form-control mr-sm-2" type="text" for="produto" placeholder="Código do Produto" name="produto">
-                <label for="dataInicio">Data Início</label>
-                <input class="form-control mr-sm-2" type="date" name="dataInicio">
-                <label for="dataFim">Data Fim</label>
-                <input class="form-control mr-sm-2" type="date" name="dataFim">
+                <label for="produto">Produto
+                <select class="custom-select" id="produto" name="produto">
+                    <option value="">Selecione</option>
+                    @foreach ($prods as $prod)
+                        <option value="{{$prod->id}}">{{$prod->nome}}</option>
+                    @endforeach
+                </select></label>
+                <label for="dataInicio">Data Início
+                <input class="form-control" type="date" name="dataInicio"></label>
+                <label for="dataFim">Data Fim
+                <input class="form-control" type="date" name="dataFim"></label>
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
             </form>
             </div>
+            <div class="table-responsive-xl">
             <table id="yesprint" class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
                         <th>Código Movimento</th>
                         <th>Tipo Movimento</th>
-                        <th>Código Produto</th>
                         <th>Nome Produto</th>
                         <th>Quantidade</th>
                         <th>Requisitante</th>
                         <th>Usuário</th>
-                        <th>Data</th>
+                        <th>Data & Hora</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -100,12 +113,11 @@
                     @if($rel->tipo=='entrada') <tr style="color:blue;"> @else <tr style="color:red;"> @endif
                         <td>{{$rel->id}}</td>
                         <td>@if($rel->tipo=='entrada') Entrada @else Saída @endif</td>
-                        <td>{{$rel->produto_id}}</td>
                         <td>{{$rel->produto_nome}}</td>
                         <td>{{$rel->quantidade}}</td>
                         <td>{{$rel->requisitante}}</td>
                         <td>{{$rel->usuario}}</td>
-                        <td>{{date("d/m/Y", strtotime($rel->data))}}</td>
+                        <td>{{date("d/m/Y H:i", strtotime($rel->created_at))}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -114,6 +126,7 @@
         </div>
         <div class="card-footer">
             {{ $rels->links() }}
+        </div>
         </div>
     </div>
     <br/>

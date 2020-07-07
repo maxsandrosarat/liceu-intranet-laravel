@@ -10,6 +10,7 @@
                     Sem disciplinas cadastradas!
                 </div>
             @else
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -32,7 +33,7 @@
             </table>
             @endif
         </div>
-
+        </div>
     </div>
     <br>
     <!-- Button trigger modal -->
@@ -60,7 +61,7 @@
                                     <input type="text" class="form-control" name="nome" id="nome" placeholder="Digite o nome da disciplina" required>
                                    <br/> 
                                     <label for="ensino">Ensino</label>
-                                    <select id="ensino" name="ensino" required>
+                                    <select class="custom-select" id="ensino" name="ensino" required>
                                         <option value="">Selecione</option>
                                             <option value="fund">Fundamental</option>
                                             <option value="medio">Médio</option>
@@ -68,7 +69,6 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
-                                <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                                 </div>
                             </form>
                         </div>

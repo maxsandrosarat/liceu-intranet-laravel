@@ -19,7 +19,7 @@ class EntradaSaidaController extends Controller
     public function index()
     {
         $rels = EntradaSaida::orderBy('created_at', 'desc')->paginate(10);
-        $prods = Produto::orderBy('nome')->get();
+        $prods = Produto::where('ativo',true)->orderBy('nome')->get();
         $busca = "nao";
         return view('admin.entrada_saida', compact('rels','prods','busca'));
     }
@@ -91,7 +91,7 @@ class EntradaSaidaController extends Controller
                 }
             }
         }
-        $prods = Produto::orderBy('nome')->get();
+        $prods = Produto::where('ativo',true)->orderBy('nome')->get();
         $busca = "sim";
         return view('admin.entrada_saida', compact('rels','prods','busca'));
     }

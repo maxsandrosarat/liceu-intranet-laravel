@@ -5,6 +5,12 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                @if(session('mensagem'))
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        <p>{{session('mensagem')}}</p>
+                    </div>
+                @endif
                 <div class="card-header">Cadastro de Administrador</div>
                 <div class="card-body">
                     <form method="POST" action="/admin">
@@ -38,16 +44,22 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Senha') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">Senha</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
+                                <input id="senhaForca" onkeyup="validarSenhaForca()" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                <p style="font-size: 70%">(Mínimo de 8 caracteres)</p>
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="erroSenhaForca" class="col-md-4 col-form-label text-md-right">Força Senha</label>
+                            <div class="col-md-6">
+                                <div name="erroSenhaForca" id="erroSenhaForca"></div>
                             </div>
                         </div>
 
@@ -72,4 +84,6 @@
         </div>
     </div>
 </div>
+<br/>
+<a href="/admin/administrativo" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

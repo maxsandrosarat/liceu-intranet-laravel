@@ -4,6 +4,7 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Painel de Listas de Atividades - Ensino Fundamental - Data: {{date("d/m/Y", strtotime($data))}}</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
@@ -37,9 +38,9 @@
                                                     <div class="modal-body">
                                                         <form method="POST" action="/prof/listaAtividade/anexar/{{$laFund->id}}" enctype="multipart/form-data">
                                                             @csrf
-                                                        <input type="file" id="arquivo" name="arquivo" accept=".pdf" required>
+                                                        <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
                                                         <br/>
-                                                        <b style="font-size: 60%;">Aceito apenas extensão PDF (".pdf")</b>
+                                                        <b style="font-size: 60%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                                     </div>
                                                     <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Enviar</button>
@@ -58,8 +59,10 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
         <h5 class="card-title">Painel de Listas de Atividades - Ensino Médio - Data: {{date("d/m/Y", strtotime($data))}}</h5>
-            <table class="table table-striped table-ordered table-hover" style="text-align: center;">
+        <div class="table-responsive-xl">    
+        <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
                         <th>Disciplinas</th>
@@ -84,7 +87,7 @@
                                                 <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Anexar AE - {{$laMedio->disciplina->nome}} - {{$laMedio->serie}}º ANO</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Anexar LA - {{$laMedio->disciplina->nome}} - {{$laMedio->serie}}º ANO</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -92,9 +95,9 @@
                                                     <div class="modal-body">
                                                         <form method="POST" action="/prof/listaAtividade/anexar/{{$laMedio->id}}" enctype="multipart/form-data">
                                                             @csrf
-                                                        <input type="file" id="arquivo" name="arquivo" accept=".pdf" required>
+                                                        <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
                                                         <br/>
-                                                        <b style="font-size: 60%;">Aceito apenas extensão PDF (".pdf")</b>
+                                                        <b style="font-size: 60%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                                     </div>
                                                     <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Enviar</button>
@@ -113,6 +116,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <br>

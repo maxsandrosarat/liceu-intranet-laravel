@@ -3,7 +3,7 @@
 @section('body')
     <div class="card border">
         <div class="card-body">
-            <h5 class="card-title">Painel de Atividades</h5>
+            <h5 class="card-title">Painel de Atividades - Disciplina: {{$discNome}}</h5>
             @if(count($atividades)==0)
                 <div class="alert alert-danger" role="alert">
                     Sem atividades para exibir!
@@ -16,25 +16,20 @@
                 </div>
             @endif
             <h5>Exibindo {{$atividades->count()}} de {{$atividades->total()}} de Atividades ({{$atividades->firstItem()}} a {{$atividades->lastItem()}})</h5>
-            <table class="table table-striped table-ordered table-hover" style="text-align: center;">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Disciplina</th>
-                        <th>Atividade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($atividades as $atividade)
-                    <tr>
-                        <td>{{$atividade->disciplina->nome}}</td>
-                        <td style="text-align: center;">
-                            <div class="card">
-                                <div class="card-header">
-                                    {{$atividade->descricao}}
-                                </div>
-                                <div class="card-body">
-                                  <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y", strtotime($atividade->data_criacao))}} @if($atividade->data_publicacao!="") | Data Publicação: {{date("d/m/Y", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | <b style="color:red;">Data Expiração: {{date("d/m/Y", strtotime($atividade->data_expiracao))}}</b> @endif</p>
-                                  @if($atividade->link!="")<a href="{{$atividade->link}}" target="_blank" class="btn btn-primary">Link Vídeo-Aula</a>@endif
+            @foreach ($atividades as $atividade)
+                <div class="d-flex justify-content-center centralizado">
+                    <div class="card border-primary text-center" style="width: 20rem;">
+                        <div class="card-body">
+                            <h5>{{$atividade->descricao}}</h5>
+                            <p class="card-text">
+                                <ul>
+                                    <li>Visualizações: {{$atividade->visualizacoes}}</li>
+                                    <li>Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}}</li>
+                                    <li>@if($atividade->data_publicacao!="")Publicação: {{date("d/m/Y H:i", strtotime($atividade->data_publicacao))}} @endif</li>
+                                    <li>@if($atividade->data_expiracao!="") <b style="color:red;">Expiração: {{date("d/m/Y H:i", strtotime($atividade->data_expiracao))}}</b> @endif</li>
+                                </ul>
+                            </p>
+                            @if($atividade->link!="")<a href="{{$atividade->link}}" target="_blank" class="btn btn-primary">Link Vídeo-Aula</a>@endif
                                   <a type="button" class="btn btn-success" href="/aluno/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a>
                                   @if($atividade->retorno=="sim")
                                     @if(count($retornos)==0)
@@ -60,6 +55,12 @@
                                         @endif
                                     @endif
                                 @endif
+                        </div>
+                    </div>
+                </div>
+                    
+                                    
+                                  
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModalCreate{{$atividade->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -73,11 +74,10 @@
                                     <div class="modal-body">
                                         <form method="POST" action="/aluno/atividade/retorno/{{$atividade->id}}" enctype="multipart/form-data">
                                             @csrf
-                                            <label for="comentario" class="col-md-4 col-form-label text-md-right">Comentário</label>
-                                            <textarea name="comentario" id="comentario" rows="10" cols="40" maxlength="500"></textarea> 
+                                            <label for="comentario">Comentário
+                                            <textarea class="form-control" name="comentario" id="comentario" rows="10" cols="40" maxlength="500"></textarea></label>
                                             <br/>
-                                            <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
-                                            <br/>
+                                            <input class="form-control-file" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
                                             <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                         </div>
                                         <div class="modal-footer">
@@ -106,10 +106,10 @@
                                     <div class="modal-body">
                                         <form method="POST" action="/aluno/atividade/retorno/editar/{{$retorno->id}}" enctype="multipart/form-data">
                                             @csrf
-                                            <label for="comentario" class="col-md-4 col-form-label text-md-right">Comentário</label>
-                                            <textarea name="comentario" id="comentario" rows="10" cols="40" maxlength="500">{{$retorno->comentario}}</textarea>
+                                            <label for="comentario">Comentário
+                                            <textarea class="form-control" name="comentario" id="comentario" rows="10" cols="40" maxlength="500">{{$retorno->comentario}}</textarea></label>
                                             <br/>
-                                            <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
+                                            <input class="form-control-file" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
                                             <br/>
                                             <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                     </div>
@@ -126,11 +126,7 @@
                                 </div>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
                     @endforeach
-                </tbody>
-            </table>
             <div class="card-footer">
                 {{$atividades->links() }}
             </div>
@@ -138,5 +134,5 @@
         </div>
     </div>
     <br/>
-    <a href="/aluno/disciplinas" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    <a href="/aluno/atividade/disciplinas" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

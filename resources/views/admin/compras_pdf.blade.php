@@ -2,7 +2,7 @@
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <title>Lista de Compras - {{date("d/m/Y", strtotime($lista->data))}}</title>
-        <link rel="shortcut icon" href="/storage/logos/favicon.png"/>
+        <link rel="shortcut icon" href="/storage/favicon.png"/>
     </head>
     <body>
     <div class="card border">
@@ -12,15 +12,13 @@
             <table class="table table-striped table-sm">
                 <thead class="thead-dark">
                     <tr>
-                        <th style="text-align: center;">Produto</th>
-                        <th style="text-align: center;">Estoque</th>
+                        <th style="text-align: center;">Produto(s)</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($produtos as $prod)
                     <tr>
                         <td>{{$prod->produto->nome}}</td>
-                        <td style="text-align: center;">{{$prod->estoque}}</td>
                     </tr>
                     @endforeach
                 </tbody>

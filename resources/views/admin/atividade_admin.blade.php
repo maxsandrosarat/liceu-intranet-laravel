@@ -20,27 +20,35 @@
                     <h5 class="card-title">Filtros:</h5>
                     <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/atividade/filtro">
                         @csrf
-                        <label for="turma">Turma</label>
-                            <select id="turma" name="turma">
+                        <label for="turma">Turma
+                            <select class="custom-select" id="turma" name="turma">
                                 <option value="">Selecione</option>
                                 @foreach ($turmas as $turma)
                                 <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                                 @endforeach
-                            </select>
+                            </select></label>
+                            <label for="disciplina">Disciplina
+                            <select class="custom-select" id="disciplina" name="disciplina">
+                                <option value="">Selecione</option>
+                                @foreach ($discs as $disciplina)
+                                <option value="{{$disciplina->id}}">{{$disciplina->nome}}@if($disciplina->ensino=='fund') (Fundamental) @else @if($disciplina->ensino=='medio') (Médio) @endif @endif</option>
+                                @endforeach
+                            </select></label>
                         <label for="descricao">Descrição Atividade</label>
                             <input class="form-control mr-sm-2" type="text" placeholder="Digite a descrição" name="descricao">
-                        <label for="data">Data Criação</label>
-                            <input class="form-control mr-sm-2" type="date" name="data">
+                        <label for="data">Data Criação
+                            <input class="form-control mr-sm-2" type="date" name="data"></label>
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
                     </form>
                 </div>
             </div>
             <h5>Exibindo {{$atividades->count()}} de {{$atividades->total()}} de Atividades ({{$atividades->firstItem()}} a {{$atividades->lastItem()}})</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Turmas</th>
-                        <th>Disciplinas</th>
+                        <th>Turma</th>
+                        <th>Disciplina</th>
                         <th>Atividade</th>
                     </tr>
                 </thead>
@@ -55,9 +63,9 @@
                                     {{$atividade->descricao}}
                                 </div>
                                 <div class="card-body">
-                                  <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y", strtotime($atividade->data_criacao))}} @if($atividade->data_publicacao!="") | Data Publicação: {{date("d/m/Y", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y", strtotime($atividade->data_expiracao))}}@endif</p>
+                                    <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}} <br>@if($atividade->data_publicacao!="")Data Publicação: {{date("d/m/Y H:i", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y H:i", strtotime($atividade->data_expiracao))}}@endif</p>
                                   <a href="{{$atividade->link}}" target="_blank" class="btn btn-primary">Link Vídeo-Aula</a>
-                                  <a type="button" class="btn btn-success" href="/admin/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-danger" href="/admin/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
+                                  <a type="button" class="btn btn-success" href="/admin/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <!--<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button>--> <a type="button" class="btn btn-danger" href="/admin/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
                                 </div>
                             </div>
                         </td>
@@ -114,6 +122,7 @@
             </table>
             <div class="card-footer">
                 {{$atividades->links() }}
+            </div>
             </div>
             @endif
         </div>

@@ -4,6 +4,7 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Painel de Listas de Atividades - Ensino Fundamental - Data: {{date("d/m/Y", strtotime($data))}}</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
@@ -54,8 +55,10 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         <h5 class="card-title">Painel de Listas de Atividades - Ensino Médio - Data: {{date("d/m/Y", strtotime($data))}}</h5>
-            <table class="table table-striped table-ordered table-hover" style="text-align: center;">
+        <div class="table-responsive-xl">    
+        <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
                         <th>Disciplinas</th>
@@ -105,6 +108,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <br>

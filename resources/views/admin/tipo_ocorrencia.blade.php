@@ -27,7 +27,7 @@
                                 <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Digite a Descricao da Ocorrência" required>
                                 <br/>
                                 <label for="tipo">Tipo</label>
-                                    <select id="tipo" name="tipo" required>
+                                    <select class="custom-select" id="tipo" name="tipo" required>
                                         <option value="">Selecione o tipo</option>
                                             <option value="despontuacao">Despontuação</option>
                                             <option value="elogio">Elogio</option>
@@ -39,7 +39,6 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
-                        <button type="cancel" class="btn btn-danger btn-sn">Cancelar</button>
                     </div>
                 </form>
                 </div>
@@ -50,6 +49,7 @@
                     Sem tipos cadastrados!
                 </div>
             @else
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -68,7 +68,7 @@
                         <td>@if($tipo->tipo=='despontuacao') Despontuação @else Elogio @endif</td>
                         <td>{{$tipo->pontuacao}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$tipo->id}}">
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$tipo->id}}">
                                 Editar
                             </button>
                             
@@ -90,10 +90,13 @@
                                                 <label for="descricao">Descrição</label>
                                                 <input type="text" class="form-control" name="descricao" id="descricao" value="{{$tipo->descricao}}" required>
                                                 <label for="tipo">Tipo</label>
-                                                    <select id="tipo" name="tipo" required>
-                                                        <option value="{{$tipo->tipo}}">Selecione o tipo</option>
-                                                            <option value="despontuacao">Despontuação</option>
-                                                            <option value="elogio">Elogio</option>
+                                                    <select class="custom-select" id="tipo" name="tipo" required>
+                                                        <option value="{{$tipo->tipo}}">@if($tipo->tipo=="despontuacao") Despontuação @else Elogio @endif</option>
+                                                        @if($tipo->tipo=="elogio")    
+                                                        <option value="despontuacao">Despontuação</option>
+                                                        @else
+                                                        <option value="elogio">Elogio</option>
+                                                        @endif
                                                     </select>
                                                 <label for="pontuacao">Pontuação</label>
                                                 <input type="text" class="form-control" name="pontuacao" id="pontuacao" value="{{$tipo->pontuacao}}" required>
@@ -101,7 +104,6 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
-                                        <button type="cancel" class="btn btn-danger btn-sn">Cancelar</button>
                                     </div>
                                 </form>
                                 </div>
@@ -113,6 +115,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
             @endif
         </div>
 

@@ -17,8 +17,8 @@
                 <h5>Filtros: </h5>
             <form class="form-inline my-2 my-lg-0" method="GET" action="/prof/filtro">
                 @csrf
-                <input class="form-control mr-sm-2" type="text" placeholder="Nome do Professor" name="nome">
-                <select id="disciplina" name="disciplina">
+                <input class="form-control" type="text" placeholder="Nome do Professor" name="nome">
+                <select class="custom-select" id="disciplina" name="disciplina">
                     <option value="">Selecione uma disciplina</option>
                     @foreach ($discs as $disc)
                         <option value="{{$disc->id}}">{{$disc->nome}} (@if($disc->ensino=="fund") Fundamental @else Médio @endif)</option>
@@ -29,6 +29,7 @@
             </div>
             <br>
             <h5>Exibindo {{$profs->count()}} de {{$profs->total()}} de Professor(es) ({{$profs->firstItem()}} a {{$profs->lastItem()}})</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -157,6 +158,7 @@
             <div class="card-footer">
                 {{$profs->links() }}
             </div>
+            </div>
             @endif
         </div>
     </div>
@@ -203,18 +205,24 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Senha') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">Senha</label>
+            
+                                        <div class="col-md-6">
+                                            <input id="senhaForca" onkeyup="validarSenhaForca()" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                            <p style="font-size: 70%">(Mínimo de 8 caracteres)</p>
+                                            @error('password')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="erroSenhaForca" class="col-md-4 col-form-label text-md-right">Força Senha</label>
+                                        <div class="col-md-6">
+                                            <div name="erroSenhaForca" id="erroSenhaForca"></div>
+                                        </div>
+                                    </div>
 
                         <div class="form-group row">
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirmação Senha') }}</label>

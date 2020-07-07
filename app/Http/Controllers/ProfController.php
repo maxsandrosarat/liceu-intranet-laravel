@@ -145,12 +145,11 @@ class ProfController extends Controller
         $atividade->disciplina_id = $discId;
         $atividade->turma_id = $request->input('turma');
         $atividade->retorno = $request->input('retorno');
-        $atividade->data_criacao = date("Y/m/d");
         if($request->input('dataPublicacao')!=""){
-            $atividade->data_publicacao = $request->input('dataPublicacao');
+            $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
         }
         if($request->input('dataExpiracao')!=""){
-            $atividade->data_expiracao = $request->input('dataExpiracao');
+            $atividade->data_expiracao = $request->input('dataExpiracao').' '.$request->input('horaExpiracao');
         }
         $atividade->descricao = $request->input('descricao');
         $atividade->link = $request->input('link');
@@ -175,11 +174,11 @@ class ProfController extends Controller
         if($request->input('turma')!=""){
             $atividade->turma_id = $request->input('turma');
         }
-        if($request->input('dataPublicacao')!=""){
-            $atividade->data_publicacao = $request->input('dataPublicacao');
+        if($request->input('dataPublicacao')!="" && $request->input('horaPublicacao')!=""){
+            $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
         }
-        if($request->input('dataExpiracao')!=""){
-            $atividade->data_expiracao = $request->input('dataExpiracao');
+        if($request->input('dataExpiracao')!="" && $request->input('horaExpiracao')!=""){
+            $atividade->data_expiracao = $request->input('dataExpiracao').' '.$request->input('horaExpiracao');
         }
         if($request->input('descricao')!=""){
             $atividade->descricao = $request->input('descricao');

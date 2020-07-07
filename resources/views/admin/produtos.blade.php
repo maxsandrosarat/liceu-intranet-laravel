@@ -29,7 +29,7 @@
                                         <input type="number" class="form-control" name="estoqueProduto" id="estoqueProduto" placeholder="Digite a quantidade em estoque do produto" required>
                                         <br>
                                         <label for="categoriaProduto">Categoria</label>
-                                        <select id="categoriaProduto" name="categoriaProduto" required>
+                                        <select class="custom-select" id="categoriaProduto" name="categoriaProduto" required>
                                             <option value="">Selecione</option>
                                             @foreach ($cats as $cat)
                                                 <option value="{{$cat->id}}">{{$cat->nome}}</option>
@@ -38,7 +38,6 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
-                                    <button type="cancel" class="btn btn-danger btn-sn">Cancelar</button>
                                     </div>
                                 </form>
                             </div>
@@ -56,8 +55,8 @@
                 <h5>Filtros: </h5>
                 <form class="form-inline my-2 my-lg-0" method="GET" action="/produtos/filtro">
                     @csrf
-                    <input class="form-control mr-sm-2" type="text" placeholder="Nome do Produto" name="nomeProduto">
-                    <select id="categoria" name="categoria">
+                    <input class="form-control" type="text" placeholder="Nome do Produto" name="nomeProduto">
+                    <select class="custom-select" id="categoria" name="categoria">
                         <option value="">Selecione uma categoria</option>
                         @foreach ($cats as $cat)
                             <option value="{{$cat->id}}">{{$cat->nome}}</option>
@@ -67,6 +66,7 @@
                 </form>
                 </div>
             <h5>Exibindo {{$prods->count()}} de {{$prods->total()}} de Produtos ({{$prods->firstItem()}} a {{$prods->lastItem()}})</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -85,7 +85,7 @@
                         <td>{{$prod->estoque}}</td>
                         <td>{{$prod->categoria->nome}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$prod->id}}">
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$prod->id}}">
                                 Editar
                             </button>
                             <!-- Modal -->
@@ -108,16 +108,18 @@
                                                         <input type="text" class="form-control" name="nomeProduto" id="nomeProduto" value="{{$prod->nome}}" required>
                                                         <br>
                                                         <label for="categoriaProduto">Categoria</label>
-                                                        <select id="categoriaProduto" name="categoriaProduto" required>
-                                                            <option value="{{$prod->categoria->id}}">Selecione</option>
+                                                        <select class="custom-select" id="categoriaProduto" name="categoriaProduto" required>
+                                                            <option value="{{$prod->categoria->id}}">{{$prod->categoria->nome}}</option>
                                                             @foreach ($cats as $cat)
+                                                                @if($cat->id==$prod->categoria->id)
+                                                                @else
                                                                 <option value="{{$cat->id}}">{{$cat->nome}}</option>
+                                                                @endif
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
-                                                    <button type="cancel" class="btn btn-danger btn-sn">Cancelar</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -136,6 +138,7 @@
         </div>
         <div class="card-footer">
             {{ $prods->links() }}
+        </div>
         </div>
     </div>
     <br>

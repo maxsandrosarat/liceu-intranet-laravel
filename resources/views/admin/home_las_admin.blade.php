@@ -4,6 +4,7 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Atividades com Data de Entrega pelos Professores</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr style="text-align: center;">
@@ -66,6 +67,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <br>

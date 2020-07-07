@@ -13,12 +13,15 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
+                background-color: #cccccc; 
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
-                font-weight: 200;
+                font-weight: 900;
                 margin: 0;
             }
+			h2, h3, h4{
+				font-weight: 900;
+			}
 
             .full-height {
                 height: 100vh;
@@ -82,12 +85,13 @@
                                     <!--@if (Route::has('register'))
                                         <a href="{{ route('register') }}">Cadastre-se</a>
                                     @endif-->
-                                    <h4>FAÇA LOGIN COMO</h4>
-                                    <h4><a href="{{ route('aluno.login') }}" class="badge badge-dark">ALUNO</a>
-                                    <a href="{{ route('prof.login') }}" class="badge badge-dark">PROFESSOR</a>
-                                    <a href="{{ route('outro.login') }}" class="badge badge-dark">COLABORADOR</a>
-                                    <!--<a href="{{ route('login') }}" class="badge badge-dark">USUÁRIO</a>-->
-                                    <a href="{{ route('admin.login') }}" class="badge badge-dark">ADMIN</a></h4>
+                                        <b><h4>FAÇA LOGIN COMO</h4></b>
+                                        <h4><a href="{{ route('responsavel.login') }}" class="badge badge-dark">RESPONSÁVEL</a>
+                                        <a href="{{ route('aluno.login') }}" class="badge badge-dark">ALUNO</a>
+                                        <a href="{{ route('outro.login') }}" class="badge badge-dark">COLABORADOR</a>
+                                        <!--<a href="{{ route('prof.login') }}" class="badge badge-dark">PROFESSOR</a></h4>
+                                        <a href="{{ route('login') }}" class="badge badge-dark">USUÁRIO</a>
+                                        <a href="{{ route('admin.login') }}" class="badge badge-dark">ADMIN</a>-->
                                 @endauth
                             @endauth
                         @endauth
@@ -96,23 +100,27 @@
             @endif
 
             <div class="content">
-                <h2>Seja Bem-vindo! Ao intranet (externo) do</h2>
+                <b><h2>Seja Bem-vindo!</h2></b>
                 <div class="title m-b-md">
-                    <img src="/storage/liceu.png" alt="logo_liceu" width="30%">
+                    <img class="img-fluid" src="/storage/liceu.png" alt="logo_liceu">
                 </div>
                 @auth("web")
-                    <b> <h3>Você está logado como  {{Auth::user()->name}}  !</h3>
+                    <b> <h3>Você está logado como  {{Auth::user()->name}}  !</h3></b>
                 @else
                     @auth("admin")
-                        <b> <h3>Você está logado como  {{Auth::guard('admin')->user()->name}}  !</h3>
+                        <b> <h3>Você está logado como  {{Auth::guard('admin')->user()->name}}  !</h3></b>
                     @else
                         @auth("aluno")
-                            <b> <h3>Você está logado como  {{Auth::guard('aluno')->user()->name}}  !</h3>
+                            <b> <h3>Você está logado como  {{Auth::guard('aluno')->user()->name}}  !</h3></b>
                         @else
                             @auth("prof")
-                                <b> <h3>Você está logado como  {{Auth::guard('prof')->user()->name}}  !</h3>
+                                <b> <h3>Você está logado como  {{Auth::guard('prof')->user()->name}}  !</h3></b>
                             @else
-                                <h3>Você não está logado! Por gentileza faça login!</h3>
+                                @auth("responsavel")
+                                <b> <h3>Você está logado como  {{Auth::guard('responsavel')->user()->name}}  !</h3></b>
+                                @else
+                                    <b> <h3>Você não está logado! Por gentileza faça login.</h3></b>
+                                @endauth
                             @endauth
                         @endauth
                     @endauth

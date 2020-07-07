@@ -10,6 +10,7 @@
                     Sem turmas cadastradas!
                 </div>
             @else
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -36,7 +37,7 @@
             </table>
             @endif
         </div>
-
+    </div>
     </div>
     <br>
     <!-- Button trigger modal -->
@@ -67,7 +68,7 @@
                                     <input type="text" class="form-control" name="turma" id="turma" placeholder="Digite a turma (Exemplo: A, B,...)" required>
                                     <br/> 
                                     <label for="turno">Turno</label>
-                                    <select id="turno" name="turno" required>
+                                    <select class="custom-select" id="turno" name="turno" required>
                                         <option value="">Selecione</option>
                                             <option value="M">Matutino</option>
                                             <option value="V">Vespertino</option>
@@ -75,7 +76,7 @@
                                     </select>
                                     <br/> 
                                     <label for="ensino">Ensino</label>
-                                    <select id="ensino" name="ensino" required>
+                                    <select class="custom-select" id="ensino" name="ensino" required>
                                         <option value="">Selecione</option>
                                             <option value="fund">Fundamental</option>
                                             <option value="medio">Médio</option>

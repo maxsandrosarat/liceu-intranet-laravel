@@ -23,6 +23,7 @@
                     </button>
                     </div>
                     <div class="modal-body">
+                        <div class="table-responsive-xl">
                         <table class="table table-striped table-sm">
                             <thead class="thead-dark">
                                 <tr>
@@ -41,8 +42,9 @@
                                     @endforeach
                                 </tbody>
                         </table>
+                        </div>
                         <label for="tipo">Tipo</label>
-                        <select id="tipo" name="tipo" required style="width:300px;">
+                        <select class="custom-select" id="tipo" name="tipo" required style="width:300px;">
                             <option value="">Selecione o tipo</option>
                             @foreach ($tipos as $tipo)
                             <option value="{{$tipo->id}}">{{$tipo->codigo}} - {{$tipo->descricao}} - @if($tipo->tipo=="despontuacao") Despontuar: @else Elogio: @endif{{$tipo->pontuacao}}</option>
@@ -50,11 +52,11 @@
                         </select>
                         <input type="hidden" name="disciplina" value="{{$disciplina}}">
                         <br/><br/>
-                        <label for="data">Data</label>
-                        <input type="date" name="data" required>
+                        <label for="data">Data
+                        <input class="form-control" type="date" name="data" required></label>
                         <br/><br/>
                         <label for="observacao">Observação</label>
-                        <textarea name="observacao" id="observacao" rows="10" cols="40" maxlength="500" placeholder="Atenção!!! Caso marque vários alunos e faça uma observação neste momento, a mesma será para todos marcados. Caso deseje apenas para alunos especificos lance sem observação e edite o lançamento para inserir a observação."></textarea> 
+                        <textarea class="form-control" name="observacao" id="observacao" rows="10" cols="40" maxlength="500" placeholder="Atenção!!! Caso marque vários alunos e faça uma observação neste momento, a mesma será para todos marcados. Caso deseje apenas para alunos especificos lance sem observação e edite o lançamento para inserir a observação."></textarea> 
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Enviar</button>
@@ -79,20 +81,20 @@
                     <h5 class="card-title">Filtros:</h5>
                     <form class="form-inline my-2 my-lg-0" method="GET" action="/prof/ocorrencias/filtro/{{$disciplina}}/{{$turma}}">
                         @csrf
-                        <label for="tipo">Tipo</label>
-                        <select id="tipo" name="tipo" style="width:170px;">
+                        <label for="tipo">Tipo
+                        <select class="custom-select" id="tipo" name="tipo" style="width:170px;">
                             <option value="">Selecione o tipo</option>
                             @foreach ($tipos as $tipo)
                             <option value="{{$tipo->id}}">{{$tipo->codigo}} - {{$tipo->descricao}} - @if($tipo->tipo=="despontuacao") Despontuar: @else Elogio: @endif{{$tipo->pontuacao}}</option>
                             @endforeach
-                        </select>
-                        <label for="aluno">Aluno</label>
-                        <select id="aluno" name="aluno" style="width:170px;">
+                        </select></label>
+                        <label for="aluno">Aluno
+                        <select class="custom-select" id="aluno" name="aluno" style="width:170px;">
                             <option value="">Selecione o aluno</option>
                             @foreach ($alunos as $aluno)
                             <option value="{{$aluno->id}}">{{$aluno->name}}</option>
                             @endforeach
-                        </select>
+                        </select></label>
                         <label for="dataInicio">Data Início</label>
                         <input class="form-control mr-sm-2" type="date" name="dataInicio">
                         <label for="dataFim">Data Fim</label>
@@ -102,6 +104,7 @@
                 </div>
             </div>
             <br/>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
@@ -111,6 +114,7 @@
                         <th>Data</th>
                         <th>Observação</th>
                         <th>Ações</th>
+                        <th>Aprovação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -125,7 +129,7 @@
                             @if($ocorrencia->observacao=="")
                             <h6 style="color: red;">Sem observação</h6>
                             @else
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalOb{{$ocorrencia->id}}">
+                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModalOb{{$ocorrencia->id}}">
                                 Ver Observação
                             </button>
                             @endif
@@ -146,7 +150,11 @@
                             </div>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$ocorrencia->id}}">
+                            @if($ocorrencia->aprovado==1) 
+                            @else
+                                @if($ocorrencia->aprovado!==NULL)
+                                @else
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal{{$ocorrencia->id}}">
                                 Editar
                             </button>
                             
@@ -164,18 +172,21 @@
                                             @csrf
                                             <h6><b>Aluno: {{$ocorrencia->aluno->name}}</b></h6>
                                             <label for="tipo">Tipo</label>
-                                            <select id="tipo" name="tipo" required style="width:300px;">
-                                                <option value="{{$ocorrencia->tipo_ocorrencia_id}}">Selecione o tipo</option>
+                                            <select class="custom-select" id="tipo" name="tipo" required style="width:300px;">
+                                                <option value="{{$ocorrencia->tipo_ocorrencia->id}}">{{$ocorrencia->tipo_ocorrencia->codigo}} - {{$ocorrencia->tipo_ocorrencia->descricao}} - @if($ocorrencia->tipo_ocorrencia->tipo=="despontuacao") Despontuar: @else Elogio: @endif{{$ocorrencia->tipo_ocorrencia->pontuacao}}</option>
                                                 @foreach ($tipos as $tipo)
+                                                @if($tipo->id==$ocorrencia->tipo_ocorrencia_id)
+                                                @else
                                                 <option value="{{$tipo->id}}">{{$tipo->codigo}} - {{$tipo->descricao}} - @if($tipo->tipo=="despontuacao") Despontuar: @else Elogio: @endif{{$tipo->pontuacao}}</option>
+                                                @endif
                                                 @endforeach
                                             </select>
                                             <br/><br/>
                                             <label for="data">Data</label>
-                                            <input type="date" name="data" value="{{$ocorrencia->data}}" required>
+                                            <input class="form-control" type="date" name="data" value="{{$ocorrencia->data}}" required>
                                             <br/><br/>
                                             <label for="observacao">Observação</label>
-                                            <textarea name="observacao" id="observacao" rows="10" cols="40" maxlength="500">{{$ocorrencia->observacao}}</textarea> 
+                                            <textarea class="form-control" name="observacao" id="observacao" rows="10" cols="40" maxlength="500">{{$ocorrencia->observacao}}</textarea> 
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
@@ -185,12 +196,26 @@
                                 </div>
                             </div>
                             <a href="/prof/ocorrencias/apagar/{{$disciplina}}/{{$turma}}/{{$ocorrencia->id}}" class="btn btn-sm btn-danger">Apagar</a>
+                            @endif
+                            @endif
+                        </td>
+                        <td max-width="100px">
+                            @if($ocorrencia->aprovado==1)
+                                <b><p style="color: green;"><i class="material-icons green">check_circle</i> APROVADO</p></b> 
+                            @else
+                                @if($ocorrencia->aprovado!==NULL)
+                                <b><p style="color: red;"><i class="material-icons red">highlight_off</i> REPROVADO</p></b>
+                                @else
+                                    <p><i class="material-icons">update</i> Aguardando Análise</p>
+                                @endif
+                            @endif
                         </td>
                     </tr>
                     @endif
                     @endforeach
                 </tbody>
             </table>
+            </div>
             <div class="card-footer">
                 {{$ocorrencias->links() }}
             </div>

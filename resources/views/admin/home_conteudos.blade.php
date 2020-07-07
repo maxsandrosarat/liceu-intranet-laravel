@@ -5,16 +5,17 @@
         <div class="card-body">
             <form action="/admin/conteudos" method="GET">
                 @csrf
-                <label for="ano">Selecione o ano: </label>
-                <select id="ano" name="ano">
+                <label for="ano">Selecione o ano:
+                <select class="custom-select" id="ano" name="ano">
                     <option value="">Selecione</option>
                     @foreach ($anos as $an)
                     <option value="{{$an->ano}}">{{$an->ano}}</option>
                     @endforeach
-                  </select>
+                  </select></label>
                 <input type="submit" class="btn btn-primary" value="Selecionar">
             </form>
             <h5 class="card-title">Conteúdos pelos Professores - {{$ano}}</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr style="text-align: center;">
@@ -51,6 +52,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <br>
@@ -75,13 +77,13 @@
             </button>
         </div>
         <div class="modal-body">
-            <form action="/admin/conteudos/gerar" method="POST">
+            <form id="form-gerar-conteudo" action="/admin/conteudos/gerar" method="POST">
             @csrf
             <div class="form-group">
                 <label for="ano">Ano: </label>
-                <input type="number" name="ano" id="ano" required>
+                <input class="form-control" type="number"  name="ano" id="ano" required>
                 <label for="bimestre">Bimestre: </label>
-                <select id="bimestre" name="bimestre" required>
+                <select class="custom-select" id="bimestre" name="bimestre" required>
                     <option value="">Selecione</option>
                     <option value="1">1º</option>
                     <option value="2">2º</option>
@@ -97,13 +99,13 @@
                 <label for="SIM">SIM</label>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Gerar</button>
+        <div class="modal-footer" id="processamento">
+            <button type="submit" class="btn btn-primary" onclick="processar()">Gerar</button>
         </div>
             </form>
         </div>
     </div>
     </div>
-
+    <br><br>
     <a href="/admin/pedagogico" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

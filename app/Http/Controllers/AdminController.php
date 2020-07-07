@@ -15,6 +15,7 @@ use App\TipoOcorrencia;
 use App\Ocorrencia;
 use App\Conteudo;
 use App\ListaAtividade;
+use App\Recado;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -43,7 +44,7 @@ class AdminController extends Controller
         $adm->email = $request->input('email');
         $adm->password = Hash::make($request->input('password'));
         $adm->save();
-        return redirect('/admin');
+        return back()->with('mensagem', 'Novo Administrador(a) cadastrado com Sucesso!');
     }
 	
 	public function templates($nome){
@@ -258,30 +259,47 @@ class AdminController extends Controller
     public function filtro_atividade(Request $request)
     {
         $turma = $request->input('turma');
+        $disciplina = $request->input('disciplina');
         $descricao = $request->input('descricao');
         $data = $request->input('data');
         if(isset($turma)){
-            if(isset($descricao)){
-                if(isset($data)){
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+            if(isset($disciplina)){
+                if(isset($descricao)){
+                    if(isset($data)){
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                    } else {
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
+                    }
                 } else {
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
+                    $atividades = Atividade::where('turma_id',"$turma")->where('disciplina_id',"$disciplina")->orderBy('id','desc')->paginate(50);
                 }
             } else {
                 $atividades = Atividade::where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
             }
         } else {
-            if(isset($descricao)){
-                if(isset($data)){
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+            if(isset($disciplina)){
+                if(isset($descricao)){
+                    if(isset($data)){
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                    } else {
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->orderBy('id','desc')->paginate(50);
+                    }
                 } else {
-                    $atividades = Atividade::where('descricao','like',"%$descricao%")->orderBy('id','desc')->paginate(50);
+                    $atividades = Atividade::where('disciplina_id',"$disciplina")->orderBy('id','desc')->paginate(50);
                 }
             } else {
-                if(isset($data)){
-                    $atividades = Atividade::where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                if(isset($descricao)){
+                    if(isset($data)){
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                    } else {
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->orderBy('id','desc')->paginate(50);
+                    }
                 } else {
-                    $atividades = Atividade::orderBy('id','desc')->paginate(50);
+                    if(isset($data)){
+                        $atividades = Atividade::where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                    } else {
+                        $atividades = Atividade::orderBy('id','desc')->paginate(10);
+                    }
                 }
             }
         }
@@ -425,6 +443,30 @@ class AdminController extends Controller
         if(isset($ocorrencia)){
             $ocorrencia->delete();
         }
+        return back();
+    }
+
+    public function aprovarOcorrencia($id){
+        $ocorrencia = Ocorrencia::find($id);
+        $ocorrencia->aprovado = true;
+        $ocorrencia->save();
+        //$resps = ResponsavelAluno::where('aluno_id',"$ocorrencia->aluno_id")->get();
+        //if(isset($resps)){
+            //foreach($resps as $resp){
+               // $responsavel = Responsavel::find($resp->responsavel_id);
+              //  $responsavel->ocorrencias += 1;
+               // $responsavel->save();
+           // }
+        //}
+
+        return back();
+    }
+
+    public function reprovarOcorrencia($id){
+        $ocorrencia = Ocorrencia::find($id);
+        $ocorrencia->aprovado = false;
+        $ocorrencia->save();
+
         return back();
     }
 
@@ -653,6 +695,130 @@ class AdminController extends Controller
         Storage::disk('public')->delete($arquivo);
         $ae->arquivo = "";
         $ae->save();
+        return back();
+    }
+
+    public function indexRecados(){
+        $recados = Recado::with(['turma', 'aluno'])->paginate(10);
+        $turmas = Turma::all();
+        $alunos = Aluno::orderBy('name')->get();
+        $busca = "nao";
+        return view('admin.recados_admin', compact('recados','turmas','alunos','busca'));
+    }
+
+    public function novoRecado(Request $request){
+        if($request->input('geral')!=""){
+            if($request->input('geral')==true){
+                $recado = new Recado();
+                $recado->titulo = $request->input('titulo');
+                $recado->descricao = $request->input('descricao');
+                $recado->geral = true;
+                $recado->save();
+                return back();
+            } else{
+                if($request->input('turma')!=""){
+                    $recado = new Recado();
+                    $recado->titulo = $request->input('titulo');
+                    $recado->descricao = $request->input('descricao');
+                    $recado->geral = false;
+                    $recado->turma_id = $request->input('turma');
+                    $recado->save();
+                    return back();
+                } else{
+                    $recado = new Recado();
+                    $recado->titulo = $request->input('titulo');
+                    $recado->descricao = $request->input('descricao');
+                    $recado->geral = false;
+                    $recado->aluno_id = $request->input('aluno');
+                    $recado->save();
+                    return back();
+                }
+            }
+        }
+        return back();
+    }
+
+    public function filtroRecados(Request $request)
+    {
+        $titulo = $request->input('titulo');
+        $dataInicio = $request->input('dataInicio');
+        $dataFim = $request->input('dataFim');
+        if(isset($titulo)){
+            if(isset($dataInicio)){
+                if(isset($dataFim)){
+                    $recados = Recado::where('titulo','like',"%$titulo%")->whereBetween('data',["$dataInicio", "$dataFim"])->paginate(100);
+                } else {
+                    $recados = Recado::where('titulo','like',"%$titulo%")->whereBetween('data',["$dataInicio", date("Y/m/d")])->paginate(100);
+                }
+            } else {
+                if(isset($dataFim)){
+                    $recados = Recado::where('titulo','like',"%$titulo%")->whereBetween('data',["", "$dataFim"])->paginate(100);
+                } else {
+                    $recados = Recado::where('titulo','like',"%$titulo%")->paginate(100);
+                }
+            }
+        } else {
+            if(isset($dataInicio)){
+                if(isset($dataFim)){
+                    $recados = Recado::whereBetween('data',["$dataInicio", "$dataFim"])->paginate(100);
+                } else {
+                    $recados = Recado::whereBetween('data',["$dataInicio", date("Y/m/d")])->paginate(100);
+                }
+            } else {
+                if(isset($dataFim)){
+                    $recados = Recado::whereBetween('data',["", "$dataFim"])->paginate(100);
+                } else {
+                    $recados = Recado::paginate(10);
+                }
+            }
+        }
+        $turmas = Turma::all();
+        $alunos = Aluno::orderBy('name')->get();
+        $busca = "sim";
+        return view('admin.recados_admin', compact('recados','turmas','alunos','busca'));
+    }
+
+    public function editarRecado(Request $request, $id)
+    {
+        $recado = Recado::find($id);
+        if($request->input('geral')!=""){
+            if($request->input('geral')==true){
+                $recado->titulo = $request->input('titulo');
+                $recado->descricao = $request->input('descricao');
+                $recado->geral = true;
+                $recado->turma_id = NULL;
+                $recado->aluno_id = NULL;
+                $recado->save();
+                return back();
+            } else{
+                if($request->input('turma')!=""){
+                    $recado->titulo = $request->input('titulo');
+                    $recado->descricao = $request->input('descricao');
+                    $recado->geral = false;
+                    $recado->turma_id = $request->input('turma');
+                    $recado->aluno_id = NULL;
+                    $recado->save();
+                    return back();
+                } else{
+                    $recado->titulo = $request->input('titulo');
+                    $recado->descricao = $request->input('descricao');
+                    $recado->geral = false;
+                    $recado->aluno_id = $request->input('aluno');
+                    $recado->turma_id = NULL;
+                    $recado->save();
+                    return back();
+                }
+            }
+        }
+        return back();
+    }
+
+    public function apagarRecado($id)
+    {
+        $recado = Recado::find($id);
+        if(isset($recado)){
+            $recado->delete();
+        }
         return back();
     }
 

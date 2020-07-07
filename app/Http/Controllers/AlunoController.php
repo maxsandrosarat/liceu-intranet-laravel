@@ -6,6 +6,7 @@ use App\Aluno;
 use App\Turma;
 use App\Atividade;
 use App\AtividadeRetorno;
+use App\Conteudo;
 use App\Disciplina;
 use App\Prof;
 use App\ProfDisciplina;
@@ -26,21 +27,23 @@ class AlunoController extends Controller
         return view('alunos.home_aluno');
     }
 
-    public function disciplinas(){
+    public function disciplinasAtividades(){
         $profs = ProfDisciplina::all();
         $turmaId = Auth::user()->turma_id;
         $turma = Turma::find($turmaId);
         $turmaDiscs = Turma::with('disciplinas')->where('id',"$turmaId")->get();
-        return view('alunos.disciplinas', compact('profs','turma','turmaDiscs'));
+        return view('alunos.atividades_disciplinas', compact('profs','turma','turmaDiscs'));
     }
 
-    public function painelAtividades($disciplina){
+    public function painelAtividades($discId){
         $alunoId = Auth::user()->id;
         $retornos = AtividadeRetorno::where('aluno_id',"$alunoId")->get();
         $dataAtual = date("Y-m-d");
         $turmaId = Auth::user()->turma_id;
-        $atividades = Atividade::where('turma_id',"$turmaId")->where('disciplina_id',"$disciplina")->where("data_publicacao",'<=',"$dataAtual")->where("data_expiracao",'>=',"$dataAtual")->orderBy('id','desc')->paginate(5);
-        return view('alunos.atividade_aluno', compact('atividades','retornos'));
+        $disciplina = Disciplina::find($discId);
+        $discNome = $disciplina->nome;
+        $atividades = Atividade::where('turma_id',"$turmaId")->where('disciplina_id',"$discId")->where("data_publicacao",'<=',"$dataAtual")->where("data_expiracao",'>=',"$dataAtual")->orderBy('id','desc')->paginate(9);
+        return view('alunos.atividade_aluno', compact('discNome','atividades','retornos'));
     }
 
     public function downloadAtividade($id)
@@ -160,5 +163,64 @@ class AlunoController extends Controller
             $aluno->delete();
         }
         return redirect('/aluno/consulta');
+    }
+
+    public function painelConteudos($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        return view('alunos.home_conteudos',compact('ano'));
+    }
+
+    public function conteudos($ano, $bim, $tipo){
+        $validador = Conteudo::where('tipo', "$tipo")->where('bimestre',"$bim")->where('ano',"$ano")->count();
+        if($validador==0){
+            return back()->with('mensagem', 'Os conteúdos para essa atividade ainda não estão disponiveis!');
+        } else {
+            $turmaId = Auth::user()->turma_id;
+            $turma = Turma::find($turmaId);
+            $ensino = $turma->ensino;
+            $serie = $turma->serie;
+            if($ensino=="fund"){
+                $fundDiscs = Disciplina::where('ensino','fund')->get();
+                $medioDiscs = "";
+            } else {
+                $fundDiscs = "";
+                $medioDiscs = Disciplina::where('ensino','medio')->get();
+            }
+            if($ensino=="fund"){
+                $contFunds = Conteudo::orderBy('disciplina_id')->where('tipo', "$tipo")->where('bimestre',"$bim")->where('ensino','fund')->where('ano',"$ano")->where('serie',"$serie")->get();
+                $contMedios = "";
+            } else {
+                $contFunds = "";
+                $contMedios = Conteudo::orderBy('disciplina_id')->where('tipo', "$tipo")->where('bimestre',"$bim")->where('ensino','medio')->where('ano',"$ano")->where('serie',"$serie")->get();
+            }
+            return view('alunos.conteudos',compact('ensino','serie','tipo','bim','fundDiscs','medioDiscs','contFunds','contMedios','ano'));
+        }
+    }
+
+    public function downloadConteudo($id)
+    {
+        $cont = Conteudo::find($id);
+        $discId = $cont->disciplina_id;
+        $disciplina = Disciplina::find($discId);
+        $nameFile = "";
+        switch ($cont->serie) {
+                case 6: $nameFile = "6º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
+                case 7: $nameFile = "7º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
+                case 8: $nameFile = "8º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
+                case 9: $nameFile = "9º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
+                case 1: $nameFile = "1º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
+                case 2: $nameFile = "2º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
+                case 3: $nameFile = "3º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
+                default: $nameFile = "";
+        };
+        if(isset($cont)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return back();
     }
 }

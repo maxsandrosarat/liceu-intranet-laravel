@@ -30,6 +30,6 @@
         </div>
     </div>
     <br>
-    <a href="/listaCompras" class="btn btn-success">Voltar</a>
+    <a href="/listaCompras" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
     <a href="/listaCompras/pdf/{{$lista_id}}" target="_blank" class="btn btn-success">Gerar PDF</a>
 @endsection

@@ -2,7 +2,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <img src="/storage/liceu.png" alt="logo_liceu" width="10%">
+    <img src="/storage/logo_liceu.png" alt="logo_liceu" width="100" class="d-inline-block align-top" loading="lazy">
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <ul class="navbar-nav mr-auto">
             <!--ADMIN-->
@@ -21,13 +21,32 @@
             </li>
             @endauth
 
+            <!--RESPONSAVEL-->
+            @auth("responsavel")
+            <li @if($current=="home") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/responsavel">Home</a>
+            </li>
+            <!--<li @if($current=="diario") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/responsavel/diario">Diário</a>
+            </li>-->
+            <li @if($current=="ocorrencias") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/responsavel/ocorrencias">Ocorrências</a>
+            </li>
+            <li @if($current=="recados") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/responsavel/recados">Recados</a>
+            </li>
+            @endauth
+
             <!--ALUNO-->
             @auth("aluno")
             <li @if($current=="home") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/aluno">Home</a>
             </li>
             <li @if($current=="atividade") class="nav-item active" @else class="nav-item" @endif>
-                <a class="nav-link" href="/aluno/disciplinas">Atividades</a>
+                <a class="nav-link" href="/aluno/atividade/disciplinas">Atividades</a>
+            </li>
+            <li @if($current=="conteudo") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/aluno/conteudos/{{date("Y")}}">Conteúdos</a>
             </li>
             @endauth
 
@@ -70,20 +89,24 @@
             <!--DESLOGADO-->
             @guest
             <!--<li class="nav-item">
-                //<a class="nav-link" href="{{ route('login') }}">{{ __('Login(Usuário)') }}</a>
-            </li>-->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('aluno.login') }}">{{ __('Login(Aluno)') }}</a>
+                <a class="nav-link" href="{{ route('login') }}">{{ __('Login(Usuário)') }}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('prof.login') }}">{{ __('Login(Prof)') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('outro.login') }}">{{ __('Login(Outro)') }}</a>
+                <a class="nav-link" href="{{ route('admin.login') }}">{{ __('Login(Admin)') }}</a>
+            </li>-->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('responsavel.login') }}">{{ __('Login(Responsável)') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.login') }}">{{ __('Login(Admin)') }}</a>
+                <a class="nav-link" href="{{ route('aluno.login') }}">{{ __('Login(Aluno)') }}</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('outro.login') }}">{{ __('Login(Colaborador)') }}</a>
+            </li>
+            
             <!--@if (Route::has('register'))
             <li class="nav-item">
                <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastre-se') }}</a>

@@ -25,6 +25,8 @@ class CreateOcorrenciasTable extends Migration
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
             $table->date('data');
             $table->string('observacao');
+            $table->boolean('aprovado')->nullable();
+            $table->boolean('responsavel_ciente')->default(false);
             $table->timestamps();
         });
     }
