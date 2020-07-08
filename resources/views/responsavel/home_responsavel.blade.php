@@ -12,7 +12,7 @@
                     </p>
                     <a href="/responsavel/diario" class="btn btn-primary">Diário</a>
                 </div>
-            </div>-->
+            </div>
             <div class="card border border-primary mb-3" style="width: 20rem;">
                 <div class="card-body">
                     <h5>Ocorrências</h5>
@@ -33,6 +33,39 @@
                     <a type="button" href="/responsavel/recados" class="btn btn-primary">
                         Recados <span class="badge badge-light">{{ Auth::user()->recados }}</span>
                     </a>
+                </div>
+            </div>-->
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Administrativo</h5>
+                        <p class="card-text">
+                            Consultar Contratos, entre outros.
+                        </p>
+                        <a href="#" class="btn btn-primary">Administrativo</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Financeiro</h5>
+                        <p class="card-text">
+                            Consultar boletos, histórico de pagamentos, entre outros.
+                        </p>
+                        <a href="#" class="btn btn-primary">Financeiro</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Pedagógico</h5>
+                        <p class="card-text">
+                            Consultar Ocorrências, Recados, Boletim, entre outros.
+                        </p>
+                        <a href="#" class="btn btn-primary">Pedagógico</a>
+                    </div>
                 </div>
             </div>
         </div>

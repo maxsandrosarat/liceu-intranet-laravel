@@ -3,6 +3,12 @@
 @section('body')
     <div class="card border">
         <div class="card-body">
+            @if(session('mensagem'))
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert">x</button>
+                <p>{{session('mensagem')}}</p>
+            </div>
+            @endif
             <form action="/admin/conteudos" method="GET">
                 @csrf
                 <label for="ano">Selecione o ano:
@@ -56,11 +62,6 @@
         </div>
     </div>
     <br>
-    @if(session('mensagem'))
-        <div class="alert alert-success" role="alert">
-            <p>{{session('mensagem')}}</p>
-        </div>
-    @endif
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
     Gerar Conteúdos

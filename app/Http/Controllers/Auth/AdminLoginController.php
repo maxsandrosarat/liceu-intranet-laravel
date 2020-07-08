@@ -30,7 +30,7 @@ class AdminLoginController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        return redirect()->back()->withInput($request->only('email','remember'));
+        return redirect()->back()->withInput($request->only('email','remember'))->with('mensagem', 'Os dados informados estão incorretos, verifique e tente novamente!');
     }
 
     public function index(){

@@ -19,6 +19,7 @@ class CreateOutrosTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('foto')->nullable();
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }

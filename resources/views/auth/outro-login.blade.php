@@ -4,6 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            @if(session('mensagem'))
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    <p>{{session('mensagem')}}</p>
+                </div>
+            @endif
             <select class="custom-select" name="tipoLogin" id="tipoLogin">
                 <option value="">Selecione o Tipo de Login</option>
                 <option value="prof">PROFESSOR(A)</option>

@@ -21,6 +21,7 @@ class CreateAlunosTable extends Migration
             $table->string('foto')->nullable();
             $table->unsignedBigInteger('turma_id');
             $table->foreign('turma_id')->references('id')->on('turmas');
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }

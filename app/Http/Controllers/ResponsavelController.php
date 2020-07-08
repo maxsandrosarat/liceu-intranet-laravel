@@ -27,8 +27,8 @@ class ResponsavelController extends Controller
     //ADMIN
     public function consulta()
     {
-        $resps = Responsavel::with('alunos')->orderBy('name')->paginate(10);
-        $alunos = Aluno::orderBy('name')->get();
+        $resps = Responsavel::where('ativo',true)->with('alunos')->orderBy('name')->paginate(10);
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
         return view('admin.responsavel', compact('resps','alunos'));
     }
 
@@ -47,12 +47,32 @@ class ResponsavelController extends Controller
     public function filtro(Request $request)
     {
         $nome = $request->input('nome');
+        $aluno = $request->input('aluno');
         if(isset($nome)){
-            $resps = Responsavel::where('name','like',"%$nome%")->orderBy('name')->get();
+            if(isset($aluno)){
+                $respAlunos = ResponsavelAluno::where('aluno_id',"$aluno")->get();
+                $respIds = array();
+                foreach($respAlunos as $respAluno){
+                    $respIds[] = $respAluno->responsavel_id;
+                }
+                $resps = Responsavel::whereIn('id', $respIds)->where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
+            } else {
+                $resps = Responsavel::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
+            }
         } else {
-            return back();
+            if(isset($aluno)){
+                $respAlunos = ResponsavelAluno::where('aluno_id',"$aluno")->get();
+                $respIds = array();
+                foreach($respAlunos as $respAluno){
+                    $respIds[] = $respAluno->responsavel_id;
+                }
+                $resps = Responsavel::whereIn('id', $respIds)->where('ativo',true)->orderBy('name')->paginate(100);
+            } else {
+                return redirect('/responsavel/consulta');
+            }
         }
-        return view('admin.responsavel', compact('resps'));
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
+        return view('admin.responsavel', compact('resps','alunos'));
     }
 
     //ADMIN
@@ -75,7 +95,8 @@ class ResponsavelController extends Controller
     {
         $resp = Responsavel::find($id);
         if(isset($resp)){
-            $resp->delete();
+            $resp->ativo = false;
+            $resp->save();
         }
         return back();
     }

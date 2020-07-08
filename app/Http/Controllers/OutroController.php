@@ -34,7 +34,7 @@ class OutroController extends Controller
         $outro->email = $request->input('email');
         $outro->password = Hash::make($request->input('password'));
         $outro->save();
-        return redirect('/outro/consulta');
+        return back();
     }
 
     public function file(Request $request)
@@ -45,7 +45,7 @@ class OutroController extends Controller
 
     public function consulta()
     {
-        $outros = Outro::orderBy('name')->paginate(10);
+        $outros = Outro::where('ativo',true)->orderBy('name')->paginate(10);
         return view('admin.outros', compact('outros'));
     }
 
@@ -53,9 +53,9 @@ class OutroController extends Controller
     {
         $nome = $request->input('nome');
         if(isset($nome)){
-                $outros = Outro::where('name','like',"%$nome%")->orderBy('name')->paginate(10);
+                $outros = Outro::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(10);
         } else {
-                return redirect('/outro/consulta');
+            return back();
         }
         return view('outros.outros', compact('outros'));
     }
@@ -71,15 +71,16 @@ class OutroController extends Controller
             }
             $outro->save();
         }
-        return redirect('/outro/consulta');
+        return back();
     }
 
     public function destroy($id)
     {
         $outro = Outro::find($id);
         if(isset($outro)){
-            $outro->delete();
+            $outro->ativo = false;
+            $outro->save();
         }
-        return redirect('/outro/consulta');
+        return back();
     }
 }

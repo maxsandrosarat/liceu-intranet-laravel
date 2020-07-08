@@ -16,16 +16,16 @@ class TurmaDisciplinaController extends Controller
 
     public function index()
     {
-        $turmaDiscs = Turma::with('disciplinas')->get();
-        $turmas = Turma::all();
-        $discs = Disciplina::all();
+        $turmaDiscs = Turma::where('ativo',true)->with('disciplinas')->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $discs = Disciplina::where('ativo',true)->get();
         return view('admin.turmas_disciplinas',compact('turmaDiscs','turmas','discs'));
     }
 
     public function store(Request $request)
     {
         if($request->input('disciplina')=="todasFund"){
-            $discFunds = Disciplina::where('ensino','fund')->get();
+            $discFunds = Disciplina::where('ativo',true)->where('ensino','fund')->get();
             foreach($discFunds as $discFund){
                 $turmaDisc = new TurmaDisciplina();
                 $turmaDisc->turma_id = $request->input('turma');
@@ -33,7 +33,7 @@ class TurmaDisciplinaController extends Controller
                 $turmaDisc->save();
             }
         } elseif($request->input('disciplina')=="todasMedio"){
-            $discs = Disciplina::where('ensino','medio')->get();
+            $discs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
             foreach($discs as $disc){
                 $turmaDisc = new TurmaDisciplina();
                 $turmaDisc->turma_id = $request->input('turma');

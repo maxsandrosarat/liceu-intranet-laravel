@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Disciplina;
+use App\ProfDisciplina;
+use App\TurmaDisciplina;
 use Illuminate\Http\Request;
 
 class DisciplinaController extends Controller
@@ -14,7 +16,7 @@ class DisciplinaController extends Controller
     
     public function index()
     {
-        $discs = Disciplina::all();
+        $discs = Disciplina::where('ativo',true)->get();
         return view('admin.disciplinas',compact('discs'));
     }
 
@@ -31,8 +33,12 @@ class DisciplinaController extends Controller
     {
         $disc = Disciplina::find($id);
         if(isset($disc)){
-            $disc->delete();
+            $disc->ativo = false;
+            $disc->save();
+            TurmaDisciplina::where('disciplina_id',"$id")->delete();
+            ProfDisciplina::where('disciplina_id',"$id")->delete();
         }
         return back();
     }
+
 }

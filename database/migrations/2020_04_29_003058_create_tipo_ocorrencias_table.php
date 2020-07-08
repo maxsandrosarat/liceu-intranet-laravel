@@ -19,6 +19,7 @@ class CreateTipoOcorrenciasTable extends Migration
             $table->string('descricao');
             $table->string('tipo');
             $table->float('pontuacao');
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }

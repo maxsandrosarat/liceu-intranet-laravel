@@ -25,8 +25,8 @@ class ProfController extends Controller
     //ADMIN
     public function consultaProf()
     {
-        $profs = Prof::with('disciplinas')->orderBy('name')->paginate(10);
-        $discs = Disciplina::all();
+        $profs = Prof::where('ativo',true)->with('disciplinas')->orderBy('name')->paginate(10);
+        $discs = Disciplina::where('ativo',true)->get();
         return view('admin.profs', compact('profs','discs'));
     }
 
@@ -38,15 +38,14 @@ class ProfController extends Controller
         $prof->email = $request->input('email');
         $prof->password = Hash::make($request->input('password'));
         $prof->save();
-        $profId = DB::table('profs')->max('id');
         $disciplinas = $request->input('disciplinas');
                 foreach($disciplinas as $disciplina){
                     $profDisc = new ProfDisciplina();
-                    $profDisc->prof_id = $profId;
+                    $profDisc->prof_id = $prof->id;
                     $profDisc->disciplina_id = $disciplina;
                     $profDisc->save();
                 }
-        return redirect('/prof/consulta');
+        return back();
     }
 
     //ADMIN
@@ -56,18 +55,28 @@ class ProfController extends Controller
         $disc = $request->input('disciplina');
         if(isset($nome)){
             if(isset($disc)){
-                $profs = Prof::where('name','like',"%$nome%")->where('disciplina_id',"$disc")->orderBy('name')->get();
+                $profDiscs = ProfDisciplina::where('disciplina_id',"$disc")->get();
+                $profIds = array();
+                foreach($profDiscs as $profDisc){
+                    $profIds[] = $profDisc->prof_id;
+                }
+                $profs = Prof::whereIn('id', $profIds)->where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
             } else {
-                $profs = Prof::where('name','like',"%$nome%")->orderBy('name')->get();
+                $profs = Prof::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
             }
         } else {
             if(isset($disc)){
-                $profs = Prof::where('disciplina_id',"$disc")->orderBy('name')->get();
+                $profDiscs = DB::table('prof_disciplinas')->select(DB::raw("prof_id"))->where('disciplina_id',"$disc")->get();
+                $profIds = array();
+                foreach($profDiscs as $profDisc){
+                    $profIds[] = $profDisc->prof_id;
+                }
+                $profs = Prof::whereIn('id', $profIds)->where('ativo',true)->orderBy('name')->paginate(100);
             } else {
                 return redirect('/prof/consulta');
             }
         }
-        $discs = Disciplina::all();
+        $discs = Disciplina::where('ativo',true)->get();
         return view('admin.profs', compact('discs','profs'));
     }
 
@@ -93,7 +102,7 @@ class ProfController extends Controller
                 }
             }
         }
-        return redirect('/prof/consulta');
+        return back();
     }
 
     //ADMIN
@@ -101,15 +110,16 @@ class ProfController extends Controller
     {
         $prof = Prof::find($id);
         if(isset($prof)){
-            $prof->delete();
+            $prof->ativo = false;
+            $prof->save();
         }
-        return redirect('/prof/consulta');
+        return back();
     }
 
     public function apagarDisciplina($prof_id, $disciplina_id)
     {
         ProfDisciplina::where('prof_id',"$prof_id")->where('disciplina_id',"$disciplina_id")->delete();
-        return redirect('/prof/consulta');
+        return back();
     }
     
     
@@ -292,8 +302,8 @@ class ProfController extends Controller
         $lafund = ListaAtividade::where('dia', "$data")->where('ensino','fund')->count();
         $lamedio = ListaAtividade::where('dia', "$data")->where('ensino','medio')->count();
         if($lafund==0){
-            $discs = Disciplina::where('ensino','fund')->get();
-            $turmas = Turma::where('ensino','fund')->where('turma','A')->get();
+            $discs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
+            $turmas = Turma::select('serie')->where('ativo',true)->where('ensino','fund')->groupby('serie')->get();
             foreach($turmas as $turma){
                 foreach($discs as $disc){
                     $lf = new ListaAtividade();
@@ -306,8 +316,8 @@ class ProfController extends Controller
             }
         }
         if($lamedio==0){
-            $discs = Disciplina::where('ensino','medio')->get();
-            $turmas = Turma::where('ensino','medio')->get();
+            $discs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
+            $turmas = Turma::select('serie')->where('ativo',true)->where('ensino','medio')->groupby('serie')->get();
             foreach($turmas as $turma){
                 foreach($discs as $disc){
                     $lm = new ListaAtividade();
@@ -321,10 +331,10 @@ class ProfController extends Controller
         }
         $profId = Auth::user()->id;
         $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
-        $fundTurmas = Turma::where('turma','A')->where('ensino','fund')->get();
-        $medioTurmas = Turma::where('turma','A')->where('ensino','medio')->get();
-        $fundDiscs = Disciplina::where('ensino','fund')->get();
-        $medioDiscs = Disciplina::where('ensino','medio')->get();
+        $fundTurmas = Turma::select('serie')->where('ativo',true)->where('ensino','fund')->groupby('serie')->get();
+        $medioTurmas = Turma::select('serie')->where('ativo',true)->where('ensino','medio')->groupby('serie')->get();
+        $fundDiscs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
+        $medioDiscs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
         $laFunds = ListaAtividade::orderBy('disciplina_id')->where('dia', "$data")->where('ensino','fund')->get();
         $laMedios = ListaAtividade::orderBy('disciplina_id')->where('dia', "$data")->where('ensino','medio')->get();
         return view('profs.lista_atividade',compact('data','profDiscs','fundTurmas','medioTurmas','fundDiscs','medioDiscs','laFunds','laMedios'));
@@ -394,8 +404,8 @@ class ProfController extends Controller
 
     public function indexOcorrencias($disciplina, $turma){
         $profId = Auth::user()->id;
-        $alunos = Aluno::where('turma_id',"$turma")->get();
-        $tipos = TipoOcorrencia::all();
+        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->get();
+        $tipos = TipoOcorrencia::where('ativo',true)->get();
         $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->paginate(10);
         $busca = "nao";
         return view('profs.ocorrencias_prof', compact('alunos','tipos','disciplina','ocorrencias','busca','turma'));
@@ -469,8 +479,8 @@ class ProfController extends Controller
                 }
             }
         }
-        $alunos = Aluno::where('turma_id',"$turma")->get();
-        $tipos = TipoOcorrencia::all();
+        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->get();
+        $tipos = TipoOcorrencia::where('ativo',true)->get();
         $busca = "sim";
         return view('profs.ocorrencias_prof', compact('alunos','tipos','disciplina','ocorrencias','busca','turma'));
     }
@@ -530,8 +540,8 @@ class ProfController extends Controller
             $ocorrencia->delete();
         }
         $profId = Auth::user()->id;
-        $alunos = Aluno::where('turma_id',"$turma")->get();
-        $tipos = TipoOcorrencia::all();
+        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->get();
+        $tipos = TipoOcorrencia::where('ativo',true)->get();
         $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->paginate(10);
         $tipo = "painel";
         return view('profs.ocorrencias_prof', compact('alunos','tipos','disciplina','ocorrencias','turma','tipo'));
@@ -558,10 +568,10 @@ class ProfController extends Controller
         } else {
             $profId = Auth::user()->id;
             $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
-            $fundTurmas = Turma::where('turma','A')->where('ensino','fund')->get();
-            $medioTurmas = Turma::where('turma','A')->where('ensino','medio')->get();
-            $fundDiscs = Disciplina::where('ensino','fund')->get();
-            $medioDiscs = Disciplina::where('ensino','medio')->get();
+            $fundTurmas = Turma::select('serie')->where('ativo',true)->where('ensino','fund')->groupby('serie')->get();
+            $medioTurmas = Turma::select('serie')->where('ativo',true)->where('ensino','medio')->groupby('serie')->get();
+            $fundDiscs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
+            $medioDiscs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
             $contFunds = Conteudo::orderBy('disciplina_id')->where('tipo', "$tipo")->where('bimestre',"$bim")->where('ensino','fund')->where('ano',"$ano")->get();
             $contMedios = Conteudo::orderBy('disciplina_id')->where('tipo', "$tipo")->where('bimestre',"$bim")->where('ensino','medio')->where('ano',"$ano")->get();
             return view('profs.conteudos',compact('profDiscs','tipo','bim','fundTurmas','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios','ano'));

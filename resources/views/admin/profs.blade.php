@@ -49,13 +49,13 @@
                         <td>
                             <ul>
                                 @foreach ($prof->disciplinas as $disciplina)
-                                <li>{{$disciplina->nome}} (@if($disciplina->ensino=='fund') Fundamental @else Médio @endif) <a href="/prof/apagarDisciplina/{{$prof->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Apagar</a></li>
+                                <li>{{$disciplina->nome}} (@if($disciplina->ensino=='fund') Fundamental @else Médio @endif) <a href="/prof/apagarDisciplina/{{$prof->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
                                 <br/>
                                 @endforeach
                             </ul>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$prof->id}}">
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal{{$prof->id}}">
                                 Editar
                             </button>
                             

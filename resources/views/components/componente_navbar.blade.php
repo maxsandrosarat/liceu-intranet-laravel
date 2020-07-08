@@ -28,12 +28,21 @@
             </li>
             <!--<li @if($current=="diario") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/responsavel/diario">Diário</a>
-            </li>-->
+            </li>
             <li @if($current=="ocorrencias") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/responsavel/ocorrencias">Ocorrências</a>
             </li>
             <li @if($current=="recados") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/responsavel/recados">Recados</a>
+            </li>-->
+            <li @if($current=="administrativo") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="#">Administrativo</a>
+            </li>
+            <li @if($current=="financeiro") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="#">Financeiro</a>
+            </li>
+            <li @if($current=="pedagogico") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="#">Pedagógico</a>
             </li>
             @endauth
 

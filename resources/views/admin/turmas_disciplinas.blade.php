@@ -43,12 +43,16 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
+                                    @if(count($turmaDisc->disciplinas)==0)
+                                    <h5>Nenhuma disciplina vinculada!</h5>
+                                    @else
                                     <ul>
                                         @foreach ($turmaDisc->disciplinas as $disciplina)
-                                        <li>{{$disciplina->nome}} <a href="/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Apagar</a></li>
+                                        <li>{{$disciplina->nome}} <a href="/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
                                         <br/>
                                         @endforeach
                                     </ul>
+                                    @endif
                                 </div>
                                 </div>
                             </div>

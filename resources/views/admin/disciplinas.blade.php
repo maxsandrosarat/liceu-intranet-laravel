@@ -5,7 +5,6 @@
         <div class="card-body">
             <h5 class="card-title">Lista de Disciplinas</h5>
             @if(count($discs)==0)
-                <br/><br/>
                 <div class="alert alert-danger" role="alert">
                     Sem disciplinas cadastradas!
                 </div>

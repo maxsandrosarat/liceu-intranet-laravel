@@ -9,8 +9,6 @@ use App\Turma;
 use App\Atividade;
 use App\Aluno;
 use App\AtividadeExtra;
-use App\LaFund;
-use App\LaMedio;
 use App\TipoOcorrencia;
 use App\Ocorrencia;
 use App\Conteudo;
@@ -69,8 +67,8 @@ class AdminController extends Controller
         $lafund = ListaAtividade::where('dia', "$data")->where('ensino','fund')->count();
         $lamedio = ListaAtividade::where('dia', "$data")->where('ensino','medio')->count();
         if($lafund==0){
-            $discs = Disciplina::where('ensino','fund')->get();
-            $turmas = Turma::where('ensino','fund')->where('turma','A')->get();
+            $discs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
+            $turmas = Turma::select('serie')->where('ativo',true)->where('ensino','fund')->groupby('serie')->get();
             foreach($turmas as $turma){
                 foreach($discs as $disc){
                     $lf = new ListaAtividade();
@@ -83,8 +81,8 @@ class AdminController extends Controller
             }
         }
         if($lamedio==0){
-            $discs = Disciplina::where('ensino','medio')->get();
-            $turmas = Turma::where('ensino','medio')->get();
+            $discs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
+            $turmas = Turma::where('ativo',true)->where('ensino','medio')->distinct('turma')->get();
             foreach($turmas as $turma){
                 foreach($discs as $disc){
                     $lm = new ListaAtividade();
@@ -96,10 +94,10 @@ class AdminController extends Controller
                 }
             }
         }
-        $fundTurmas = Turma::where('turma','A')->where('ensino','fund')->get();
-        $medioTurmas = Turma::where('turma','A')->where('ensino','medio')->get();
-        $fundDiscs = Disciplina::where('ensino','fund')->get();
-        $medioDiscs = Disciplina::where('ensino','medio')->get();
+        $fundTurmas = Turma::select('serie')->where('ativo',true)->groupby('serie')->where('ensino','fund')->get();
+        $medioTurmas = Turma::select('serie')->where('ativo',true)->groupby('serie')->where('ensino','medio')->get();
+        $fundDiscs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
+        $medioDiscs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
         $laFunds = ListaAtividade::orderBy('disciplina_id')->where('dia', "$data")->where('ensino','fund')->get();
         $laMedios = ListaAtividade::orderBy('disciplina_id')->where('dia', "$data")->where('ensino','medio')->get();
         return view('admin.lista_atividade_admin',compact('data','fundTurmas','medioTurmas','fundDiscs','medioDiscs','laFunds','laMedios'));
@@ -158,8 +156,8 @@ class AdminController extends Controller
 
     //PROF
     public function painelAtividades(){
-        $discs = Disciplina::orderBy('nome')->get();
-        $turmas = Turma::all();
+        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
+        $turmas = Turma::where('ativo',true)->get();
         $atividades = Atividade::orderBy('id','desc')->paginate(10);
         $tipo = "painel";
         return view('admin.atividade_admin', compact('discs','turmas','atividades','tipo'));
@@ -241,7 +239,7 @@ class AdminController extends Controller
             $name = $nameFile.".".$extension;
             return response()->download($path, $name);
         }
-        return redirect('/admin/atividade');
+        return back();
     }
 
     //PROF
@@ -303,15 +301,15 @@ class AdminController extends Controller
                 }
             }
         }
-        $discs = Disciplina::orderBy('nome')->get();
-        $turmas = Turma::all();
+        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
+        $turmas = Turma::where('ativo',true)->get();
         $tipo = "filtro";
         return view('admin.atividade_admin', compact('discs','turmas','atividades','tipo'));
     }
 
     public function tipoOcorrencia()
     {
-        $tipos = TipoOcorrencia::all();
+        $tipos = TipoOcorrencia::where('ativo',true)->get();
         return view('admin.tipo_ocorrencia',compact('tipos'));
     }
 
@@ -323,7 +321,7 @@ class AdminController extends Controller
         $tipo->tipo = $request->input('tipo');
         $tipo->pontuacao = $request->input('pontuacao');
         $tipo->save();
-        return redirect('/tiposOcorrencias');
+        return back();
     }
 
     public function tipoOcorrenciaEdit(Request $request, $id)
@@ -344,21 +342,22 @@ class AdminController extends Controller
             }
             $tipo->save();
         }
-        return redirect('/tiposOcorrencias');
+        return back();
     }
 
     public function tipoOcorrenciaDelete($id)
     {
         $tipo = TipoOcorrencia::find($id);
         if(isset($tipo)){
-            $tipo->delete();
+            $tipo->ativo = false;
+            $tipo->save();
         }
-        return redirect('/tiposOcorrencias');
+        return back();
     }
 
     public function indexOcorrencias(){
-        $alunos = Aluno::all();
-        $tipos = TipoOcorrencia::all();
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
+        $tipos = TipoOcorrencia::where('ativo',true)->get();
         $ocorrencias = Ocorrencia::paginate(10);
         $busca = "nao";
         return view('admin.ocorrencias_admin', compact('alunos','tipos','ocorrencias','busca'));
@@ -431,8 +430,8 @@ class AdminController extends Controller
                 }
             }
         }
-        $alunos = Aluno::all();
-        $tipos = TipoOcorrencia::all();
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
+        $tipos = TipoOcorrencia::where('ativo',true)->get();
         $busca = "sim";
         return view('admin.ocorrencias_admin', compact('alunos','tipos','ocorrencias','busca'));
     }
@@ -489,8 +488,8 @@ class AdminController extends Controller
         if($validador==0){
             return back()->with('mensagem', 'Os campos para anexar os Conteúdos não foram gerados, por favor gerar!');
         } else {
-            $fundTurmas = Turma::where('turma','A')->where('ensino','fund')->get();
-            $medioTurmas = Turma::where('turma','A')->where('ensino','medio')->get();
+            $fundTurmas = Turma::select('serie')->where('ensino','fund')->groupby('serie')->get();
+            $medioTurmas = Turma::select('serie')->where('ensino','medio')->groupby('serie')->get();
             $fundDiscs = Disciplina::where('ensino','fund')->get();
             $medioDiscs = Disciplina::where('ensino','medio')->get();
             $contFunds = Conteudo::orderBy('disciplina_id')->where('tipo', "$tipo")->where('bimestre',"$bim")->where('ensino','fund')->where('ano',"$ano")->get();
@@ -503,8 +502,8 @@ class AdminController extends Controller
         $tipos = $request->input('tipos');
         $ano = $request->input('ano');
         $bimestre = $request->input('bimestre');
-        $discs = Disciplina::all();
-        $turmas = Turma::where('turma','A')->get();
+        $discs = Disciplina::where('ativo',true)->get();
+        $turmas = Turma::distinct('turma')->get();
         foreach($tipos as $tipo){
             foreach($turmas as $turma){
                 $serie = $turma->serie;
@@ -596,10 +595,10 @@ class AdminController extends Controller
         if($validador==0){
             return back()->with('mensagem', 'Os campos para anexar as AEs não foram gerados, por favor gerar!');
         } else {
-            $fundTurmas = Turma::where('turma','A')->where('ensino','fund')->get();
-            $medioTurmas = Turma::where('turma','A')->where('ensino','medio')->get();
-            $fundDiscs = Disciplina::where('ensino','fund')->get();
-            $medioDiscs = Disciplina::where('ensino','medio')->get();
+            $fundTurmas = Turma::select('serie')->where('ativo',true)->where('ensino','fund')->groupby('serie')->get();
+            $medioTurmas = Turma::select('serie')->where('ativo',true)->where('ensino','medio')->groupby('serie')->get();
+            $fundDiscs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
+            $medioDiscs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
             $aeFunds = AtividadeExtra::orderBy('disciplina_id')->where('numero', "$n")->where('bimestre',"$bim")->where('ensino','fund')->get();
             $aeMedios = AtividadeExtra::orderBy('disciplina_id')->where('numero', "$n")->where('bimestre',"$bim")->where('ensino','medio')->get();
             return view('admin.atividade_extra',compact('fundTurmas','medioTurmas','fundDiscs','medioDiscs','aeFunds','aeMedios'));
@@ -609,9 +608,9 @@ class AdminController extends Controller
     public function gerar_ae(Request $request){
         $bimestre = $request->input('bimestre');
         $qtd = $request->input('qtd');
-        $discs = Disciplina::all();
+        $discs = Disciplina::where('ativo',true)->get();
         $ano = date("Y");
-        $turmas = Turma::where('turma','A')->get();
+        $turmas = Turma::distinct('turma')->get();
         for($i=1; $i<=$qtd; $i++){
                 foreach($turmas as $turma){
                     $serie = $turma->serie;
@@ -700,8 +699,8 @@ class AdminController extends Controller
 
     public function indexRecados(){
         $recados = Recado::with(['turma', 'aluno'])->paginate(10);
-        $turmas = Turma::all();
-        $alunos = Aluno::orderBy('name')->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
         $busca = "nao";
         return view('admin.recados_admin', compact('recados','turmas','alunos','busca'));
     }
@@ -772,8 +771,8 @@ class AdminController extends Controller
                 }
             }
         }
-        $turmas = Turma::all();
-        $alunos = Aluno::orderBy('name')->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
         $busca = "sim";
         return view('admin.recados_admin', compact('recados','turmas','alunos','busca'));
     }

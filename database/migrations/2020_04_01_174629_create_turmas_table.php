@@ -19,6 +19,7 @@ class CreateTurmasTable extends Migration
             $table->string('turma');
             $table->string('turno');
             $table->string('ensino');
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }

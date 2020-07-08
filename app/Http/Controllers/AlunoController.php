@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AlunoController extends Controller
 {
@@ -31,7 +32,7 @@ class AlunoController extends Controller
         $profs = ProfDisciplina::all();
         $turmaId = Auth::user()->turma_id;
         $turma = Turma::find($turmaId);
-        $turmaDiscs = Turma::with('disciplinas')->where('id',"$turmaId")->get();
+        $turmaDiscs = Turma::where('ativo',true)->with('disciplinas')->where('id',"$turmaId")->get();
         return view('alunos.atividades_disciplinas', compact('profs','turma','turmaDiscs'));
     }
 
@@ -94,13 +95,21 @@ class AlunoController extends Controller
 
     public function consulta()
     {
-        $turmas = Turma::all();
-        $alunos = Aluno::orderBy('name')->paginate(10);
+        $turmas = Turma::where('ativo',true)->get();
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->paginate(10);
         return view('admin.alunos', compact('turmas','alunos'));
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'email' => 'unique:alunos',
+            'password' => 'min:8',
+        ], $mensagens =[
+            'email.unique' => 'Já existe um usuário com esse login!',
+            'password.min' => 'A senha deve conter no mínimo 8 caracteres!',
+        ]);
+
         $aluno = new Aluno();
         $aluno->name = $request->input('name');
         $aluno->email = $request->input('email');
@@ -111,7 +120,7 @@ class AlunoController extends Controller
         $aluno->foto = $path;
         }
         $aluno->save();
-        return redirect('/aluno/consulta');
+        return back();
     }
 
     public function filtro(Request $request)
@@ -120,19 +129,19 @@ class AlunoController extends Controller
         $turma = $request->input('turma');
         if(isset($nome)){
             if(isset($turma)){
-                $alunos = Aluno::where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('ativo',true)->where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
             } else {
-                $alunos = Aluno::where('name','like',"%$nome%")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(50);
             }
         } else {
             if(isset($turma)){
-                $alunos = Aluno::where('turma_id',"$turma")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->orderBy('name')->paginate(50);
             } else {
                 return redirect('/aluno/consulta');
             }
         }
         $pagina = "geral";
-        $turmas = Turma::all();
+        $turmas = Turma::where('ativo',true)->get();
         return view('admin.alunos', compact('turmas','alunos'));
     }
 
@@ -153,16 +162,17 @@ class AlunoController extends Controller
             }
             $aluno->save();
         }
-        return redirect('/aluno/consulta');
+        return back();
     }
 
     public function destroy($id)
     {
         $aluno = Aluno::find($id);
         if(isset($aluno)){
-            $aluno->delete();
+            $aluno->ativo = false;
+            $aluno->save();
         }
-        return redirect('/aluno/consulta');
+        return back();
     }
 
     public function painelConteudos($ano){
@@ -182,11 +192,11 @@ class AlunoController extends Controller
             $ensino = $turma->ensino;
             $serie = $turma->serie;
             if($ensino=="fund"){
-                $fundDiscs = Disciplina::where('ensino','fund')->get();
+                $fundDiscs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
                 $medioDiscs = "";
             } else {
                 $fundDiscs = "";
-                $medioDiscs = Disciplina::where('ensino','medio')->get();
+                $medioDiscs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
             }
             if($ensino=="fund"){
                 $contFunds = Conteudo::orderBy('disciplina_id')->where('tipo', "$tipo")->where('bimestre',"$bim")->where('ensino','fund')->where('ano',"$ano")->where('serie',"$serie")->get();

@@ -17,6 +17,12 @@
             <form class="form-inline my-2 my-lg-0" method="GET" action="/responsavel/filtro">
                 @csrf
                 <input class="form-control" type="text" placeholder="Nome do Responsável" name="nome">
+                <select class="custom-select" id="aluno" name="aluno">
+                    <option value="">Selecione um aluno</option>
+                    @foreach ($alunos as $aluno)
+                        <option value="{{$aluno->id}}">{{$aluno->name}}</option>
+                    @endforeach
+                </select>
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
             </form>
             </div>

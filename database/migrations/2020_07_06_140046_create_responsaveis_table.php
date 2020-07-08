@@ -21,6 +21,7 @@ class CreateResponsaveisTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('foto')->nullable();
+            $table->boolean('ativo')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

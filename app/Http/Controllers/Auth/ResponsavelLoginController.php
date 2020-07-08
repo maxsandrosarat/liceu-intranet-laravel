@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ResponsavelLoginController extends Controller
 {
@@ -18,19 +19,29 @@ class ResponsavelLoginController extends Controller
             'email' => 'required|string',
             'password' => 'required|string',
         ]);
-
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password
-        ];
-
-        $authOK = Auth::guard('responsavel')->attempt($credentials, $request->remember);
-
-        if($authOK) {
-            return redirect()->intended(route('responsavel.dashboard'));
+        
+        $ativo = false;
+        $resps = DB::table('responsaveis')->select(DB::raw("ativo"))->where('email', "$request->email")->get();
+        foreach($resps as $resp){
+            $ativo = $resp->ativo;
         }
 
-        return redirect()->back()->withInput($request->only('email','remember'));
+        if($ativo==true){
+            $credentials = [
+                'email' => $request->email,
+                'password' => $request->password
+            ];
+
+            $authOK = Auth::guard('responsavel')->attempt($credentials, $request->remember);
+
+            if($authOK) {
+                return redirect()->intended(route('responsavel.dashboard'));
+            }
+
+            return redirect()->back()->withInput($request->only('email','remember'))->with('mensagem', 'Os dados informados estão incorretos, verifique e tente novamente!');
+        } else{
+            return back()->with('mensagem', 'Usuário não encontrado ou inativo!');
+        }
     }
 
     public function index(){

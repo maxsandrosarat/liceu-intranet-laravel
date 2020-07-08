@@ -14,7 +14,7 @@ class TurmaController extends Controller
     
     public function index()
     {
-        $turmas = Turma::all();
+        $turmas = Turma::where('ativo',true)->get();
         return view('admin.turmas',compact('turmas'));
     }
 
@@ -33,7 +33,8 @@ class TurmaController extends Controller
     {
         $turma = Turma::find($id);
         if(isset($turma)){
-            $turma->delete();
+            $turma->ativo = false;
+            $turma->save();
         }
         return redirect('/turmas');
     }
