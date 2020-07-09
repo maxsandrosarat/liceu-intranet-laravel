@@ -15,10 +15,10 @@
                 </div>
             @endif
             @if(count($recados)==0)
-                    <div class="alert alert-danger" role="alert">
-                        @if($busca=="nao")
-                        Sem recados cadastrados!
-                        @else @if($busca=="sim")
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
+                        Sem recados cadastrados! Faça novo cadastro no botão    <a type="button" href="#"><i class="material-icons blue">add_circle</i></a>   no canto inferior direito.
+                        @else @if($view=="filtro")
                         Sem resultados da busca!
                         <a href="/admin/recados" class="btn btn-success">Voltar</a>
                         @endif

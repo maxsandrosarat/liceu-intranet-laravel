@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ResponsavelController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:responsavel');
+    }
+    
     public function index(){
         $respId = Auth::user()->id;
         $alunos = ResponsavelAluno::where('responsavel_id',"$respId")->get();
@@ -22,100 +27,6 @@ class ResponsavelController extends Controller
         }
         $ocorrencias = Ocorrencia::whereIn('aluno_id', $alunosIds)->where('aprovado',true)->where('responsavel_ciente',false)->count();
         return view('responsavel.home_responsavel', compact('ocorrencias'));
-    }
-
-    //ADMIN
-    public function consulta()
-    {
-        $resps = Responsavel::where('ativo',true)->with('alunos')->orderBy('name')->paginate(10);
-        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
-        return view('admin.responsavel', compact('resps','alunos'));
-    }
-
-    //ADMIN
-    public function novo(Request $request)
-    {
-        $resp = new Responsavel();
-        $resp->name = $request->input('name');
-        $resp->email = $request->input('email');
-        $resp->password = Hash::make($request->input('password'));
-        $resp->save();
-        return back();
-    }
-
-    //ADMIN
-    public function filtro(Request $request)
-    {
-        $nome = $request->input('nome');
-        $aluno = $request->input('aluno');
-        if(isset($nome)){
-            if(isset($aluno)){
-                $respAlunos = ResponsavelAluno::where('aluno_id',"$aluno")->get();
-                $respIds = array();
-                foreach($respAlunos as $respAluno){
-                    $respIds[] = $respAluno->responsavel_id;
-                }
-                $resps = Responsavel::whereIn('id', $respIds)->where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
-            } else {
-                $resps = Responsavel::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
-            }
-        } else {
-            if(isset($aluno)){
-                $respAlunos = ResponsavelAluno::where('aluno_id',"$aluno")->get();
-                $respIds = array();
-                foreach($respAlunos as $respAluno){
-                    $respIds[] = $respAluno->responsavel_id;
-                }
-                $resps = Responsavel::whereIn('id', $respIds)->where('ativo',true)->orderBy('name')->paginate(100);
-            } else {
-                return redirect('/responsavel/consulta');
-            }
-        }
-        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
-        return view('admin.responsavel', compact('resps','alunos'));
-    }
-
-    //ADMIN
-    public function editar(Request $request, $id)
-    {
-        $resp = Responsavel::find($id);
-        if(isset($resp)){
-            $resp->name =$request->input('name');
-            $resp->email =$request->input('email');
-            if($request->input('password')!=""){
-            $resp->password = Hash::make($request->input('password'));
-            }
-            $resp->save();
-        }
-        return back();
-    }
-
-    //ADMIN
-    public function apagar($id)
-    {
-        $resp = Responsavel::find($id);
-        if(isset($resp)){
-            $resp->ativo = false;
-            $resp->save();
-        }
-        return back();
-    }
-
-    //ADMIN
-    public function vincular(Request $request, $id)
-    {
-        $respAluno = new ResponsavelAluno();
-        $respAluno->responsavel_id = $id;
-        $respAluno->aluno_id = $request->input('aluno');
-        $respAluno->save();
-        
-        return back();
-    }
-
-    public function desvincular($resp_id, $aluno_id)
-    {
-        ResponsavelAluno::where('responsavel_id',"$resp_id")->where('aluno_id',"$aluno_id")->delete();
-        return back();
     }
 
     public function ocorrencias(){

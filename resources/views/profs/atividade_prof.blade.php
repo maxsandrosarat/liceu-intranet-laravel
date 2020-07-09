@@ -66,11 +66,11 @@
             </div>
             </div>
             @if(count($atividades)==0)
-                    <div class="alert alert-danger" role="alert">
-                        @if($tipo=="painel")
-                        Sem atividades cadastradas!
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
+                        Sem atividades cadastradas! Faça novo cadastro no botão    <a type="button" href="#"><i class="material-icons blue">add_circle</i></a>   no canto inferior direito.
                         @endif
-                        @if($tipo=="filtro")
+                        @if($view=="filtro")
                         Sem resultados da busca!
                         <a href="/prof/atividade/{{$disciplina->id}}" class="btn btn-success">Voltar</a>
                         @endif

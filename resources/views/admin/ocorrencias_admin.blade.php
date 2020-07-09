@@ -11,12 +11,12 @@
                 </div>
             @endif
             @if(count($ocorrencias)==0)
-                    <div class="alert alert-danger" role="alert">
-                        @if($busca=="nao")
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
                         Sem ocorrências cadastradas!
-                        @else @if($busca=="sim")
+                        @else @if($view=="filtro")
                         Sem resultados da busca!
-                        <a href="/admin/educacional" class="btn btn-success">Voltar</a>
+                        <a href="/admin/ocorrencias" class="btn btn-success">Voltar</a>
                         @endif
                         @endif
                     </div>

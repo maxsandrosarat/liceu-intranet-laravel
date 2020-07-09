@@ -11,7 +11,7 @@
                         <p class="card-text">
                             Gerenciar as Disciplinas
                         </p>
-                        <a href="/disciplinas" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/disciplinas" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                         <p class="card-text">
                             Gerenciar as Turmas
                         </p>
-                        <a href="/turmas" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/turmas" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                         <p class="card-text">
                             Gerenciar as Disciplinas das Turmas
                         </p>
-                        <a href="/turmasDiscs" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/turmasDiscs" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                         <p class="card-text">
                             Gerenciar os Tipos de Ocorrências
                         </p>
-                        <a href="/tiposOcorrencias" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/tiposOcorrencias" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                         <p class="card-text">
                             Gerenciar os Professores
                         </p>
-                        <a href="/prof/consulta" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/prof" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                         <p class="card-text">
                             Gerenciar os Alunos
                         </p>
-                        <a href="/aluno/consulta" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/aluno" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                         <p class="card-text">
                             Gerenciar os Responsáveis
                         </p>
-                        <a href="/responsavel/consulta" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/responsavel" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                         <p class="card-text">
                             Gerenciar os Colaboradores
                         </p>
-                        <a href="/outro/consulta" class="btn btn-primary">Gerenciar</a>
+                        <a href="/admin/colaborador" class="btn btn-primary">Gerenciar</a>
                     </div>
                 </div>
             </div>

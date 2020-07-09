@@ -7,7 +7,7 @@
             @if(count($rels)==0)
                 <br/><br/>
                 <div class="alert alert-danger" role="alert">
-                    Sem produtos cadastrados!
+                    Sem produtos selecionados!
                 </div>
             @else
             <table class="table table-striped table-sm">
@@ -26,10 +26,11 @@
                     @endforeach
                 </tbody>
             </table>
+            <a href="/admin/listaCompras/pdf/{{$lista_id}}" target="_blank" class="btn btn-success">Gerar PDF</a>
             @endif
         </div>
     </div>
     <br>
-    <a href="/listaCompras" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
-    <a href="/listaCompras/pdf/{{$lista_id}}" target="_blank" class="btn btn-success">Gerar PDF</a>
+    <a href="/admin/listaCompras" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    
 @endsection

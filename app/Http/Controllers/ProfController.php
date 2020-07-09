@@ -22,106 +22,10 @@ use Illuminate\Support\Facades\DB;
 
 class ProfController extends Controller
 {
-    //ADMIN
-    public function consultaProf()
+    public function __construct()
     {
-        $profs = Prof::where('ativo',true)->with('disciplinas')->orderBy('name')->paginate(10);
-        $discs = Disciplina::where('ativo',true)->get();
-        return view('admin.profs', compact('profs','discs'));
+        $this->middleware('auth:prof');
     }
-
-    //ADMIN
-    public function novoProf(Request $request)
-    {
-        $prof = new Prof();
-        $prof->name = $request->input('name');
-        $prof->email = $request->input('email');
-        $prof->password = Hash::make($request->input('password'));
-        $prof->save();
-        $disciplinas = $request->input('disciplinas');
-                foreach($disciplinas as $disciplina){
-                    $profDisc = new ProfDisciplina();
-                    $profDisc->prof_id = $prof->id;
-                    $profDisc->disciplina_id = $disciplina;
-                    $profDisc->save();
-                }
-        return back();
-    }
-
-    //ADMIN
-    public function filtroProf(Request $request)
-    {
-        $nome = $request->input('nome');
-        $disc = $request->input('disciplina');
-        if(isset($nome)){
-            if(isset($disc)){
-                $profDiscs = ProfDisciplina::where('disciplina_id',"$disc")->get();
-                $profIds = array();
-                foreach($profDiscs as $profDisc){
-                    $profIds[] = $profDisc->prof_id;
-                }
-                $profs = Prof::whereIn('id', $profIds)->where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
-            } else {
-                $profs = Prof::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
-            }
-        } else {
-            if(isset($disc)){
-                $profDiscs = DB::table('prof_disciplinas')->select(DB::raw("prof_id"))->where('disciplina_id',"$disc")->get();
-                $profIds = array();
-                foreach($profDiscs as $profDisc){
-                    $profIds[] = $profDisc->prof_id;
-                }
-                $profs = Prof::whereIn('id', $profIds)->where('ativo',true)->orderBy('name')->paginate(100);
-            } else {
-                return redirect('/prof/consulta');
-            }
-        }
-        $discs = Disciplina::where('ativo',true)->get();
-        return view('admin.profs', compact('discs','profs'));
-    }
-
-    //ADMIN
-    public function editarProf(Request $request, $id)
-    {
-        $prof = Prof::find($id);
-        if(isset($prof)){
-            $prof->name =$request->input('name');
-            $prof->email =$request->input('email');
-            if($request->input('password')!=""){
-            $prof->password = Hash::make($request->input('password'));
-            }
-            $prof->save();
-            $disciplinas = $request->input('disciplinas');
-            foreach ($disciplinas as $disciplina) {
-                $profDiscs = ProfDisciplina::where('prof_id',"$id")->where('disciplina_id',"$disciplina")->get();
-                if($profDiscs->count()==0){
-                    $profDisc = new ProfDisciplina();
-                    $profDisc->prof_id = $id;
-                    $profDisc->disciplina_id = $disciplina;
-                    $profDisc->save();
-                }
-            }
-        }
-        return back();
-    }
-
-    //ADMIN
-    public function apagarProf($id)
-    {
-        $prof = Prof::find($id);
-        if(isset($prof)){
-            $prof->ativo = false;
-            $prof->save();
-        }
-        return back();
-    }
-
-    public function apagarDisciplina($prof_id, $disciplina_id)
-    {
-        ProfDisciplina::where('prof_id',"$prof_id")->where('disciplina_id',"$disciplina_id")->delete();
-        return back();
-    }
-    
     
     //PROF
     public function index(){
@@ -140,8 +44,8 @@ class ProfController extends Controller
         $disciplina = Disciplina::find($discId);
         $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
         $atividades = Atividade::where('prof_id',"$profId")->where('disciplina_id',"$discId")->orderBy('id','desc')->paginate(5);
-        $tipo = "painel";
-        return view('profs.atividade_prof', compact('disciplina','turmas','atividades','tipo'));
+        $view = "inicial";
+        return view('profs.atividade_prof', compact('view','disciplina','turmas','atividades'));
     }
 
     //PROF
@@ -294,8 +198,8 @@ class ProfController extends Controller
             }
         }
         $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
-        $tipo = "filtro";
-        return view('profs.atividade_prof', compact('disciplina','turmas','atividades','tipo'));
+        $view = "filtro";
+        return view('profs.atividade_prof', compact('view','disciplina','turmas','atividades'));
     }
 
     public function painelListaAtividades($data){
@@ -407,8 +311,8 @@ class ProfController extends Controller
         $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->get();
         $tipos = TipoOcorrencia::where('ativo',true)->get();
         $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->paginate(10);
-        $busca = "nao";
-        return view('profs.ocorrencias_prof', compact('alunos','tipos','disciplina','ocorrencias','busca','turma'));
+        $view = "inicial";
+        return view('profs.ocorrencias_prof', compact('view','alunos','tipos','disciplina','ocorrencias','turma'));
     }
 
     public function filtroOcorrencias(Request $request, $disciplina, $turma)
@@ -481,8 +385,8 @@ class ProfController extends Controller
         }
         $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->get();
         $tipos = TipoOcorrencia::where('ativo',true)->get();
-        $busca = "sim";
-        return view('profs.ocorrencias_prof', compact('alunos','tipos','disciplina','ocorrencias','busca','turma'));
+        $view = "filtro";
+        return view('profs.ocorrencias_prof', compact('view','alunos','tipos','disciplina','ocorrencias','turma'));
     }
 
     public function novasOcorrencias(Request $request){

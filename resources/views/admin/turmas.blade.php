@@ -30,7 +30,7 @@
                         <td>{{$turma->turma}}</td>
                         <td>@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif</td>
                         <td>@if($turma->ensino=='fund') Fundamental @else Médio @endif</td>
-                        <td><a href="/turmas/apagar/{{$turma->id}}" class="btn btn-sm btn-danger">Apagar</a></td>
+                        <td><a href="/admin/turmas/apagar/{{$turma->id}}" class="btn btn-sm btn-danger">Apagar</a></td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -58,7 +58,7 @@
                 <div class="modal-body">
                     <div class="card border">
                         <div class="card-body">
-                            <form action="/turmas" method="POST">
+                            <form action="/admin/turmas" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="serie">Série da Turma</label>

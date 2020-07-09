@@ -20,7 +20,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="/entradaSaida" method="POST">
+                    <form action="/admin/entradaSaida" method="POST">
                         @csrf
                         <div class="form-group">
                             <br>
@@ -61,19 +61,19 @@
             </div>
             </div>
             @if(count($rels)==0)
-                    <div class="alert alert-danger" role="alert">
-                        @if($busca=="nao")
-                        Sem movimentos cadastrados!
-                        @else @if($busca=="sim")
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
+                        Sem movimentos cadastrados! Faça novo movimento no botão    <a type="button" href="#"><i class="material-icons blue">add_circle</i></a>   no canto inferior direito.
+                        @else @if($view=="filtro")
                         Sem resultados da busca!
-                        <a href="/entradaSaida" class="btn btn-success">Voltar</a>
+                        <a href="/admin/entradaSaida" class="btn btn-success">Voltar</a>
                         @endif
                         @endif
                     </div>
             @else
             <div class="card border">
             <h5>Filtros: </h5>
-            <form class="form-inline my-2 my-lg-0" method="GET" action="/entradaSaida/filtro_entradaSaida">
+            <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/entradaSaida/filtro">
                 @csrf
                 <label for="tipo">Tipo</label>
                 <select class="custom-select" id="tipo" name="tipo">

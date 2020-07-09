@@ -5,11 +5,11 @@
         <div class="card-body">
             <h5 class="card-title">Painel de Atividades</h5>
             @if(count($atividades)==0)
-                    <div class="alert alert-danger" role="alert">
-                        @if($tipo=="painel")
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
                         Sem atividades cadastradas!
                         @endif
-                        @if($tipo=="filtro")
+                        @if($view=="filtro")
                         Sem resultados da busca!
                         <a href="/admin/atividade" class="btn btn-success">Voltar</a>
                         @endif

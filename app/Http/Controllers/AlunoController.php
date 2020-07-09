@@ -2,32 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Aluno;
+
 use App\Turma;
 use App\Atividade;
 use App\AtividadeRetorno;
 use App\Conteudo;
 use App\Disciplina;
-use App\Prof;
 use App\ProfDisciplina;
-use Excel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class AlunoController extends Controller
 {
     public function __construct()
     {
-        
+        $this->middleware('auth:aluno');
     }
     
+    //HOME ALUNO
     public function index(){
         return view('alunos.home_aluno');
     }
-
+    
+    //ATIVIDADES
     public function disciplinasAtividades(){
         $profs = ProfDisciplina::all();
         $turmaId = Auth::user()->turma_id;
@@ -87,102 +85,15 @@ class AlunoController extends Controller
         return back()->with('success', 'Retorno da Atividade atualizado com Sucesso!');
     }
 
-    public function file(Request $request)
-    {
-        Excel::import(new \App\Imports\AlunoImport, $request->file('arquivo'));
-        return back()->with('success', 'Dados importados do Excel com Sucesso!');
-    }
-
-    public function consulta()
-    {
-        $turmas = Turma::where('ativo',true)->get();
-        $alunos = Aluno::where('ativo',true)->orderBy('name')->paginate(10);
-        return view('admin.alunos', compact('turmas','alunos'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'email' => 'unique:alunos',
-            'password' => 'min:8',
-        ], $mensagens =[
-            'email.unique' => 'Já existe um usuário com esse login!',
-            'password.min' => 'A senha deve conter no mínimo 8 caracteres!',
-        ]);
-
-        $aluno = new Aluno();
-        $aluno->name = $request->input('name');
-        $aluno->email = $request->input('email');
-        $aluno->password = Hash::make($request->input('password'));
-        $aluno->turma_id = $request->input('turma');
-        if($request->file('foto')!=""){
-        $path = $request->file('foto')->store('fotos_perfil','public');
-        $aluno->foto = $path;
-        }
-        $aluno->save();
-        return back();
-    }
-
-    public function filtro(Request $request)
-    {
-        $nome = $request->input('nome');
-        $turma = $request->input('turma');
-        if(isset($nome)){
-            if(isset($turma)){
-                $alunos = Aluno::where('ativo',true)->where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
-            } else {
-                $alunos = Aluno::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(50);
-            }
-        } else {
-            if(isset($turma)){
-                $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->orderBy('name')->paginate(50);
-            } else {
-                return redirect('/aluno/consulta');
-            }
-        }
-        $pagina = "geral";
-        $turmas = Turma::where('ativo',true)->get();
-        return view('admin.alunos', compact('turmas','alunos'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $aluno = Aluno::find($id);
-        if(isset($aluno)){
-            $aluno->name =$request->input('name');
-            $aluno->email =$request->input('email');
-            if($request->input('password')!=""){
-            $aluno->password = Hash::make($request->input('password'));
-            }
-            $aluno->turma_id = $request->input('turma');
-            if($request->file('foto')!=""){
-                Storage::disk('public')->delete($aluno->foto);
-                $path = $request->file('foto')->store('fotos_perfil','public');
-                $aluno->foto = $path;
-            }
-            $aluno->save();
-        }
-        return back();
-    }
-
-    public function destroy($id)
-    {
-        $aluno = Aluno::find($id);
-        if(isset($aluno)){
-            $aluno->ativo = false;
-            $aluno->save();
-        }
-        return back();
-    }
-
-    public function painelConteudos($ano){
+    //CONTEUDOS
+    public function indexConteudos($ano){
         if($ano==""){
             $ano = date("Y");
         }
         return view('alunos.home_conteudos',compact('ano'));
     }
 
-    public function conteudos($ano, $bim, $tipo){
+    public function painelConteudos($ano, $bim, $tipo){
         $validador = Conteudo::where('tipo', "$tipo")->where('bimestre',"$bim")->where('ano',"$ano")->count();
         if($validador==0){
             return back()->with('mensagem', 'Os conteúdos para essa atividade ainda não estão disponiveis!');

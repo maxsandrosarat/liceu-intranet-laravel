@@ -25,7 +25,7 @@
                         <td>{{$disc->id}}</td>
                         <td>{{$disc->nome}}</td>
                         <td>@if($disc->ensino=='fund') Fundamental @else Médio @endif</td>
-                        <td><a href="/disciplinas/apagar/{{$disc->id}}" class="btn btn-sm btn-danger">Apagar</a></td>
+                        <td><a href="/admin/disciplinas/apagar/{{$disc->id}}" class="btn btn-sm btn-danger">Apagar</a></td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -53,7 +53,7 @@
                 <div class="modal-body">
                     <div class="card border">
                         <div class="card-body">
-                            <form action="/disciplinas" method="POST">
+                            <form action="/admin/disciplinas" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="nome">Nome da Disciplina</label>

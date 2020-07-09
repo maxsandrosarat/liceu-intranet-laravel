@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                     <tbody>
-                        <form action="/listaCompras" method="POST">
+                        <form action="/admin/listaCompras" method="POST">
                             @csrf
                         @foreach ($prods as $prod)
                         <tr>

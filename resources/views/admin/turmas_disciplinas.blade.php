@@ -48,7 +48,7 @@
                                     @else
                                     <ul>
                                         @foreach ($turmaDisc->disciplinas as $disciplina)
-                                        <li>{{$disciplina->nome}} <a href="/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
+                                        <li>{{$disciplina->nome}} <a href="/admin/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
                                         <br/>
                                         @endforeach
                                     </ul>
@@ -79,7 +79,7 @@
                 <div class="modal-body">
                     <div class="card border">
                         <div class="card-body">
-                            <form action="/turmasDiscs" method="POST" style="text-align: center;">
+                            <form action="/admin/turmasDiscs" method="POST" style="text-align: center;">
                                 @csrf
                                 <div class="form-group">
                                     <label for="turma" class="col-md-4 col-form-label text-md-right">Turma</label>

@@ -20,7 +20,7 @@
                     <div class="modal-body">
                         <div class="card border">
                             <div class="card-body">
-                                <form action="/produtos" method="POST">
+                                <form action="/admin/produtos" method="POST">
                                     @csrf
                                     <div class="form-group">
                                         <label for="nomeProduto">Nome do Produto</label>
@@ -47,13 +47,19 @@
                 </div>
             </div>
             @if(count($prods)==0)
-                <div class="alert alert-danger" role="alert">
-                    Sem produtos cadastrados!
-                </div>
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
+                        Sem produtos cadastrados! Faça novo cadastro no botão    <a type="button" href="#"><i class="material-icons blue">add_circle</i></a>   no canto inferior direito.
+                        @endif
+                        @if($view=="filtro")
+                        Sem resultados da busca!
+                        <a href="/admin/produtos" class="btn btn-success">Voltar</a>
+                        @endif
+                    </div>
             @else
             <div class="card border">
                 <h5>Filtros: </h5>
-                <form class="form-inline my-2 my-lg-0" method="GET" action="/produtos/filtro">
+                <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/produtos/filtro">
                     @csrf
                     <input class="form-control" type="text" placeholder="Nome do Produto" name="nomeProduto">
                     <select class="custom-select" id="categoria" name="categoria">
@@ -101,7 +107,7 @@
                                     <div class="modal-body">
                                         <div class="card border">
                                             <div class="card-body">
-                                                <form action="/produtos/editar/{{$prod->id}}" method="POST">
+                                                <form action="/admin/produtos/editar/{{$prod->id}}" method="POST">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label for="nomeProduto">Nome do Produto</label>
@@ -128,7 +134,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/produtos/apagar/{{$prod->id}}" class="btn btn-sm btn-danger">Apagar</a>
+                            <a href="/admin/produtos/apagar/{{$prod->id}}" class="btn btn-sm btn-danger">Apagar</a>
                         </td>
                     </tr>
                     @endforeach

@@ -18,7 +18,7 @@
                     </button>
                     </div>
                     <div class="modal-body">
-                        <form action="/categorias" method="POST">
+                        <form action="/admin/categorias" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label for="nomeCategoria">Nome da Categoria</label>
@@ -66,7 +66,7 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/categorias/editar/{{$cat->id}}" method="POST">
+                                        <form action="/admin/categorias/editar/{{$cat->id}}" method="POST">
                                             @csrf
                                             <div class="form-group">
                                                 <label for="nomeCategoria">Nome da Categoria</label>
@@ -80,7 +80,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/categorias/apagar/{{$cat->id}}" class="btn btn-sm btn-danger">Apagar</a>
+                            <a href="/admin/categorias/apagar/{{$cat->id}}" class="btn btn-sm btn-danger">Apagar</a>
                         </td>
                     </tr>
                     @endforeach

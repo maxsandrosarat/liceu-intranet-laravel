@@ -18,7 +18,7 @@
                     </button>
                     </div>
                     <div class="modal-body">
-                        <form action="/tiposOcorrencias" method="POST">
+                        <form action="/admin/tiposOcorrencias" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label for="codigo">Código</label>
@@ -82,7 +82,7 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/tiposOcorrencias/editar/{{$tipo->id}}" method="POST">
+                                        <form action="/admin/tiposOcorrencias/editar/{{$tipo->id}}" method="POST">
                                             @csrf
                                             <div class="form-group">
                                                 <label for="codigo">Código</label>
@@ -109,7 +109,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/tiposOcorrencias/apagar/{{$tipo->id}}" class="btn btn-sm btn-danger">Apagar</a>
+                            <a href="/admin/tiposOcorrencias/apagar/{{$tipo->id}}" class="btn btn-sm btn-danger">Apagar</a>
                         </td>
                     </tr>
                     @endforeach

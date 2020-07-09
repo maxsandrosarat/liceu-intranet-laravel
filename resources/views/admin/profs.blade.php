@@ -8,14 +8,19 @@
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
             @if(count($profs)==0)
-                <br/><br/>
-                <div class="alert alert-danger" role="alert">
-                    Sem professores cadastrados!
-                </div>
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
+                        Sem professores cadastrados! Faça novo cadastro no botão    <a type="button" href="#"><i class="material-icons blue">add_circle</i></a>   no canto inferior direito.
+                        @endif
+                        @if($view=="filtro")
+                        Sem resultados da busca!
+                        <a href="/admin/prof/consulta" class="btn btn-success">Voltar</a>
+                        @endif
+                    </div>
             @else
             <div class="card border">
                 <h5>Filtros: </h5>
-            <form class="form-inline my-2 my-lg-0" method="GET" action="/prof/filtro">
+            <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/prof/filtro">
                 @csrf
                 <input class="form-control" type="text" placeholder="Nome do Professor" name="nome">
                 <select class="custom-select" id="disciplina" name="disciplina">
@@ -49,7 +54,7 @@
                         <td>
                             <ul>
                                 @foreach ($prof->disciplinas as $disciplina)
-                                <li>{{$disciplina->nome}} (@if($disciplina->ensino=='fund') Fundamental @else Médio @endif) <a href="/prof/apagarDisciplina/{{$prof->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
+                                <li>{{$disciplina->nome}} (@if($disciplina->ensino=='fund') Fundamental @else Médio @endif) <a href="/admin/prof/desvincularDisciplinaProf/{{$prof->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
                                 <br/>
                                 @endforeach
                             </ul>
@@ -71,7 +76,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="card-body">
-                                            <form method="POST" action="/prof/editar/{{$prof->id}}">
+                                            <form method="POST" action="/admin/prof/editar/{{$prof->id}}">
                                                 @csrf
                                                 <div class="form-group row">
                                                     <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
@@ -149,7 +154,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/prof/apagar/{{$prof->id}}" class="btn btn-sm btn-danger">Excluir</a>
+                            <a href="/admin/prof/apagar/{{$prof->id}}" class="btn btn-sm btn-danger">Excluir</a>
                         </td>
                     </tr>
                     @endforeach
@@ -174,7 +179,7 @@
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                    <form method="POST" action="/prof">
+                    <form method="POST" action="/admin/prof">
                         @csrf
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nome') }}</label>

@@ -25,13 +25,19 @@
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
             @if(count($alunos)==0)
-                <div class="alert alert-danger" role="alert">
-                    Sem alunos cadastrados!
-                </div>
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
+                        Sem alunos cadastrados! Faça novo cadastro no botão    <a type="button" href="#"><i class="material-icons blue">add_circle</i></a>   no canto inferior direito.
+                        @endif
+                        @if($view=="filtro")
+                        Sem resultados da busca!
+                        <a href="/admin/aluno/consulta" class="btn btn-success">Voltar</a>
+                        @endif
+                    </div>
             @else
             <div class="card border">
                 <h5>Filtros: </h5>
-            <form class="form-inline my-2 my-lg-0" method="GET" action="/aluno/filtro">
+            <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/aluno/filtro">
                 @csrf
                 <input class="form-control" type="text" placeholder="Nome do Aluno" name="nome">
                 <select class="custom-select" id="turma" name="turma">
@@ -82,7 +88,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="card-body">
-                                            <form method="POST" action="/aluno/editar/{{$aluno->id}}" enctype="multipart/form-data">
+                                            <form method="POST" action="/admin/aluno/editar/{{$aluno->id}}" enctype="multipart/form-data">
                                                 @csrf
                                                     <label for="name">{{ __('Name') }}</label>
                         
@@ -162,7 +168,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/aluno/apagar/{{$aluno->id}}" class="btn btn-sm btn-danger">Excluir</a>
+                            <a href="/admin/aluno/apagar/{{$aluno->id}}" class="btn btn-sm btn-danger">Excluir</a>
                         </td>
                     </tr>
                     @endforeach
@@ -186,7 +192,7 @@
             </button>
             </div>
             <div class="modal-body">
-                <form method="POST" id="form-importar-excel" action="/aluno/file" enctype="multipart/form-data">
+                <form method="POST" id="form-importar-excel" action="/admin/aluno/importarExcel" enctype="multipart/form-data">
                     @csrf
                     <ul>
                         <li><h5>Baixe o modelo de importação.</h5></li>
@@ -220,7 +226,7 @@
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                    <form method="POST" action="/aluno" enctype="multipart/form-data">
+                    <form method="POST" action="/admin/aluno" enctype="multipart/form-data">
                         @csrf
 
                             <label for="name">{{ __('Nome') }}</label>

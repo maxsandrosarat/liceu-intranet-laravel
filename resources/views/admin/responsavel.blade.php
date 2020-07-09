@@ -8,13 +8,19 @@
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
             @if(count($resps)==0)
-                <div class="alert alert-danger" role="alert">
-                    Sem responsáveis cadastrados!
-                </div>
+                    <div class="alert alert-dark" role="alert">
+                        @if($view=="inicial")
+                        Sem responsaveis cadastrados! Faça novo cadastro no botão    <a type="button" href="#"><i class="material-icons blue">add_circle</i></a>   no canto inferior direito.
+                        @endif
+                        @if($view=="filtro")
+                        Sem resultados da busca!
+                        <a href="/admin/responsavel/consulta" class="btn btn-success">Voltar</a>
+                        @endif
+                    </div>
             @else
             <div class="card border">
                 <h5>Filtros: </h5>
-            <form class="form-inline my-2 my-lg-0" method="GET" action="/responsavel/filtro">
+            <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/responsavel/filtro">
                 @csrf
                 <input class="form-control" type="text" placeholder="Nome do Responsável" name="nome">
                 <select class="custom-select" id="aluno" name="aluno">
@@ -50,7 +56,7 @@
                             @else
                             <ul>
                                 @foreach ($resp->alunos as $aluno)
-                                <li>{{$aluno->name}} <a href="/responsavel/desvincular/{{$resp->id}}/{{$aluno->id}}" class="btn btn-sm btn-danger">Desvincular</a></li>
+                                <li>{{$aluno->name}} <a href="/admin/responsavel/desvincular/{{$resp->id}}/{{$aluno->id}}" class="btn btn-sm btn-danger">Desvincular</a></li>
                                 @endforeach
                             </ul>
                             @endif
@@ -65,7 +71,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="POST" action="/responsavel/vincular/{{$resp->id}}">
+                                        <form method="POST" action="/admin/responsavel/vincular/{{$resp->id}}">
                                         @csrf
                                             <select class="custom-select" id="aluno" name="aluno" required>
                                                 <option value="">Selecione um aluno</option>
@@ -103,7 +109,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="card-body">
-                                            <form method="POST" action="/responsavel/editar/{{$resp->id}}">
+                                            <form method="POST" action="/admin/responsavel/editar/{{$resp->id}}">
                                                 @csrf
                                                 <div class="form-group row">
                                                     <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
@@ -171,7 +177,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/responsavel/apagar/{{$resp->id}}" class="btn btn-sm btn-danger">Excluir</a>
+                            <a href="/admin/responsavel/apagar/{{$resp->id}}" class="btn btn-sm btn-danger">Excluir</a>
                         </td>
                     </tr>
                     @endforeach
@@ -196,7 +202,7 @@
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                    <form method="POST" action="/responsavel">
+                    <form method="POST" action="/admin/responsavel">
                         @csrf
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nome') }}</label>

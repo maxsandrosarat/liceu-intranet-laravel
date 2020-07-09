@@ -4,7 +4,7 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Listas de Compra</h5>
-            <a type="button" class="float-button" href="/listaCompras/nova" data-toggle="tooltip" data-placement="bottom" title="Nova Lista">
+            <a type="button" class="float-button" href="/admin/listaCompras/nova" data-toggle="tooltip" data-placement="bottom" title="Nova Lista">
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
             @if(count($listaProds)==0)
@@ -58,7 +58,7 @@
                             </div>
                         </td>
                         <td>
-                            <a target="_blank" href="/listaCompras/pdf/{{$lista->id}}" class="btn btn-sm btn-success">Gerar PDF</a>
+                            <a target="_blank" href="/admin/listaCompras/pdf/{{$lista->id}}" class="btn btn-sm btn-success">Gerar PDF</a>
                         </td>
                     </tr>
                     @endforeach

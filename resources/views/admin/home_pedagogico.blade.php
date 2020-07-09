@@ -4,28 +4,6 @@
 <div class="jumbotron bg-light border border-secondary">
     <div class="row">
         <div class="card-deck">
-            <!--<div class="d-flex justify-content-center centralizado">
-                <div class="card border-primary text-center" style="width: 20rem;">
-                    <div class="card-body">
-                        <h5>Atividades Extras</h5>
-                        <p class="card-text">
-                            Consultar e cadastrar Atividades Extras
-                        </p>
-                        <a href="/atividadeExtra" class="btn btn-primary">Atividades Extras</a>
-                    </div>
-                </div>
-            </div>-->
-            <div class="d-flex justify-content-center centralizado">
-                <div class="card border-primary text-center" style="width: 20rem;">
-                    <div class="card-body">
-                        <h5>Listas Atividades</h5>
-                        <p class="card-text">
-                            Consultar e cadastrar Listas Atividades
-                        </p>
-                        <a href="/admin/listaAtividade" class="btn btn-primary">Listas Atividades</a>
-                    </div>
-                </div>
-            </div>
             <div class="d-flex justify-content-center centralizado">
                 <div class="card border-primary text-center" style="width: 20rem;">
                     <div class="card-body">
@@ -34,6 +12,17 @@
                             Consultar e cadastrar Atividades
                         </p>
                         <a href="/admin/atividade" class="btn btn-primary">Atividades</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Listas Atividades</h5>
+                        <p class="card-text">
+                            Consultar e cadastrar Listas Atividades
+                        </p>
+                        <a href="/admin/listaAtividade" class="btn btn-primary">Listas Atividades</a>
                     </div>
                 </div>
             </div>
@@ -70,6 +59,17 @@
                     </div>
                 </div>
             </div>
+            <!--<div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5>Atividades Extras</h5>
+                        <p class="card-text">
+                            Consultar e cadastrar Atividades Extras
+                        </p>
+                        <a href="/atividadeExtra" class="btn btn-primary">Atividades Extras</a>
+                    </div>
+                </div>
+            </div>-->
         </div>
     </div>
 </div>
