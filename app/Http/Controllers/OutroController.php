@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Outro;
 use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +20,4 @@ class OutroController extends Controller
     public function index(){
         return view('outros.home_outro');
     }
-
-    
 }

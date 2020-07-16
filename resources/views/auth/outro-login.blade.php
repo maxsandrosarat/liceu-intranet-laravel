@@ -7,20 +7,20 @@
             @if(session('mensagem'))
                 <div class="alert alert-danger" role="alert">
                     <button type="button" class="close" data-dismiss="alert">x</button>
-                    <p>{{session('mensagem')}}</p>
+                    <h5>{{session('mensagem')}}</h5>
                 </div>
             @endif
             <select class="custom-select" name="tipoLogin" id="tipoLogin">
                 <option value="">Selecione o Tipo de Login</option>
-                <option value="prof">PROFESSOR(A)</option>
-                <option value="outro">COLABORADOR(A)</option>
-                <option value="admin">ADMINISTRADOR(A)</option>
+                <option value="admin">ADMINISTRADOR</option>
+                <option value="outro">COLABORADOR</option>
+                <option value="prof">PROFESSOR</option>
             </select>
 
             <div id="principal">
 
                 <div class="card" id="outro">
-                    <div class="card-header">LOGIN COMO COLABORADOR(A)</div>
+                    <div class="card-header">LOGIN COMO COLABORADOR</div>
 
                     <div class="card-body">
                         <form method="POST" action="{{route('outro.login.submit')}}">
@@ -71,7 +71,7 @@
                 </div>
 
                     <div class="card" id="prof">
-                        <div class="card-header">LOGIN COMO PROFESSOR(A)</div>
+                        <div class="card-header">LOGIN COMO PROFESSOR</div>
         
                         <div class="card-body">
                             <form method="POST" action="{{route('prof.login.submit')}}">
@@ -122,7 +122,7 @@
                     </div>
 
                     <div class="card" id="admin">
-                        <div class="card-header">LOGIN COMO ADMINISTRADOR(A)</div>
+                        <div class="card-header">LOGIN COMO ADMINISTRADOR</div>
         
                         <div class="card-body">
                             <form method="POST" action="{{route('admin.login.submit')}}">

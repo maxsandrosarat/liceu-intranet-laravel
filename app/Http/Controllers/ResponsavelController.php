@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Aluno;
 use App\Ocorrencia;
 use App\Recado;
-use App\Responsavel;
 use App\ResponsavelAluno;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class ResponsavelController extends Controller

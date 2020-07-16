@@ -10,6 +10,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 
+//ADMIN
 Route::group(['prefix' => 'admin'], function() {
     Route::get('/login', 'Auth\AdminLoginController@index')->name('admin.login');
     Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
@@ -33,7 +34,6 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/apagar/{id}', 'AdminController@apagarTurma');
     });
 
-    
     Route::group(['prefix' => 'turmasDiscs'], function() {
         Route::get('/', 'AdminController@indexTurmaDiscs');
         Route::post('/', 'AdminController@novaTurmaDisc');
@@ -86,7 +86,6 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/importarExcel', 'AdminController@importarOutroExcel');
     });
 
-    
     Route::group(['prefix' => 'categorias'], function() {
         Route::get('/', 'AdminController@indexCategorias');
         Route::post('/', 'AdminController@novaCategoria');
@@ -102,13 +101,11 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/apagar/{id}', 'AdminController@apagarProduto');
     });
     
-    
     Route::group(['prefix' => 'entradaSaida'], function() {
         Route::get('/', 'AdminController@indexEntradaSaidas');
         Route::post('/', 'AdminController@novaEntradaSaida');
         Route::get('/filtro', 'AdminController@filtroEntradaSaidas');
     });
-    
     
     Route::group(['prefix' => 'listaCompras'], function() {
         Route::get('/', 'AdminController@indexListaCompras');
@@ -170,12 +167,57 @@ Route::group(['prefix' => 'admin'], function() {
     });
 });
 
+//PROF
+Route::group(['prefix' => 'prof'], function() {
+    Route::get('/login', 'Auth\ProfLoginController@index')->name('prof.login');
+    Route::post('/login', 'Auth\ProfLoginController@login')->name('prof.login.submit');
+    Route::get('/', 'ProfController@index')->name('prof.dashboard')->middleware('auth:prof');
 
+    Route::group(['prefix' => 'atividade'], function() {
+        Route::get('/disciplinas', 'ProfController@disciplinasAtividades');
+        Route::get('/{id}', 'ProfController@painelAtividades');
+        Route::post('/', 'ProfController@novaAtividade');
+        Route::get('/filtro/{id}', 'ProfController@filtroAtividades');
+        Route::get('/download/{id}', 'ProfController@downloadAtividade');
+        Route::post('/editar/{id}', 'ProfController@editarAtividade');
+        Route::get('/apagar/{id}', 'ProfController@apagarAtividade');
+        Route::get('/retornos/{id}', 'ProfController@retornos');
+        Route::get('/retorno/download/{id}', 'ProfController@downloadRetorno');
+    });
+
+    Route::group(['prefix' => 'listaAtividade'], function() {
+        Route::get('/', function () { return view('profs.home_las'); });
+        Route::get('/painel/{data}', 'ProfController@painelListaAtividades');
+        Route::post('/anexar/{id}', 'ProfController@anexarListaAtividade');
+        Route::get('/download/{id}', 'ProfController@downloadListaAtividade');
+        Route::get('/apagar/{id}', 'ProfController@apagarListaAtividade');
+    });
+    
+    Route::group(['prefix' => 'ocorrencias'], function() {
+        Route::get('/disciplinas', 'ProfController@disciplinasOcorrencias');
+        Route::get('/{id}', 'ProfController@turmasOcorrencias');
+        Route::get('/{disc}/{turma}', 'ProfController@indexOcorrencias');
+        Route::post('/', 'ProfController@novasOcorrencias');
+        Route::get('/filtro/{disc}/{turma}', 'ProfController@filtroOcorrencias');
+        Route::post('/editar/{id}', 'ProfController@editarOcorrencia');
+        Route::get('/apagar/{disc}/{turma}/{id}', 'ProfController@apagarOcorrencia');
+    });
+    
+    Route::group(['prefix' => 'conteudos'], function() {
+        Route::get('/', 'ProfController@painelConteudos');
+        Route::get('/{a}', 'ProfController@painelConteudosAno');
+        Route::get('/painel/{a}/{b}/{t}', 'ProfController@conteudos');
+        Route::post('/anexar/{id}', 'ProfController@anexarConteudo');
+        Route::get('/download/{id}', 'ProfController@downloadConteudo');
+        Route::get('/apagar/{id}', 'ProfController@apagarConteudo');
+    });
+});
+
+//ALUNO
 Route::group(['prefix' => 'aluno'], function() {
     Route::get('/login', 'Auth\AlunoLoginController@index')->name('aluno.login');
     Route::post('/login', 'Auth\AlunoLoginController@login')->name('aluno.login.submit');
     Route::get('/', 'AlunoController@index')->name('aluno.dashboard');
-
     
     Route::group(['prefix' => 'atividade'], function() {
         Route::get('/disciplinas', 'AlunoController@disciplinasAtividades');
@@ -192,47 +234,7 @@ Route::group(['prefix' => 'aluno'], function() {
     });
 });
 
-
-
-Route::get('/prof/login', 'Auth\ProfLoginController@index')->name('prof.login');
-Route::post('/prof/login', 'Auth\ProfLoginController@login')->name('prof.login.submit');
-Route::get('/prof', 'ProfController@index')->name('prof.dashboard')->middleware('auth:prof');
-Route::get('/prof/disciplinasAtividades', 'ProfController@disciplinasAtividades')->middleware('auth:prof');
-Route::get('/prof/atividade/{id}', 'ProfController@painelAtividades')->middleware('auth:prof');
-Route::post('/prof/atividade', 'ProfController@novaAtividade')->middleware('auth:prof');
-Route::get('/prof/atividade/download/{id}', 'ProfController@downloadAtividade')->middleware('auth:prof');
-Route::post('/prof/atividade/editar/{id}', 'ProfController@editarAtividade')->middleware('auth:prof');
-Route::get('/prof/atividade/apagar/{id}', 'ProfController@apagarAtividade')->middleware('auth:prof');
-Route::get('/prof/atividade/filtro/{id}', 'ProfController@filtroAtividade')->middleware('auth:prof');
-Route::get('/prof/atividade/retornos/{id}', 'ProfController@retornos')->middleware('auth:prof');
-Route::get('/prof/atividade/retorno/download/{id}', 'ProfController@downloadRetorno')->middleware('auth:prof');
-Route::get('/prof/listaAtividade', function () {
-    return view('profs.home_las');
-})->middleware('auth:prof');
-Route::get('/prof/listaAtividade/painel/{data}', 'ProfController@painelListaAtividades')->middleware('auth:prof');
-Route::post('/prof/listaAtividade/anexar/{id}', 'ProfController@anexarListaAtividade')->middleware('auth:prof');
-Route::get('/prof/listaAtividade/download/{id}', 'ProfController@downloadListaAtividade')->middleware('auth:prof');
-Route::get('/prof/listaAtividade/apagar/{id}', 'ProfController@apagarListaAtividade')->middleware('auth:prof');
-Route::get('/prof/ocorrencias', 'ProfController@disciplinasOcorrencias')->middleware('auth:prof');
-Route::get('/prof/ocorrencias/{id}', 'ProfController@turmasOcorrencias')->middleware('auth:prof');
-Route::get('/prof/ocorrencias/{disc}/{turma}', 'ProfController@indexOcorrencias')->middleware('auth:prof');
-Route::post('/prof/ocorrencias', 'ProfController@novasOcorrencias')->middleware('auth:prof');
-Route::post('/prof/ocorrencias/editar/{id}', 'ProfController@editarOcorrencia')->middleware('auth:prof');
-Route::get('/prof/ocorrencias/apagar/{disc}/{turma}/{id}', 'ProfController@apagarOcorrencia')->middleware('auth:prof');
-Route::get('/prof/ocorrencias/filtro/{disc}/{turma}', 'ProfController@filtroOcorrencias')->middleware('auth:prof');
-Route::get('/prof/conteudos', 'ProfController@painelConteudosAno')->middleware('auth:prof');
-Route::get('/prof/conteudos/{a}', 'ProfController@painelConteudos')->middleware('auth:prof');
-Route::get('/prof/conteudos/painel/{a}/{b}/{t}', 'ProfController@conteudos')->middleware('auth:prof');
-Route::post('/prof/conteudos/anexar/{id}', 'ProfController@anexarConteudo')->middleware('auth:prof');
-Route::get('/prof/conteudos/download/{id}', 'ProfController@downloadConteudo')->middleware('auth:prof');
-Route::get('/prof/conteudos/apagar/{id}', 'ProfController@apagarConteudo')->middleware('auth:prof');
-
-Route::get('/outro/login', 'Auth\OutroLoginController@index')->name('outro.login');
-Route::post('/outro/login', 'Auth\OutroLoginController@login')->name('outro.login.submit');
-Route::get('/outro', 'OutroController@index')->name('outro.dashboard')->middleware('auth:outro');
-Route::get('/outro/novo', 'OutroController@create')->middleware('auth:outro');
-
-
+//RESPONSAVEL
 Route::group(['prefix' => 'responsavel'], function() {
     Route::get('/login', 'Auth\ResponsavelLoginController@index')->name('responsavel.login');
     Route::post('/login', 'Auth\ResponsavelLoginController@login')->name('responsavel.login.submit');
@@ -241,3 +243,11 @@ Route::group(['prefix' => 'responsavel'], function() {
     Route::get('/ocorrencias/ciente/{id}', 'ResponsavelController@cienteOcorrencia')->middleware('auth:responsavel');
     Route::get('/recados', 'ResponsavelController@recados')->middleware('auth:responsavel');
 });
+
+//OUTRO
+Route::group(['prefix' => 'outro'], function() {
+    Route::get('/login', 'Auth\OutroLoginController@index')->name('outro.login');
+    Route::post('/login', 'Auth\OutroLoginController@login')->name('outro.login.submit');
+    Route::get('/', 'OutroController@index')->name('outro.dashboard');
+});
+

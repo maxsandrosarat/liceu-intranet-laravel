@@ -7,6 +7,17 @@
             <div class="d-flex justify-content-center centralizado">
                 <div class="card border-primary text-center" style="width: 20rem;">
                     <div class="card-body">
+                        <h5>Atividades</h5>
+                        <p class="card-text">
+                            Gerenciar as Atividades
+                        </p>
+                        <a href="/prof/atividade/disciplinas" class="btn btn-primary">Atividades</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 20rem;">
+                    <div class="card-body">
                         <h5>Lista de Atividades</h5>
                         <p class="card-text">
                             Gerenciar as Lista de Atividades
@@ -22,7 +33,7 @@
                         <p class="card-text">
                             Lançar as Ocorrências
                         </p>
-                        <a href="/prof/ocorrencias" class="btn btn-primary">Ocorrências</a>
+                        <a href="/prof/ocorrencias/disciplinas" class="btn btn-primary">Ocorrências</a>
                     </div>
                 </div>
             </div>
@@ -34,17 +45,6 @@
                             Anexar e baixar os conteúdos
                         </p>
                         <a href="/prof/conteudos/{{date("Y")}}" class="btn btn-primary">Conteúdos</a>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center centralizado">
-                <div class="card border-primary text-center" style="width: 20rem;">
-                    <div class="card-body">
-                        <h5>Atividades</h5>
-                        <p class="card-text">
-                            Gerenciar as Atividades
-                        </p>
-                        <a href="/prof/disciplinasAtividades" class="btn btn-primary">Atividades</a>
                     </div>
                 </div>
             </div>

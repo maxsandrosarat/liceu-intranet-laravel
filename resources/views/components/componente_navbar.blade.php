@@ -64,17 +64,17 @@
             <li @if($current=="home") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof">Home</a>
             </li>
+            <li @if($current=="atividade") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/prof/atividade/disciplinas">Atividades</a>
+            </li>
             <li @if($current=="la") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof/listaAtividade">Listas Atividades</a>
             </li>
             <li @if($current=="ocorrencias") class="nav-item active" @else class="nav-item" @endif>
-                <a class="nav-link" href="/prof/ocorrencias">Ocorrências</a>
+                <a class="nav-link" href="/prof/ocorrencias/disciplinas">Ocorrências</a>
             </li>
             <li @if($current=="conteudos") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof/conteudos/{{date("Y")}}">Conteúdos</a>
-            </li>
-            <li @if($current=="atividade") class="nav-item active" @else class="nav-item" @endif>
-                <a class="nav-link" href="/prof/disciplinasAtividades">Atividades</a>
             </li>
             @endauth
 

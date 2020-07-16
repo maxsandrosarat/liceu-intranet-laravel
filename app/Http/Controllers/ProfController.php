@@ -8,14 +8,12 @@ use App\AtividadeRetorno;
 use App\Conteudo;
 use App\Disciplina;
 use App\ListaAtividade;
-use App\Prof;
 use App\ProfDisciplina;
 use App\Turma;
 use App\TurmaDisciplina;
 use Illuminate\Http\Request;
 use App\Ocorrencia;
 use App\TipoOcorrencia;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -27,18 +25,18 @@ class ProfController extends Controller
         $this->middleware('auth:prof');
     }
     
-    //PROF
+    //HOME
     public function index(){
         return view('profs.home_prof');
     }
 
+    //ATIVIDADES
     public function disciplinasAtividades(){
         $profId = Auth::user()->id;
         $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
         return view('profs.atividade_disciplinas', compact('profDiscs'));
     }
 
-    //PROF
     public function painelAtividades($discId){
         $profId = Auth::user()->id;
         $disciplina = Disciplina::find($discId);
@@ -48,7 +46,6 @@ class ProfController extends Controller
         return view('profs.atividade_prof', compact('view','disciplina','turmas','atividades'));
     }
 
-    //PROF
     public function novaAtividade(Request $request)
     {
         $profId = Auth::user()->id;
@@ -74,98 +71,7 @@ class ProfController extends Controller
         return back()->with('success', 'Atividade cadastrada com Sucesso!');
     }
 
-    //PROF
-    public function editarAtividade(Request $request, $id)
-    {
-        $atividade = Atividade::find($id);
-        if($request->file('arquivo')!=""){
-            $arquivo = $atividade->arquivo;
-            Storage::disk('public')->delete($arquivo);
-            $path = $request->file('arquivo')->store('atividades','public');
-        } else {
-            $path = "";
-        }
-        if($request->input('turma')!=""){
-            $atividade->turma_id = $request->input('turma');
-        }
-        if($request->input('dataPublicacao')!="" && $request->input('horaPublicacao')!=""){
-            $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
-        }
-        if($request->input('dataExpiracao')!="" && $request->input('horaExpiracao')!=""){
-            $atividade->data_expiracao = $request->input('dataExpiracao').' '.$request->input('horaExpiracao');
-        }
-        if($request->input('descricao')!=""){
-            $atividade->descricao = $request->input('descricao');
-        }
-        if($request->input('link')!=""){
-            $atividade->link = $request->input('link');
-        }
-        if($path!=""){
-            $atividade->arquivo = $path;
-        }
-        $atividade->retorno = $request->input('retorno');
-        $atividade->save();
-        
-        return back()->with('success', 'Atividade editada com Sucesso!');
-    }
-
-    //PROF
-    public function downloadAtividade($id)
-    {
-        $atividade = Atividade::find($id);
-        $disc = Disciplina::find($atividade->disciplina_id);
-        $turma = Turma::find($atividade->turma_id);
-        $nameFile = $turma->serie."º - Atividade ".$atividade->descricao." - ".$disc->nome;
-        if(isset($atividade)){
-            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $name = $nameFile.".".$extension;
-            return response()->download($path, $name);
-        }
-        return redirect('/prof/atividade');
-    }
-
-    public function downloadRetorno($id)
-    {
-        $retorno = AtividadeRetorno::find($id);
-        $alunoId = $retorno->aluno_id;
-        $atividadeId = $retorno->atividade_id;
-        $aluno = Aluno::find($alunoId);
-        $nomeAluno = $aluno->name;
-        $atividade = Atividade::find($atividadeId);
-        $descricaoAtividade = $atividade->descricao;
-        $turma = Turma::find($atividade->turma_id);
-        $nameFile = $turma->serie."º - ".$descricaoAtividade." - ".$nomeAluno;
-        if(isset($retorno)){
-            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($retorno->arquivo);
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $name = $nameFile.".".$extension;
-            return response()->download($path, $name);
-        }
-        return back();
-    }
-    
-    public function retornos($atividade_id){
-        $retornos = AtividadeRetorno::where('atividade_id',"$atividade_id")->get();
-        $atividade = Atividade::find($atividade_id);
-        $descricao = $atividade->descricao;
-        return view('profs.retornos', compact('descricao','retornos'));
-    }
-
-    //PROF
-    public function apagarAtividade($id){
-        $atividade = Atividade::find($id);
-        $arquivo = $atividade->arquivo;
-        Storage::disk('public')->delete($arquivo);
-        if(isset($atividade)){
-            $atividade->delete();
-        }
-        
-        return back()->with('success', 'Atividade excluída com Sucesso!');
-    }
-
-    //PROF
-    public function filtroAtividade(Request $request, $discId)
+    public function filtroAtividades(Request $request, $discId)
     {
         $profId = Auth::user()->id;
         $disciplina = Disciplina::find($discId);
@@ -202,6 +108,94 @@ class ProfController extends Controller
         return view('profs.atividade_prof', compact('view','disciplina','turmas','atividades'));
     }
 
+    public function editarAtividade(Request $request, $id)
+    {
+        $atividade = Atividade::find($id);
+        if($request->file('arquivo')!=""){
+            $arquivo = $atividade->arquivo;
+            Storage::disk('public')->delete($arquivo);
+            $path = $request->file('arquivo')->store('atividades','public');
+        } else {
+            $path = "";
+        }
+        if($request->input('turma')!=""){
+            $atividade->turma_id = $request->input('turma');
+        }
+        if($request->input('dataPublicacao')!="" && $request->input('horaPublicacao')!=""){
+            $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
+        }
+        if($request->input('dataExpiracao')!="" && $request->input('horaExpiracao')!=""){
+            $atividade->data_expiracao = $request->input('dataExpiracao').' '.$request->input('horaExpiracao');
+        }
+        if($request->input('descricao')!=""){
+            $atividade->descricao = $request->input('descricao');
+        }
+        if($request->input('link')!=""){
+            $atividade->link = $request->input('link');
+        }
+        if($path!=""){
+            $atividade->arquivo = $path;
+        }
+        $atividade->retorno = $request->input('retorno');
+        $atividade->save();
+        
+        return back()->with('success', 'Atividade editada com Sucesso!');
+    }
+
+    public function downloadAtividade($id)
+    {
+        $atividade = Atividade::find($id);
+        $disc = Disciplina::find($atividade->disciplina_id);
+        $turma = Turma::find($atividade->turma_id);
+        $nameFile = $turma->serie."º - Atividade ".$atividade->descricao." - ".$disc->nome;
+        if(isset($atividade)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return redirect('/prof/atividade');
+    }
+
+    public function apagarAtividade($id){
+        $atividade = Atividade::find($id);
+        $arquivo = $atividade->arquivo;
+        Storage::disk('public')->delete($arquivo);
+        if(isset($atividade)){
+            $atividade->delete();
+        }
+        
+        return back()->with('success', 'Atividade excluída com Sucesso!');
+    }
+
+    public function retornos($atividade_id){
+        $retornos = AtividadeRetorno::where('atividade_id',"$atividade_id")->get();
+        $atividade = Atividade::find($atividade_id);
+        $descricao = $atividade->descricao;
+        return view('profs.retornos', compact('descricao','retornos'));
+    }
+
+    public function downloadRetorno($id)
+    {
+        $retorno = AtividadeRetorno::find($id);
+        $alunoId = $retorno->aluno_id;
+        $atividadeId = $retorno->atividade_id;
+        $aluno = Aluno::find($alunoId);
+        $nomeAluno = $aluno->name;
+        $atividade = Atividade::find($atividadeId);
+        $descricaoAtividade = $atividade->descricao;
+        $turma = Turma::find($atividade->turma_id);
+        $nameFile = $turma->serie."º - ".$descricaoAtividade." - ".$nomeAluno;
+        if(isset($retorno)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($retorno->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return back();
+    }
+    
+    //LISTA DE ATIVIDADES
     public function painelListaAtividades($data){
         $lafund = ListaAtividade::where('dia', "$data")->where('ensino','fund')->count();
         $lamedio = ListaAtividade::where('dia', "$data")->where('ensino','medio')->count();
@@ -295,6 +289,7 @@ class ProfController extends Controller
         return back();
     }
 
+    //OCORRENCIAS
     public function disciplinasOcorrencias(){
         $profId = Auth::user()->id;
         $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
@@ -313,6 +308,34 @@ class ProfController extends Controller
         $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->paginate(10);
         $view = "inicial";
         return view('profs.ocorrencias_prof', compact('view','alunos','tipos','disciplina','ocorrencias','turma'));
+    }
+
+    public function novasOcorrencias(Request $request){
+        $profId = Auth::user()->id;
+        $alunos = $request->input('alunos');
+        $tipo = $request->input('tipo');
+        $disciplina = $request->input('disciplina');
+        $data = $request->input('data');
+        if($request->input('observacao')==""){
+            $observacao = "";
+        } else {
+            $observacao = $request->input('observacao');
+        }
+        if($request->input('alunos')==""){
+            return back();
+        } else {
+            foreach($alunos as $aluno) {
+                $ocorrencia = new Ocorrencia();
+                $ocorrencia->aluno_id = $aluno;
+                $ocorrencia->tipo_ocorrencia_id = $tipo;
+                $ocorrencia->prof_id = $profId;
+                $ocorrencia->disciplina_id = $disciplina;
+                $ocorrencia->data = $data;
+                $ocorrencia->observacao = $observacao;
+                $ocorrencia->save();
+            }
+        }
+        return back();
     }
 
     public function filtroOcorrencias(Request $request, $disciplina, $turma)
@@ -389,34 +412,6 @@ class ProfController extends Controller
         return view('profs.ocorrencias_prof', compact('view','alunos','tipos','disciplina','ocorrencias','turma'));
     }
 
-    public function novasOcorrencias(Request $request){
-        $profId = Auth::user()->id;
-        $alunos = $request->input('alunos');
-        $tipo = $request->input('tipo');
-        $disciplina = $request->input('disciplina');
-        $data = $request->input('data');
-        if($request->input('observacao')==""){
-            $observacao = "";
-        } else {
-            $observacao = $request->input('observacao');
-        }
-        if($request->input('alunos')==""){
-            return back();
-        } else {
-            foreach($alunos as $aluno) {
-                $ocorrencia = new Ocorrencia();
-                $ocorrencia->aluno_id = $aluno;
-                $ocorrencia->tipo_ocorrencia_id = $tipo;
-                $ocorrencia->prof_id = $profId;
-                $ocorrencia->disciplina_id = $disciplina;
-                $ocorrencia->data = $data;
-                $ocorrencia->observacao = $observacao;
-                $ocorrencia->save();
-            }
-        }
-        return back();
-    }
-
     public function editarOcorrencia(Request $request, $id)
     {
         $ocorrencia = Ocorrencia::find($id);
@@ -451,13 +446,14 @@ class ProfController extends Controller
         return view('profs.ocorrencias_prof', compact('alunos','tipos','disciplina','ocorrencias','turma','tipo'));
     }
 
-    public function painelConteudosAno(Request $request){
+    //CONTEUDOS
+    public function painelConteudos(Request $request){
         $ano = $request->input('ano');
         $anos = DB::table('conteudos')->select(DB::raw("ano"))->groupBy('ano')->get();
         return view('profs.home_conteudos',compact('ano','anos'));
     }
 
-    public function painelConteudos($ano){
+    public function painelConteudosAno($ano){
         if($ano==""){
             $ano = date("Y");
         }

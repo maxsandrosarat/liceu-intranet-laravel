@@ -9,6 +9,7 @@ use App\AtividadeRetorno;
 use App\Conteudo;
 use App\Disciplina;
 use App\ProfDisciplina;
+use App\TurmaDisciplina;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -37,12 +38,54 @@ class AlunoController extends Controller
     public function painelAtividades($discId){
         $alunoId = Auth::user()->id;
         $retornos = AtividadeRetorno::where('aluno_id',"$alunoId")->get();
-        $dataAtual = date("Y-m-d");
+        $dataAtual = date("Y-m-d H:i");
         $turmaId = Auth::user()->turma_id;
         $disciplina = Disciplina::find($discId);
-        $discNome = $disciplina->nome;
+        $turmaDiscs = TurmaDisciplina::where('turma_id',"$turmaId")->get();
+        $discIds = array();
+        foreach($turmaDiscs as $turmaDisc){
+            $discIds[] = $turmaDisc->disciplina_id;
+        }
+        $discs = Disciplina::whereIn('id',$discIds)->where('ativo',true)->orderBy('nome')->get();
         $atividades = Atividade::where('turma_id',"$turmaId")->where('disciplina_id',"$discId")->where("data_publicacao",'<=',"$dataAtual")->where("data_expiracao",'>=',"$dataAtual")->orderBy('id','desc')->paginate(9);
-        return view('alunos.atividade_aluno', compact('discNome','atividades','retornos'));
+        return view('alunos.atividade_aluno', compact('discs','disciplina','atividades','retornos'));
+    }
+
+    public function filtroAtividades(Request $request, $discId)
+    {
+        $profId = Auth::user()->id;
+        $disciplina = Disciplina::find($discId);
+        $turma = $request->input('turma');
+        $descricao = $request->input('descricao');
+        $data = $request->input('data');
+        if(isset($turma)){
+            if(isset($descricao)){
+                if(isset($data)){
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                } else {
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->orderBy('id','desc')->get();
+                }
+            } else {
+                $atividades = Atividade::where('prof_id',"$profId")->where('turma_id',"$turma")->orderBy('id','desc')->get();
+            }
+        } else {
+            if(isset($descricao)){
+                if(isset($data)){
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                } else {
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->orderBy('id','desc')->get();
+                }
+            } else {
+                if(isset($data)){
+                    $atividades = Atividade::where('prof_id',"$profId")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                } else {
+                    $atividades = Atividade::where('prof_id',"$profId")->orderBy('id','desc')->get();
+                }
+            }
+        }
+        $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
+        $view = "filtro";
+        return view('profs.atividade_prof', compact('view','disciplina','turmas','atividades'));
     }
 
     public function downloadAtividade($id)

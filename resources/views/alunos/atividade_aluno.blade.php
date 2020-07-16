@@ -3,7 +3,7 @@
 @section('body')
     <div class="card border">
         <div class="card-body">
-            <h5 class="card-title">Painel de Atividades - Disciplina: {{$discNome}}</h5>
+            <h5 class="card-title">Painel de Atividades - Disciplina: {{$disciplina->nome}}</h5>
             @if(count($atividades)==0)
                 <div class="alert alert-danger" role="alert">
                     Sem atividades para exibir!
@@ -15,7 +15,23 @@
                         <strong>{{ $message }}</strong>
                 </div>
             @endif
-            <h5>Exibindo {{$atividades->count()}} de {{$atividades->total()}} de Atividades ({{$atividades->firstItem()}} a {{$atividades->lastItem()}})</h5>
+            <div class="card">
+                <div class="card border">
+                    <h5 class="card-title">Filtros:</h5>
+                    <form class="form-inline my-2 my-lg-0" method="GET" action="/aluno/atividade/filtro">
+                        @csrf
+                        <input type="hidden" name="disc" value="{{$disciplina->id}}">
+                        <label for="descricao">Descrição Atividade
+                            <input class="form-control mr-sm-2" type="text" placeholder="Digite a descrição" name="descricao"></label>
+                        <br>
+                            <label for="data">Data Expiração 
+                            - De <input class="form-control mr-sm-2" type="date" name="expiracaoDe">
+                            Até <input class="form-control mr-sm-2" type="date" name="expiracaoAte"></label>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
+                    </form>
+                </div>
+            </div>
+            <h6>Exibindo {{$atividades->count()}} de {{$atividades->total()}} de Atividades ({{$atividades->firstItem()}} a {{$atividades->lastItem()}})</h6>
             @foreach ($atividades as $atividade)
                 <div class="d-flex justify-content-center centralizado">
                     <div class="card border-primary text-center" style="width: 20rem;">
@@ -81,7 +97,6 @@
                                             <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                         </div>
                                         <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                                         <button type="submit" class="btn btn-primary">Enviar</button>
                                         </div>
                                     </form>    
@@ -116,7 +131,6 @@
                                     @endif
                                     @endforeach   
                                     <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                                     <button type="submit" class="btn btn-primary">Enviar</button>
                                     </div>
                                     </form>
