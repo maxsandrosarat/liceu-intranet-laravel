@@ -2,10 +2,11 @@
 
 @section('body')
 <div class="jumbotron bg-light border border-secondary">
-    <div class="row">
+    <div class="row justify-content-center">
+        <div class="col align-self-center">
         <div class="card-deck">
             <div class="d-flex justify-content-center centralizado">
-                <div class="card border-primary text-center" style="width: 20rem;">
+                <div class="card border-primary text-center" style="width: 300px;">
                     <div class="card-body">
                         <h5>Atividades</h5>
                         <p class="card-text">
@@ -16,7 +17,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center centralizado">
-                <div class="card border-primary text-center" style="width: 20rem;">
+                <div class="card border-primary text-center" style="width: 300px;">
                     <div class="card-body">
                         <h5>Conteúdos</h5>
                         <p class="card-text">
@@ -26,6 +27,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>
