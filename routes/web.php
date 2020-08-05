@@ -130,10 +130,18 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/download/{id}', 'AdminController@downloadLA');
         Route::get('/apagar/{id}', 'AdminController@apagarLA');
     });
+
+    Route::group(['prefix' => 'diario'], function() {
+        Route::get('/', 'AdminController@indexDiario');
+        Route::get('/consulta', 'AdminController@consultaDiario');
+        Route::post('/editar/{id}', 'AdminController@editarDiario');
+        Route::get('/conferido/{id}', 'AdminController@conferirDiario');
+    });
     
     Route::group(['prefix' => 'ocorrencias'], function() {
         Route::get('/', 'AdminController@indexOcorrencias');
         Route::get('/filtro', 'AdminController@filtroOcorrencias');
+        Route::post('/editar/{id}', 'AdminController@editarOcorrencia');
         Route::get('/aprovar/{id}', 'AdminController@aprovarOcorrencia');
         Route::get('/reprovar/{id}', 'AdminController@reprovarOcorrencia');
         Route::get('/apagar/{id}', 'AdminController@apagarOcorrencia');
@@ -200,7 +208,7 @@ Route::group(['prefix' => 'prof'], function() {
         Route::post('/', 'ProfController@novasOcorrencias');
         Route::get('/filtro/{disc}/{turma}', 'ProfController@filtroOcorrencias');
         Route::post('/editar/{id}', 'ProfController@editarOcorrencia');
-        Route::get('/apagar/{disc}/{turma}/{id}', 'ProfController@apagarOcorrencia');
+        Route::post('/apagar/{id}', 'ProfController@apagarOcorrencia');
     });
     
     Route::group(['prefix' => 'conteudos'], function() {
@@ -210,6 +218,14 @@ Route::group(['prefix' => 'prof'], function() {
         Route::post('/anexar/{id}', 'ProfController@anexarConteudo');
         Route::get('/download/{id}', 'ProfController@downloadConteudo');
         Route::get('/apagar/{id}', 'ProfController@apagarConteudo');
+    });
+
+    Route::group(['prefix' => 'diario'], function() {
+        Route::get('/disciplinas', 'ProfController@disciplinasDiario');
+        Route::get('/{disc}', 'ProfController@turmasDiario');
+        Route::get('/{disc}/{turma}', 'ProfController@diaDiario');
+        Route::get('/', 'ProfController@indexDiario');
+        Route::post('/', 'ProfController@editarDiario');
     });
 });
 

@@ -14,6 +14,7 @@ use App\CompraProduto;
 use App\TipoOcorrencia;
 use App\Ocorrencia;
 use App\Conteudo;
+use App\Diario;
 use App\EntradaSaida;
 use App\ListaAtividade;
 use App\ListaCompra;
@@ -166,7 +167,7 @@ class AdminController extends Controller
     //TIPOS DE OCORRENCIAS
     public function indexTiposOcorrencia()
     {
-        $tipos = TipoOcorrencia::where('ativo',true)->get();
+        $tipos = TipoOcorrencia::where('ativo',true)->orderBy('codigo')->get();
         return view('admin.tipo_ocorrencia',compact('tipos'));
     }
 
@@ -1061,11 +1062,74 @@ class AdminController extends Controller
         return back();
     }
 
+    //DIÁRIO
+    public function indexDiario(){
+        $turmas = Turma::where('ativo',true)->orderBy('ensino')->orderBy('serie')->get();
+        return view('admin.home_diario', compact('turmas'));
+    }
+
+    public function consultaDiario(Request $request){
+        $turmaId = $request->input('turma');
+        $dia = $request->input('data');
+        $turma = Turma::find($turmaId);
+        $diarios = Diario::where('turma_id',"$turmaId")->where('dia', "$dia")->orderBy('tempo')->get();
+        $ocorrencias = Ocorrencia::where('data',"$dia")->get();
+        return view('admin.diario_admin', compact('dia','turma','diarios','ocorrencias'));
+    }
+
+    public function editarDiario(Request $request, $id)
+    {
+        $diario = Diario::find($id);
+        if(isset($diario)){
+            if($request->input('tempo')!=""){
+                $diario->tempo = $request->input('tempo');
+            }
+            if($request->input('segundoTempo')!=""){
+                if($request->input('segundoTempo')==1){
+                    $diario->segundo_tempo = true;
+                    if($request->input('outroTempo')!=""){
+                        $diario->outro_tempo = $request->input('outroTempo');
+                    }
+                } else {
+                    $diario->segundo_tempo = false;
+                    $diario->outro_tempo = NULL;
+                }
+            }
+            if($request->input('tema')!=""){
+                $diario->tema = $request->input('tema');
+            }
+            if($request->input('conteudo')!=""){
+                $diario->conteudo = $request->input('conteudo');
+            }
+            if($request->input('referencias')!=""){
+                $diario->referencias = $request->input('referencias');
+            }
+            if($request->input('tipoTarefa')!=""){
+                $diario->tipo_tarefa = $request->input('tipoTarefa');
+            }
+            if($request->input('tarefa')!=""){
+                $diario->tarefa = $request->input('tarefa');
+            }
+            if($request->input('entregaTarefa')!=""){
+                $diario->entrega_tarefa = $request->input('entregaTarefa');
+            }
+            $diario->save();
+        }
+        return back()->with('mensagem', 'Diário atualizado com Sucesso!');
+    }
+
+    public function conferirDiario($id){
+        $diario = Diario::find($id);
+        $diario->conferido = true;
+        $diario->save();
+        return back()->with('mensagem', 'Diário conferido com Sucesso!');
+    }
+
     //OCORRENCIAS
     public function indexOcorrencias(){
         $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
         $tipos = TipoOcorrencia::where('ativo',true)->get();
-        $ocorrencias = Ocorrencia::paginate(10);
+        $ocorrencias = Ocorrencia::orderBy('data','desc')->paginate(10);
         $view = "inicial";
         return view('admin.ocorrencias_admin', compact('view','alunos','tipos','ocorrencias'));
     }
@@ -1143,18 +1207,32 @@ class AdminController extends Controller
         return view('admin.ocorrencias_admin', compact('view','alunos','tipos','ocorrencias'));
     }
 
+    public function editarOcorrencia(Request $request, $id)
+    {
+        $ocorrencia = Ocorrencia::find($id);
+        if(isset($ocorrencia)){
+            if($request->input('observacao')==""){
+                $ocorrencia->observacao = "";
+            } else { 
+                $ocorrencia->observacao = $request->input('observacao');
+            }
+            $ocorrencia->save();
+        }
+        return back()->with('mensagem', 'Ocorrência atualizada com Sucesso!');
+    }
+
     public function aprovarOcorrencia($id){
         $ocorrencia = Ocorrencia::find($id);
         $ocorrencia->aprovado = true;
         $ocorrencia->save();
-        return back();
+        return back()->with('mensagem', 'Ocorrência aprovada com Sucesso!');
     }
 
     public function reprovarOcorrencia($id){
         $ocorrencia = Ocorrencia::find($id);
         $ocorrencia->aprovado = false;
         $ocorrencia->save();
-        return back();
+        return back()->with('mensagem', 'Ocorrência reprovada com Sucesso!');
     }
 
     public function apagarOcorrencia($id)

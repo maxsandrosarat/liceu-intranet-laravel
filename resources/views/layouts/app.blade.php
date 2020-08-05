@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <title>Liceu</title>
+    <title>Colégio Liceu Unid. II</title>
     <link rel="shortcut icon" href="/storage/favicon.png"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,11 +29,13 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script type="text/javascript">
+        function id(campo){
+            return document.getElementById(campo);
+        }
+
         function validarSenhaForca(){
             var senha = document.getElementById('senhaForca').value;
             var forca = 0;
-            /*Imprimir a senha*/
-            /*document.getElementById("impSenha").innerHTML = "Senha " + senha;*/
         
             if((senha.length >= 4) && (senha.length <= 8)){
                 forca += 10;
@@ -61,9 +63,6 @@
         }
         
         function mostrarForca(forca){
-            /*Imprimir a força da senha*/
-            /*document.getElementById("impForcaSenha").innerHTML = "Força: " + forca;*/
-        
             if(forca < 30 ){
                 document.getElementById("erroSenhaForca").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div></div>';
             }else if((forca >= 30) && (forca < 50)){
@@ -82,6 +81,7 @@
         }
 
         $(document).ready(function(){
+            //OPÇÕES DE LOGIN
             $('#principal').children('div').hide();
             $('#tipoLogin').on('change', function(){
                 
@@ -91,6 +91,7 @@
 
             });
 
+            //OPÇÕES DE RECADOS
             $('#principalSelect').children('div').hide();
             $('#selectGeral').on('change', function(){
                 
@@ -101,11 +102,6 @@
             });
 
         });
-
-
-        function id(campo){
-            return document.getElementById(campo);
-        }
 
         function formataNumeroTelefone() {
             var numero = document.getElementById('telefone').value;
@@ -122,10 +118,6 @@
             id('telefone').value = telefoneFormatado;
         }
 
-        function id(campo){
-            return document.getElementById(campo);
-        }
-
         function mostrarSenha(){
             var tipo = document.getElementById("senha");
             if(tipo.type=="password"){
@@ -140,6 +132,7 @@
                 id('botao-senha').title = "Exibir Senha";
             }
         }
+
         function mostrarSenhaProf(){
             var tipo = document.getElementById("senha-prof");
             if(tipo.type=="password"){
@@ -154,6 +147,7 @@
                 id('botao-senha-prof').title = "Exibir Senha";
             }
         }
+
         function mostrarSenhaAdmin(){
             var tipo = document.getElementById("senha-admin");
             if(tipo.type=="password"){
@@ -168,7 +162,6 @@
                 id('botao-senha-admin').title = "Exibir Senha";
             }
         }
-        
     </script>
 </body>
 </html>

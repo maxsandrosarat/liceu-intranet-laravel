@@ -149,7 +149,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td @if($ocorrencia->aprovado===0 || $ocorrencia->aprovado===1)colspan="2" @endif>
                             @if($ocorrencia->aprovado==1) 
                             @else
                                 @if($ocorrencia->aprovado!==NULL)
