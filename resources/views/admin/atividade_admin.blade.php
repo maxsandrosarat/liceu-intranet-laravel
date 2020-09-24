@@ -11,7 +11,7 @@
                         @endif
                         @if($view=="filtro")
                         Sem resultados da busca!
-                        <a href="/admin/atividade" class="btn btn-success">Voltar</a>
+                        <a href="/admin/atividade" class="btn btn-sm btn-success">Voltar</a>
                         @endif
                     </div>
             @else
@@ -38,7 +38,7 @@
                             <input class="form-control mr-sm-2" type="text" placeholder="Digite a descrição" name="descricao">
                         <label for="data">Data Criação
                             <input class="form-control mr-sm-2" type="date" name="data"></label>
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
+                        <button class="btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
                     </form>
                 </div>
             </div>
@@ -64,8 +64,8 @@
                                 </div>
                                 <div class="card-body">
                                     <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}} <br>@if($atividade->data_publicacao!="")Data Publicação: {{date("d/m/Y H:i", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y H:i", strtotime($atividade->data_expiracao))}}@endif</p>
-                                  <a href="{{$atividade->link}}" target="_blank" class="btn btn-primary">Link Vídeo-Aula</a>
-                                  <a type="button" class="btn btn-success" href="/admin/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <!--<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button>--> <a type="button" class="btn btn-danger" href="/admin/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
+                                  <a href="{{$atividade->link}}" target="_blank" class="btn btn-sm btn-primary">Link Vídeo-Aula</a>
+                                  <a type="button" class="btn btn-sm btn-success" href="/admin/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <!--<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button>--> <a type="button" class="btn btn-sm btn-danger" href="/admin/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
                                 </div>
                             </div>
                         </td>
@@ -109,8 +109,8 @@
                                         <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                     </div>
                                     <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                    <button type="submit" class="btn btn-primary">Enviar</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Fechar</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
                                     </div>
                                 </form>
                                 </div>
@@ -128,5 +128,5 @@
         </div>
     </div>
     <br>
-    <a href="/admin/pedagogico" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    <a href="/admin/pedagogico" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

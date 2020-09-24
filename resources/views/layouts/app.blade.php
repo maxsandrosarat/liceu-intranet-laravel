@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <title>Colégio Liceu Unid. II</title>
+    <title>Intranet - Colégio Liceu II</title>
     <link rel="shortcut icon" href="/storage/favicon.png"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

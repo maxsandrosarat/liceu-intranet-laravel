@@ -122,11 +122,12 @@
                     @endforeach
                 </tbody>
             </table>
+			<div class="card-footer">
+            {{ $rels->links() }}
+			</div>
             @endif
         </div>
-        <div class="card-footer">
-            {{ $rels->links() }}
-        </div>
+        
         </div>
     </div>
     <br/>

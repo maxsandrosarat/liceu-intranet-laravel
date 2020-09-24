@@ -19,7 +19,7 @@
                                     <td>{{$fundDisc->nome}}</td>
                                         @foreach ($contFunds as $contFund)
                                             @if($contFund->disciplina->nome == $fundDisc->nome && $contFund->serie==$serie)
-                                                @if($contFund->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> Solicite ao Professor(a) @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-success" href="/aluno/conteudos/download/{{$contFund->id}}"><i class="material-icons md-48">cloud_download</i></a> @endif </td>
+                                                @if($contFund->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> Solicite ao Professor(a) @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/aluno/conteudos/download/{{$contFund->id}}"><i class="material-icons md-48">cloud_download</i></a> @endif </td>
                                             @endif
                                         @endforeach
                                 </tr>
@@ -48,7 +48,7 @@
 
                                         @foreach ($contMedios as $contMedio)
                                             @if($contMedio->disciplina->nome == $medioDisc->nome && $contMedio->serie==$serie)
-                                                @if($contMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> Solicite ao Professor(a) @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-success" href="/aluno/conteudos/download/{{$contMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> @endif </td>
+                                                @if($contMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> Solicite ao Professor(a) @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/aluno/conteudos/download/{{$contMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> @endif </td>
                                             @endif
                                         @endforeach
                                 </tr>

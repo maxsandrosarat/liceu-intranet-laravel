@@ -4,6 +4,7 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Painel de Conteúdos - Ensino Fundamental - {{$tipo}} - {{$bim}}º Bimestre</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
@@ -22,7 +23,7 @@
                                 @if($contFund->disciplina->nome == $fundDisc->nome && $contFund->serie==$turma->serie)
                                     @if($turma->serie==6 || $turma->serie==7 || $turma->serie==8)
                                         @if($contFund->disciplina->nome=="Biologia" || $contFund->disciplina->nome=="Física" || $contFund->disciplina->nome=="Química") <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> @else
-                                            @if($contFund->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-success" href="/admin/conteudos/download/{{$contFund->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-danger" href="/admin/conteudos/apagar/{{$contFund->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
+                                            @if($contFund->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/admin/conteudos/download/{{$contFund->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-sm btn-danger" href="/admin/conteudos/apagar/{{$contFund->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="modal6{{$contFund->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
@@ -41,7 +42,7 @@
                                                                 <b style="font-size: 90%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                                         </div>
                                                         <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Enviar</button>
+                                                        <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -50,7 +51,7 @@
                                         @endif
                                     @else
                                     @if($contFund->disciplina->nome=="Arte" || $contFund->disciplina->nome=="Ciências" || $contFund->disciplina->nome=="Educação Física") <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> @else
-                                            @if($contFund->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-success" href="/admin/conteudos/download/{{$contFund->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-danger" href="/admin/conteudos/apagar/{{$contFund->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
+                                            @if($contFund->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/admin/conteudos/download/{{$contFund->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contFund->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-sm btn-danger" href="/admin/conteudos/apagar/{{$contFund->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="modal6{{$contFund->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
@@ -69,7 +70,7 @@
                                                                 <b style="font-size: 90%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                                         </div>
                                                         <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Enviar</button>
+                                                        <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -84,9 +85,11 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
         <div class="card-body">
             <h5 class="card-title">Painel de Conteúdos - Ensino Médio - {{$tipo}} - {{$bim}}º Bimestre</h5>
+            <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
                 <thead class="thead-dark">
                     <tr>
@@ -105,7 +108,7 @@
                                 @if($contMedio->disciplina->nome == $medioDisc->nome && $contMedio->serie==$turma->serie)
                                     @if($turma->serie==3)
                                         @if($contMedio->disciplina->nome=="Química I") <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> @else
-                                            @if($contMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-success" href="/admin/conteudos/download/{{$contMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-danger" href="/admin/conteudos/apagar/{{$contMedio->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
+                                            @if($contMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/admin/conteudos/download/{{$contMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-sm btn-danger" href="/admin/conteudos/apagar/{{$contMedio->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="modal6{{$contMedio->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
@@ -124,7 +127,7 @@
                                                                 <b style="font-size: 90%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                                         </div>
                                                         <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Enviar</button>
+                                                        <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -132,7 +135,7 @@
                                             </form>
                                         @endif
                                     @else
-                                            @if($contMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-success" href="/admin/conteudos/download/{{$contMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-danger" href="/admin/conteudos/apagar/{{$contMedio->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
+                                            @if($contMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/admin/conteudos/download/{{$contMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$contMedio->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-sm btn-danger" href="/admin/conteudos/apagar/{{$contMedio->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="modal6{{$contMedio->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
@@ -151,7 +154,7 @@
                                                                 <b style="font-size: 90%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                                         </div>
                                                         <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Enviar</button>
+                                                        <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -166,6 +169,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <br>

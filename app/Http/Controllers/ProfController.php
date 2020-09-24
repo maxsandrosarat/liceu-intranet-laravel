@@ -304,7 +304,9 @@ class ProfController extends Controller
 
     public function diaDiario($discId, $turmaId){
         $turmaDiscs = TurmaDisciplina::where('disciplina_id',"$discId")->get();
-        return view('profs.diario_dia', compact('turmaDiscs','discId','turmaId'));
+        $disc = Disciplina::find($discId);
+        $turma = Turma::find($turmaId);
+        return view('profs.diario_dia', compact('turmaDiscs','disc','turma'));
     }
 
     public function indexDiario(Request $request){
@@ -382,6 +384,16 @@ class ProfController extends Controller
             $diario->save();
         }
         return back()->with('mensagem', 'Diário atualizado com Sucesso!');
+    }
+
+    public function apagarDiario(Request $request)
+    {
+        $diarioId = $request->input('ocorrencia');
+        $diario = Diario::find($diarioId);
+        if(isset($diario)){
+            $diario->delete();
+        }
+        return redirect('/prof/diario/disciplinas')->with('mensagem', 'Diário excluído com Sucesso!');
     }
 
     //OCORRENCIAS

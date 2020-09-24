@@ -51,12 +51,15 @@
                                         Data da Entrega da Tarefa: {{date("d/m/Y", strtotime($diario->entrega_tarefa))}}<br/>
                                         Prof(a). {{$diario->prof->name}}
                                         <br/><br/>
+                                        <a type="button" @if($diario->conferido===0) href="/admin/diario/conferido/{{$diario->id}}" class="btn btn-sm btn-warning" @else class="btn btn-sm btn-success" @endif>
+                                            <b>@if($diario->conferido===0)<i class="material-icons md-18 red">highlight_off</i> NÃO CONFERIDO @else <i class="material-icons md-18 green">check_circle</i> CONFERIDO @endif</b>
+                                        </a>
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal{{$diario->id}}">
                                             <i class="material-icons md-18">edit</i>
                                         </button>
-                                        <a type="button" @if($diario->conferido===0) href="/admin/diario/conferido/{{$diario->id}}" class="btn btn-sm btn-warning" @else class="btn btn-sm btn-success" @endif>
-                                            <b>@if($diario->conferido===0)<i class="material-icons md-18 red">highlight_off</i> NÃO CONFERIDO @else <i class="material-icons md-18 green">check_circle</i> CONFERIDO @endif</b>
+                                        <a type="button" href="/admin/diario/apagar/{{$diario->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom" title="Excluir Diário">
+                                            <i class="material-icons md-18 white">delete</i>
                                         </a>
                                     </p></b>
                                     <!-- Modal -->
@@ -228,4 +231,18 @@
     </div>
     <br>
     <a href="/admin/diario" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    <script type="text/javascript">
+        // Remove botão de download de vídeos
+        iframe::-internal-media-controls-download-button {
+        display:none;
+        }
+
+        iframe::-webkit-media-controls-enclosure {
+            overflow:hidden;
+        }
+
+        iframe::-webkit-media-controls-panel {
+            width: calc(100% + 30px); 
+        }
+    </script>
 @endsection

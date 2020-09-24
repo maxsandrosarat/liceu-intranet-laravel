@@ -27,9 +27,21 @@
                         $diasemana_numero = date('w', strtotime($diario->dia)); 
                         @endphp
                         <h5>Dia: {{date("d/m/Y", strtotime($diario->dia))}} ({{$diasemana[$diasemana_numero]}})</h5>
-                        <div style="text-align: right"><a type="button" @if($diario->conferido===0) class="btn btn-sm btn-warning" @else class="btn btn-sm btn-success" @endif>
-                            <b>@if($diario->conferido===0)<i class="material-icons md-18 red">highlight_off</i> NÃO CONFERIDO @else <i class="material-icons md-18 green">check_circle</i> CONFERIDO @endif</b>
-                        </a></div>
+                        <div class="row">
+                            <div class="col" style="text-align: left">
+                                <a type="button" @if($diario->conferido===0) class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="bottom" title="Aguardando conferência dos lançamentos pela Coordenação" @else class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="Conferência concluída pela Coordenação" @endif>
+                                    <b>@if($diario->conferido===0)<i class="material-icons md-18 red">highlight_off</i> NÃO CONFERIDO @else <i class="material-icons md-18 green">check_circle</i> CONFERIDO @endif</b>
+                                </a>
+                            </div>
+                            <div class="col" style="text-align: right">
+                                <form action="/prof/diario/apagar" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="ocorrencia" value="{{$diario->id}}" required>
+                                    <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom" title="Excluir Diário"><i class="material-icons md-18 white">delete</i></button>
+                                </form>
+                            </div>
+                        </div>
+                        <br/>
                         <form method="POST" action="/prof/diario">
                             @csrf
                         <input type="hidden" name="diario" value="{{$diario->id}}">
@@ -105,11 +117,10 @@
                                         @endif
                                     @endif
                                 @endif
-                                @endif
+                                @endif                              </select></label></b>
                             <input type="hidden" id="valorPrevio" value="{{$diario->segundo_tempo}}"/>
                             <div id="selects">
                                 <div id="div_select1">
-                                    </select></label></b>
                                     <b><label for="segundoTempo">Duplicar lançamento para outro tempo?
                                     <select class="custom-select" id="select1" name="segundoTempo" required>
                                         @if($diario->segundo_tempo=="0")

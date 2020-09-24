@@ -3,6 +3,18 @@
 @section('body')
     <div class="card border">
         <div class="card-body">
+            @if(session('mensagem'))
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="alert alert-success" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert">x</button>
+                                    <p>{{session('mensagem')}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            @endif
             <h5 class="card-title">Diário</h5>
             @if(count($profDiscs)==0)
                 <div class="alert alert-danger" role="alert">

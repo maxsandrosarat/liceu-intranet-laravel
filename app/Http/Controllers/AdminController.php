@@ -1125,6 +1125,14 @@ class AdminController extends Controller
         return back()->with('mensagem', 'Diário conferido com Sucesso!');
     }
 
+    public function apagarDiario($id){
+        $diario = Diario::find($id);
+        if(isset($diario)){
+            $diario->delete();
+        }
+        return back()->with('mensagem', 'Diário excluído com Sucesso!');
+    }
+
     //OCORRENCIAS
     public function indexOcorrencias(){
         $alunos = Aluno::where('ativo',true)->orderBy('name')->get();

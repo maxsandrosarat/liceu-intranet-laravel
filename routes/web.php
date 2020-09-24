@@ -117,7 +117,7 @@ Route::group(['prefix' => 'admin'], function() {
     Route::group(['prefix' => 'atividade'], function() {
         Route::get('/', 'AdminController@painelAtividades');
         Route::post('/', 'AdminController@novaAtividade');
-        Route::get('/filtro', 'AdminController@filtroAtividades');
+        Route::get('/filtro', 'AdminController@filtroAtividade');
         Route::post('/editar/{id}', 'AdminController@editarAtividade');
         Route::get('/apagar/{id}', 'AdminController@apagarAtividade');
         Route::get('/download/{id}', 'AdminController@downloadAtividade');
@@ -136,6 +136,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/consulta', 'AdminController@consultaDiario');
         Route::post('/editar/{id}', 'AdminController@editarDiario');
         Route::get('/conferido/{id}', 'AdminController@conferirDiario');
+        Route::get('/apagar/{id}', 'AdminController@apagarDiario');
     });
     
     Route::group(['prefix' => 'ocorrencias'], function() {
@@ -194,7 +195,7 @@ Route::group(['prefix' => 'prof'], function() {
     });
 
     Route::group(['prefix' => 'listaAtividade'], function() {
-        Route::get('/', function () { return view('profs.home_las'); });
+        Route::get('/', function () { return view('profs.home_las'); })->middleware('auth:prof');
         Route::get('/painel/{data}', 'ProfController@painelListaAtividades');
         Route::post('/anexar/{id}', 'ProfController@anexarListaAtividade');
         Route::get('/download/{id}', 'ProfController@downloadListaAtividade');
@@ -226,6 +227,7 @@ Route::group(['prefix' => 'prof'], function() {
         Route::get('/{disc}/{turma}', 'ProfController@diaDiario');
         Route::get('/', 'ProfController@indexDiario');
         Route::post('/', 'ProfController@editarDiario');
+        Route::post('/apagar', 'ProfController@apagarDiario');
     });
 });
 
