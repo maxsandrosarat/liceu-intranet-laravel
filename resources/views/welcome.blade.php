@@ -3,8 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Liceu</title>
+		<meta name="theme-color" content="#00008B">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#00008B">
+		<meta name="msapplication-navbutton-color" content="#00008B">
+        <title>Extranet - Colégio Liceu II</title>
         <link rel="shortcut icon" href="/storage/favicon.png"/>
         
         <!-- Fonts -->

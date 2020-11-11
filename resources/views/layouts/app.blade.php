@@ -5,6 +5,9 @@
     <link rel="shortcut icon" href="/storage/favicon.png"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#00008B">
+	<meta name="apple-mobile-web-app-status-bar-style" content="#00008B">
+	<meta name="msapplication-navbutton-color" content="#00008B">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
