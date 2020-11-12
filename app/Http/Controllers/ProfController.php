@@ -306,6 +306,10 @@ class ProfController extends Controller
         $turmaDiscs = TurmaDisciplina::where('disciplina_id',"$discId")->get();
         $disc = Disciplina::find($discId);
         $turma = Turma::find($turmaId);
+        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turmaId")->get();
+        if(count($alunos)==0){
+            return back()->with('mensagem', 'A turma selecionada não possui alunos cadastrados!');
+        }
         return view('profs.diario_dia', compact('turmaDiscs','disc','turma'));
     }
 
@@ -316,6 +320,10 @@ class ProfController extends Controller
         $dia = $request->input('data');
         $disciplina = Disciplina::find($discId);
         $turma = Turma::find($turmaId);
+        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turmaId")->get();
+        if(count($alunos)==0){
+            return back()->with('mensagem', 'A turma selecionada não possui alunos cadastrados!');
+        }
         $qtdDiario = Diario::where('dia', "$dia")->where('prof_id',"$profId")->where('disciplina_id',"$discId")->where('turma_id',"$turmaId")->count();
         if($qtdDiario==0){
             $diario = new Diario();
@@ -334,7 +342,6 @@ class ProfController extends Controller
             $diario->save();
         }
         $diarios = Diario::where('dia', "$dia")->where('prof_id',"$profId")->where('disciplina_id',"$discId")->where('turma_id',"$turmaId")->get();
-        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turmaId")->get();
         $tipos = TipoOcorrencia::where('ativo',true)->orderBy('codigo')->get();
         $alunoIds = array();
         foreach($alunos as $aluno){

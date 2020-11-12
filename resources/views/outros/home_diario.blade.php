@@ -1,4 +1,4 @@
-@extends('layouts.app', ["current"=>"pedagogico"])
+@extends('layouts.app', ["current"=>"diario"])
 
 @section('body')
 <div class="container">
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     @endif
-                    <form method="GET" action="/admin/diario/consulta">
+                    <form method="GET" action="/outro/diario/consulta">
                         @csrf
                     <label for="turma">Turma
                         <select class="custom-select" id="turma" name="turma" required>
@@ -39,5 +39,5 @@
     </div>
 </div>
 <br/>
-<a href="/admin/diario" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+<a href="/outro/diario" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

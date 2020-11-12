@@ -267,5 +267,39 @@ Route::group(['prefix' => 'outro'], function() {
     Route::get('/login', 'Auth\OutroLoginController@index')->name('outro.login');
     Route::post('/login', 'Auth\OutroLoginController@login')->name('outro.login.submit');
     Route::get('/', 'OutroController@index')->name('outro.dashboard');
+    Route::get('/estoque', function () { return view('outros.home_estoque'); })->middleware('auth:outro');
+
+    Route::group(['prefix' => 'categorias'], function() {
+        Route::get('/', 'OutroController@indexCategorias');
+        Route::post('/', 'OutroController@novaCategoria');
+        Route::post('/editar/{id}', 'OutroController@editarCategoria');
+        Route::get('/apagar/{id}', 'OutroController@apagarCategoria');
+    });
+
+    Route::group(['prefix' => 'produtos'], function() {
+        Route::get('/', 'OutroController@indexProdutos');
+        Route::post('/', 'OutroController@novoProduto');
+        Route::get('/filtro', 'OutroController@filtroProdutos');
+        Route::post('/editar/{id}', 'OutroController@editarProduto');
+        Route::get('/apagar/{id}', 'OutroController@apagarProduto');
+    });
+    
+    Route::group(['prefix' => 'entradaSaida'], function() {
+        Route::get('/', 'OutroController@indexEntradaSaidas');
+        Route::post('/', 'OutroController@novaEntradaSaida');
+        Route::get('/filtro', 'OutroController@filtroEntradaSaidas');
+    });
+    
+    Route::group(['prefix' => 'listaCompras'], function() {
+        Route::get('/', 'OutroController@indexListaCompras');
+        Route::post('/', 'OutroController@novaListaCompra');
+        Route::get('/nova', 'OutroController@selecionarListaCompra');
+        Route::get('/pdf/{id}', 'OutroController@gerarPdfListaCompra');
+    });
+
+    Route::group(['prefix' => 'diario'], function() {
+        Route::get('/', 'OutroController@indexDiario');
+        Route::get('/consulta', 'OutroController@consultaDiario');
+    });
 });
 

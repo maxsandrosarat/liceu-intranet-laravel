@@ -202,7 +202,6 @@
                                             </div>
                                             </div>
                                         </div>
-                                    </td>
                                         @endif
                                         @endif
                                     </td>

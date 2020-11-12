@@ -86,6 +86,12 @@
             <li @if($current=="home") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/outro">Home</a>
             </li>
+            <li @if($current=="estoque") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/outro/estoque">Estoque</a>
+            </li>
+            <li @if($current=="diario") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/outro/diario">Diário</a>
+            </li>
             @endauth
 
             <!--WEB

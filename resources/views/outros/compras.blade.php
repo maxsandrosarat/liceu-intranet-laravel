@@ -1,0 +1,36 @@
+@extends('layouts.app', ["current"=>"estoque"])
+
+@section('body')
+    <div class="card border">
+        <div class="card-body">
+            <h5 class="card-title">Lista de Produtos</h5>
+            @if(count($rels)==0)
+                <br/><br/>
+                <div class="alert alert-danger" role="alert">
+                    Sem produtos selecionados!
+                </div>
+            @else
+            <table class="table table-striped table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="text-align: center;">Produto</th>
+                        <th style="text-align: center;">Estoque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($rels as $rel)
+                    <tr>
+                        <td>{{$rel->produto->nome}}</td>
+                        <td style="text-align: center;">{{$rel->estoque}}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <a href="/outro/listaCompras/pdf/{{$lista_id}}" target="_blank" class="btn btn-success">Gerar PDF</a>
+            @endif
+        </div>
+    </div>
+    <br>
+    <a href="/outro/listaCompras" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    
+@endsection

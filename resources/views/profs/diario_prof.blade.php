@@ -117,7 +117,8 @@
                                         @endif
                                     @endif
                                 @endif
-                                @endif                              </select></label></b>
+                                @endif
+                            </select></label></b>
                             <input type="hidden" id="valorPrevio" value="{{$diario->segundo_tempo}}"/>
                             <div id="selects">
                                 <div id="div_select1">
@@ -397,7 +398,6 @@
                                             <input type="hidden" name="ocorrencia" value="{{$ocorrencia->id}}" required>
                                             <button type="submit" class="btn btn-sm btn-danger">Apagar</button>
                                         </form>
-                                    </td>
                                         @endif
                                         @endif
                                     </td>
