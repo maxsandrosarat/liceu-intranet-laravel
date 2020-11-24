@@ -79,6 +79,9 @@
             <li @if($current=="conteudos") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof/conteudos/{{date("Y")}}">Conteúdos</a>
             </li>
+            <li @if($current=="simulados") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/prof/simulados/{{date("Y")}}">Simulados</a>
+            </li>
             @endauth
 
             <!--OUTRO-->

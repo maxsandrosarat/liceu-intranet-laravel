@@ -22,9 +22,13 @@ use App\Outro;
 use App\Produto;
 use App\Prof;
 use App\ProfDisciplina;
+use App\Questao;
+use App\QuestaoSimulado;
+use App\QuestoesSimulado;
 use App\Recado;
 use App\Responsavel;
 use App\ResponsavelAluno;
+use App\Simulado;
 use App\TurmaDisciplina;
 use Excel;
 use PDF;
@@ -1604,6 +1608,146 @@ class AdminController extends Controller
         Storage::disk('public')->delete($arquivo);
         $ae->arquivo = "";
         $ae->save();
+        return back();
+    }
+
+    //SIMULADOS
+    public function indexSimulados(Request $request){
+        $ano = $request->input('ano');
+        $turmas = Turma::where('ativo',true)->where('turma','A')->get();
+        $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $simulados = Simulado::where('ano',"$ano")->get();
+        return view('admin.home_simulados',compact('ano','turmas','anos','simulados'));
+    }
+
+    public function indexSimuladosAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $turmas = Turma::where('ativo',true)->where('turma','A')->get();
+        $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $simulados = Simulado::where('ano',"$ano")->get();
+        return view('admin.home_simulados',compact('ano','turmas','anos','simulados'));
+    }
+    //DB::table('questao_simulados')->select(DB::raw('id, descricao, bimestre, ano'))->groupByRaw('id, descricao, bimestre, ano')->get();
+    
+    public function gerarSimulados(Request $request){
+        $sim = new Simulado();
+        $sim->descricao = $request->input('descricao');
+        $sim->ano = $request->input('ano');
+        $sim->bimestre = $request->input('bimestre');
+        $sim->save();
+        $turmas = $request->input('turmas');
+        $discs = Disciplina::where('ativo',true)->get();
+        foreach($turmas as $turmaId){
+            $turma = Turma::find($turmaId);
+            $serie = $turma->serie;
+            $ensino = $turma->ensino;
+            foreach($discs as $disc){
+                if($disc->ensino=="fund" && $ensino=="fund"){
+                    $validador = Questao::where('simulado_id', "$sim->id")->where('serie', "$serie")->where('ensino', 'fund')->where('disciplina_id', "$disc->id")->count();
+                    if($validador == 0){
+                        $quest = new Questao();
+                        $quest->simulado_id = $sim->id;
+                        $quest->serie = $serie;
+                        $quest->ensino = "fund";
+                        $quest->disciplina_id = $disc->id;
+                        $quest->save();
+                    }
+                } else if($disc->ensino=="medio" && $ensino=="medio"){
+                    $validador = Questao::where('simulado_id', "$sim->id")->where('serie', "$serie")->where('ensino', 'medio')->where('disciplina_id', "$disc->id")->count();
+                    if($validador == 0){
+                        $quest = new Questao();
+                        $quest->simulado_id = $sim->id;
+                        $quest->serie = $serie;
+                        $quest->ensino = "medio";
+                        $quest->disciplina_id = $disc->id;
+                        $quest->save();
+                    }
+                }
+            }
+        }
+        return back()->with('mensagem', 'Campos para anexar as questões gerados com sucesso!');
+    }
+
+    public function painelSimulados($simId){
+        $simulado = Simulado::find($simId);
+        $ano = $simulado->ano;
+        $fundTurmas = "";
+        $fundDiscs = "";
+        $contFunds = "";
+        $medioTurmas = "";
+        $medioDiscs = "";
+        $contMedios = "";
+        $ensino = "";
+        $validadorFund = Questao::where('simulado_id', "$simId")->where('ensino','fund')->count();
+        if($validadorFund!=0){
+            $ensino = "fund";
+            $fundTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','fund')->select(DB::raw("serie"))->groupBy('serie')->get();
+            $fundDiscs = Disciplina::where('ensino','fund')->get();
+            $contFunds = Questao::where('simulado_id', "$simId")->where('ensino','fund')->orderBy('disciplina_id')->get();
+        }
+        $validadorMedio = Questao::where('simulado_id', "$simId")->where('ensino','medio')->count();
+        if($validadorMedio!=0){
+            $ensino = "medio";
+            $medioTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','medio')->select(DB::raw("serie"))->groupBy('serie')->get();
+            $medioDiscs = Disciplina::where('ensino','medio')->get();
+            $contMedios = Questao::where('simulado_id', "$simId")->where('ensino','medio')->orderBy('disciplina_id')->get();
+        }
+        if($validadorFund!=0 && $validadorMedio!=0){
+            $ensino = "todos";
+        }
+        return view('admin.simulados',compact('ensino','simulado','ano','fundTurmas','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
+    }
+
+    public function anexarSimulado(Request $request, $id)
+    {
+        $path = $request->file('arquivo')->store('questoesSimulados','public');
+        $cont = Questao::find($id);
+        if($cont->arquivo=="" || $cont->arquivo==null){
+            $cont->arquivo = $path;
+            $cont->save();
+        } else {
+            $arquivo = $cont->arquivo;
+            Storage::disk('public')->delete($arquivo);
+            $cont->arquivo = $path;
+            $cont->save();
+        }
+        return back();
+    }
+
+    public function downloadSimulado($id)
+    {
+        $cont = Questao::find($id);
+        $discId = $cont->disciplina_id;
+        $disciplina = Disciplina::find($discId);
+        $simulado = Simulado::find($cont->simulado_id);
+        $nameFile = "";
+        switch ($cont->serie) {
+                case 6: $nameFile = "6º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
+                case 7: $nameFile = "7º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
+                case 8: $nameFile = "8º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
+                case 9: $nameFile = "9º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
+                case 1: $nameFile = "1º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
+                case 2: $nameFile = "2º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
+                case 3: $nameFile = "3º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
+                default: $nameFile = "";
+        };
+        if(isset($cont)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return back();
+    }
+
+    public function apagarSimulado($id){
+        $cont = Questao::find($id);
+        $arquivo = $cont->arquivo;
+        Storage::disk('public')->delete($arquivo);
+        $cont->arquivo = "";
+        $cont->save();
         return back();
     }
 }

@@ -188,5 +188,5 @@
         </div>
     </div>
     <br/>
-    <a href="/prof/disciplinasAtividades" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    <a href="/prof/atividade/disciplinas" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

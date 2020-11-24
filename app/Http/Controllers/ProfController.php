@@ -14,6 +14,8 @@ use App\Turma;
 use App\TurmaDisciplina;
 use Illuminate\Http\Request;
 use App\Ocorrencia;
+use App\Questao;
+use App\Simulado;
 use App\TipoOcorrencia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -631,6 +633,126 @@ class ProfController extends Controller
 
     public function apagarConteudo($id){
         $cont = Conteudo::find($id);
+        $arquivo = $cont->arquivo;
+        Storage::disk('public')->delete($arquivo);
+        $cont->arquivo = "";
+        $cont->save();
+        return back();
+    }
+
+    //SIMULADOS
+    public function indexSimulados(Request $request){
+        $profId = Auth::user()->id;
+        $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
+        $turmasIds = array();
+        foreach($profDiscs as $profDisc){
+            $turmas = TurmaDisciplina::where('disciplina_id',"$profDisc")->get();
+            foreach($turmas as $turma){
+                $serie = Turma::find($turma->turma_id);
+                $turmasIds[] = $serie->serie;
+            }
+        }
+        $simIds = DB::table('questoes')->orWhereIn('serie', $turmasIds)->select(DB::raw("simulado_id"))->groupBy('simulado_id')->get();
+        $simuladosIds = array();
+        foreach($simIds as $simId){
+            $simuladosIds[] = $simId->simulado_id;
+        }
+        $ano = $request->input('ano');
+        $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $simulados = Simulado::orWhereIn('id', $simuladosIds)->where('ano',"$ano")->get();
+        return view('profs.home_simulados',compact('ano','anos','simulados'));
+    }
+
+    public function indexSimuladosAno($ano){
+        $profId = Auth::user()->id;
+        $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
+        $turmasIds = array();
+        foreach($profDiscs as $profDisc){
+            $turmas = TurmaDisciplina::where('disciplina_id',"$profDisc->disciplina_id")->get();
+            foreach($turmas as $turma){
+                $serie = Turma::find($turma->turma_id);
+                $turmasIds[] = $serie->serie;
+            }
+        }
+        $simIds = DB::table('questoes')->orWhereIn('serie', $turmasIds)->select(DB::raw("simulado_id"))->groupBy('simulado_id')->get();
+        $simuladosIds = array();
+        foreach($simIds as $simId){
+            $simuladosIds[] = $simId->simulado_id;
+        }
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $simulados = Simulado::orWhereIn('id', $simuladosIds)->where('ano',"$ano")->get();
+        return view('profs.home_simulados',compact('ano','anos','simulados'));
+    }
+
+    public function painelSimulados($simId){
+        $simulado = Simulado::find($simId);
+        $ano = $simulado->ano;
+        $fundTurmas = "";
+        $fundDiscs = "";
+        $contFunds = "";
+        $medioTurmas = "";
+        $medioDiscs = "";
+        $contMedios = "";
+        $ensino = "";
+        $profId = Auth::user()->id;
+        $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
+        $validadorFund = Questao::where('simulado_id', "$simId")->where('ensino','fund')->count();
+        if($validadorFund!=0){
+            $ensino = "fund";
+            $fundTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','fund')->select(DB::raw("serie"))->groupBy('serie')->get();
+            $fundDiscs = Disciplina::where('ensino','fund')->get();
+            $contFunds = Questao::where('simulado_id', "$simId")->where('ensino','fund')->orderBy('disciplina_id')->get();
+        }
+        $validadorMedio = Questao::where('simulado_id', "$simId")->where('ensino','medio')->count();
+        if($validadorMedio!=0){
+            $ensino = "medio";
+            $medioTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','medio')->select(DB::raw("serie"))->groupBy('serie')->get();
+            $medioDiscs = Disciplina::where('ensino','medio')->get();
+            $contMedios = Questao::where('simulado_id', "$simId")->where('ensino','medio')->orderBy('disciplina_id')->get();
+        }
+        if($validadorFund!=0 && $validadorMedio!=0){
+            $ensino = "todos";
+        }
+        return view('profs.simulados',compact('profDiscs','ensino','simulado','ano','fundTurmas','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
+    }
+
+    public function anexarSimulado(Request $request, $id)
+    {
+        $path = $request->file('arquivo')->store('questoesSimulados','public');
+        $cont = Questao::find($id);
+        if($cont->arquivo=="" || $cont->arquivo==null){
+            $cont->arquivo = $path;
+            $cont->save();
+        } else {
+            $arquivo = $cont->arquivo;
+            Storage::disk('public')->delete($arquivo);
+            $cont->arquivo = $path;
+            $cont->save();
+        }
+        return back();
+    }
+
+    public function downloadSimulado($id)
+    {
+        $cont = Questao::find($id);
+        $discId = $cont->disciplina_id;
+        $disciplina = Disciplina::find($discId);
+        $simulado = Simulado::find($cont->simulado_id);
+        $nameFile = $cont->serie." - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome;
+        if(isset($cont)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return back();
+    }
+
+    public function apagarSimulado($id){
+        $cont = Questao::find($id);
         $arquivo = $cont->arquivo;
         Storage::disk('public')->delete($arquivo);
         $cont->arquivo = "";

@@ -174,6 +174,16 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/download/{id}', 'AdminController@downloadAE');
         Route::get('/apagar/{id}', 'AdminController@apagarAE');
     });
+
+    Route::group(['prefix' => 'simulados'], function() {
+        Route::get('/{a}', 'AdminController@indexSimuladosAno');
+        Route::get('/', 'AdminController@indexSimulados');
+        Route::get('/painel/{id}', 'AdminController@painelSimulados');
+        Route::post('/gerar', 'AdminController@gerarSimulados');
+        Route::post('/anexar/{id}', 'AdminController@anexarSimulado');
+        Route::get('/download/{id}', 'AdminController@downloadSimulado');
+        Route::get('/apagar/{id}', 'AdminController@apagarSimulado');
+    });
 });
 
 //PROF
@@ -228,6 +238,15 @@ Route::group(['prefix' => 'prof'], function() {
         Route::get('/', 'ProfController@indexDiario');
         Route::post('/', 'ProfController@editarDiario');
         Route::post('/apagar', 'ProfController@apagarDiario');
+    });
+
+    Route::group(['prefix' => 'simulados'], function() {
+        Route::get('/{a}', 'ProfController@indexSimuladosAno');
+        Route::get('/', 'ProfController@indexSimulados');
+        Route::get('/painel/{id}', 'ProfController@painelSimulados');
+        Route::post('/anexar/{id}', 'ProfController@anexarSimulado');
+        Route::get('/download/{id}', 'ProfController@downloadSimulado');
+        Route::get('/apagar/{id}', 'ProfController@apagarSimulado');
     });
 });
 

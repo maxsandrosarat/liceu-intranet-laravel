@@ -83,6 +83,17 @@
             document.getElementById("processamento").innerHTML = '<button class="btn btn-primary" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Processando...</button>';
         }
 
+
+        $('#form-sim').on("submit", function (e) {
+            var arr = $(this).serialize().toString();
+            if(arr.indexOf("turmas") < 0){
+                e.preventDefault();
+                alert("Selecione pelo menos uma série");
+            } else{
+                document.getElementById("processamento").innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processando...';
+            }
+        });
+
         $(document).ready(function(){
             //OPÇÕES DE LOGIN
             $('#principal').children('div').hide();
