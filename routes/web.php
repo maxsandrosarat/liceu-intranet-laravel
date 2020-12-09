@@ -112,6 +112,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/', 'AdminController@novaListaCompra');
         Route::get('/nova', 'AdminController@selecionarListaCompra');
         Route::get('/pdf/{id}', 'AdminController@gerarPdfListaCompra');
+        Route::get('/apagar/{id}', 'AdminController@apagarListaCompra');
     });
     
     Route::group(['prefix' => 'atividade'], function() {
@@ -121,10 +122,14 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/editar/{id}', 'AdminController@editarAtividade');
         Route::get('/apagar/{id}', 'AdminController@apagarAtividade');
         Route::get('/download/{id}', 'AdminController@downloadAtividade');
+        Route::get('/retornos/{id}', 'AdminController@retornos');
+        Route::get('/retorno/download/{id}', 'AdminController@downloadRetorno');
     });
     
     Route::group(['prefix' => 'listaAtividade'], function() {
-        Route::get('/', function () { return view('admin.home_las_admin'); })->middleware('auth:admin');
+        Route::get('/{ano}', 'AdminController@indexLAsAno');
+        Route::get('/', 'AdminController@indexLAs');
+        Route::post('/', 'AdminController@novaLA');
         Route::get('/painel/{data}', 'AdminController@painelLAs');
         Route::post('/anexar/{id}', 'AdminController@anexarLA');
         Route::get('/download/{id}', 'AdminController@downloadLA');
@@ -183,6 +188,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/anexar/{id}', 'AdminController@anexarSimulado');
         Route::get('/download/{id}', 'AdminController@downloadSimulado');
         Route::get('/apagar/{id}', 'AdminController@apagarSimulado');
+        Route::post('/conferir', 'AdminController@conferirSimulado');
     });
 });
 
@@ -205,7 +211,8 @@ Route::group(['prefix' => 'prof'], function() {
     });
 
     Route::group(['prefix' => 'listaAtividade'], function() {
-        Route::get('/', function () { return view('profs.home_las'); })->middleware('auth:prof');
+        Route::get('/{ano}', 'ProfController@indexLAsAno');
+        Route::get('/', 'ProfController@indexLAs');
         Route::get('/painel/{data}', 'ProfController@painelListaAtividades');
         Route::post('/anexar/{id}', 'ProfController@anexarListaAtividade');
         Route::get('/download/{id}', 'ProfController@downloadListaAtividade');
@@ -319,6 +326,14 @@ Route::group(['prefix' => 'outro'], function() {
     Route::group(['prefix' => 'diario'], function() {
         Route::get('/', 'OutroController@indexDiario');
         Route::get('/consulta', 'OutroController@consultaDiario');
+    });
+
+    Route::group(['prefix' => 'simulados'], function() {
+        Route::get('/{a}', 'OutroController@indexSimuladosAno');
+        Route::get('/', 'OutroController@indexSimulados');
+        Route::get('/painel/{id}', 'OutroController@painelSimulados');
+        Route::get('/download/{id}', 'OutroController@downloadSimulado');
+        Route::post('/conferir', 'OutroController@conferirSimulado');
     });
 });
 

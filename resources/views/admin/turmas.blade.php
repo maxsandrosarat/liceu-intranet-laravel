@@ -4,6 +4,18 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Turmas</h5>
+            @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             @if(count($turmas)==0)
                 <br/><br/>
                 <div class="alert alert-danger" role="alert">
@@ -19,6 +31,7 @@
                         <th>Turma</th>
                         <th>Turno</th>
                         <th>Ensino</th>
+                        <th>Ativo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -30,7 +43,20 @@
                         <td>{{$turma->turma}}</td>
                         <td>@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif</td>
                         <td>@if($turma->ensino=='fund') Fundamental @else Médio @endif</td>
-                        <td><a href="/admin/turmas/apagar/{{$turma->id}}" class="btn btn-sm btn-danger">Apagar</a></td>
+                        <td>
+                            @if($turma->ativo==1)
+                                <b><i class="material-icons green">check_circle</i></b>
+                            @else
+                                <b><i class="material-icons red">highlight_off</i></b>
+                            @endif
+                        </td>
+                        <td>
+                        @if($turma->ativo==1)
+                            <a href="/admin/turmas/apagar/{{$turma->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18 red">disabled_by_default</i></a>
+                        @else
+                            <a href="/admin/turmas/apagar/{{$turma->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Ativar"><i class="material-icons md-18 green">check_box</i></a>
+                        @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

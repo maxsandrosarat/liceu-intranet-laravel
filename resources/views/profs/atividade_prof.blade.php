@@ -96,6 +96,7 @@
                     </form>
                 </div>
             </div>
+            <hr/>
             <h5>Exibindo {{$atividades->count()}} de {{$atividades->total()}} de Atividades ({{$atividades->firstItem()}} a {{$atividades->lastItem()}}) de {{$disciplina->nome}}</h5>
             <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover" style="text-align: center;">
@@ -116,9 +117,9 @@
                                 </div>
                                 <div class="card-body">
                                   <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}} @if($atividade->data_publicacao!="") | Data Publicação: {{date("d/m/Y H:i", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y H:i", strtotime($atividade->data_expiracao))}}@endif</p>
-                                  <a href="{{$atividade->link}}" target="_blank" class="btn btn-sm btn-primary">Link Vídeo-Aula</a>
-                                  <a type="button" class="btn btn-sm btn-success" href="/prof/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-sm btn-danger" href="/prof/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
-                                  @if($atividade->retorno=="sim") <a href="/prof/atividade/retornos/{{$atividade->id}}" target="_blank" class="btn btn-sm btn-info">Retornos</a> @endif
+                                  @if($atividade->link!="")<a href="{{$atividade->link}}" target="_blank" class="badge badge-primary">Link Vídeo-Aula</a>@endif
+                                  <a type="button" class="badge badge-success" href="/prof/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="badge badge-danger" href="/prof/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
+                                  @if($atividade->retorno=="sim") <a href="/prof/atividade/retornos/{{$atividade->id}}" target="_blank" class="btn btn-info btn-sm">Retornos <span class="badge badge-light">{{count($atividade->retornos)}}</span></a> @endif
                                 </div>
                             </div>
                         </td>

@@ -4,6 +4,18 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Professores</h5>
+            @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <a type="button" class="float-button" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Adicionar Novo Professor(a)">
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
@@ -26,7 +38,7 @@
                 <select class="custom-select" id="disciplina" name="disciplina">
                     <option value="">Selecione uma disciplina</option>
                     @foreach ($discs as $disc)
-                        <option value="{{$disc->id}}">{{$disc->nome}} (@if($disc->ensino=="fund") Fundamental @else Médio @endif)</option>
+                        <option @if($disc->ativo==false) style="color: red;" @endif value="{{$disc->id}}">{{$disc->nome}} (@if($disc->ensino=="fund") Fundamental @else Médio @endif)</option>
                     @endforeach
                 </select>
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
@@ -42,6 +54,7 @@
                         <th>Nome</th>
                         <th>Login</th>
                         <th>Disciplinas</th>
+                        <th>Ativo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -54,14 +67,21 @@
                         <td>
                             <ul>
                                 @foreach ($prof->disciplinas as $disciplina)
-                                <li>{{$disciplina->nome}} (@if($disciplina->ensino=='fund') Fundamental @else Médio @endif) <a href="/admin/prof/desvincularDisciplinaProf/{{$prof->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
+                                <li @if($disciplina->ativo==false) style="color: red;" @endif>{{$disciplina->nome}} (@if($disciplina->ensino=='fund') Fundamental @else Médio @endif) <a href="/admin/prof/desvincularDisciplinaProf/{{$prof->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
                                 <br/>
                                 @endforeach
                             </ul>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal{{$prof->id}}">
-                                Editar
+                            @if($prof->ativo==1)
+                                <b><i class="material-icons green">check_circle</i></b>
+                            @else
+                                <b><i class="material-icons red">highlight_off</i></b>
+                            @endif
+                        </td>
+                        <td>
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$prof->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
                             </button>
                             
                             <!-- Modal -->
@@ -134,8 +154,11 @@
                                                     <br>
                                                     <ul>
                                                     @foreach ($discs as $disc)
+                                                    @if($disc->ativo==false)
+                                                    @else
                                                     <li><input type="checkbox" id="disciplina{{$disc->id}}" name="disciplinas[]" value="{{$disc->id}}" @foreach ($prof->disciplinas as $disciplina) @if($disciplina->id==$disc->id) checked @endif @endforeach>
                                                     <label for="disciplina{{$disc->id}}">{{$disc->nome}} (@if($disc->ensino=="fund") Fundamental @else Médio @endif)</label></li>
+                                                    @endif
                                                     @endforeach
                                                     </ul>
                                                 </div>
@@ -154,7 +177,11 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/admin/prof/apagar/{{$prof->id}}" class="btn btn-sm btn-danger">Excluir</a>
+                            @if($prof->ativo==1)
+                                <a href="/admin/prof/apagar/{{$prof->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18 red">disabled_by_default</i></a>
+                            @else
+                                <a href="/admin/prof/apagar/{{$prof->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Ativar"><i class="material-icons md-18 green">check_box</i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -242,8 +269,11 @@
                             <br>
                             <ul>
                             @foreach ($discs as $disc)
+                            @if($disc->ativo==false)
+                            @else
                             <li><input type="checkbox" id="disciplina{{$disc->id}}" name="disciplinas[]" value="{{$disc->id}}">
                             <label for="disciplina{{$disc->id}}">{{$disc->nome}} (@if($disc->ensino=="fund") Fundamental @else Médio @endif)</label></li>
+                            @endif
                             @endforeach
                             </ul>
                         </div>

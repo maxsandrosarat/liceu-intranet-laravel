@@ -100,7 +100,7 @@
                                 <b><p style="color: green; font-size: 50%;"><i class="material-icons green">check_circle</i> APROVADO</p></b>
                             @else
                                 @if($ocorrencia->aprovado!==NULL)
-                                    <b><p style="color: red; font-size: 50%;"><i class="material-icons green">highlight_off</i>REPROVADO</p></b>
+                                    <b><p style="color: red; font-size: 50%;"><i class="material-icons red">highlight_off</i>REPROVADO</p></b>
                                 @else
                                     <a href="/admin/ocorrencias/aprovar/{{$ocorrencia->id}}" class="btn btn-sm btn-success">Aprovar</a>
                                     <a href="/admin/ocorrencias/reprovar/{{$ocorrencia->id}}" class="btn btn-sm btn-danger">Reprovar</a>
@@ -119,7 +119,7 @@
                 {{$ocorrencias->links() }}
             </div>
             @endif
-        </div>
+        </div> 
     </div>
     <br>
     <a href="/admin/pedagogico" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>

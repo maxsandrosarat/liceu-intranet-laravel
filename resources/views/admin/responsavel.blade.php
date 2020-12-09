@@ -4,6 +4,18 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Responsaveis</h5>
+            @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <a type="button" class="float-button" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Adicionar Novo Professor(a)">
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
@@ -42,6 +54,7 @@
                         <th>Nome</th>
                         <th>Login</th>
                         <th>Aluno(s)</th>
+                        <th>Ativo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -56,7 +69,7 @@
                             @else
                             <ul>
                                 @foreach ($resp->alunos as $aluno)
-                                <li>{{$aluno->name}} <a href="/admin/responsavel/desvincular/{{$resp->id}}/{{$aluno->id}}" class="btn btn-sm btn-danger">Desvincular</a></li>
+                                <li @if($aluno->ativo==false) style="color: red;" @endif>{{$aluno->name}} <a href="/admin/responsavel/desvincular/{{$resp->id}}/{{$aluno->id}}" class="btn btn-sm btn-danger">Desvincular</a></li>
                                 @endforeach
                             </ul>
                             @endif
@@ -76,7 +89,9 @@
                                             <select class="custom-select" id="aluno" name="aluno" required>
                                                 <option value="">Selecione um aluno</option>
                                                     @foreach ($alunos as $aluno)
+                                                        @if($aluno->ativo==true)
                                                         <option value="{{$aluno->id}}">{{$aluno->name}}</option>
+                                                        @endif
                                                     @endforeach
                                             </select>
                                     </div>
@@ -89,12 +104,19 @@
                                 </div>
                         </td>
                         <td>
+                            @if($resp->ativo==1)
+                                <b><i class="material-icons green">check_circle</i></b>
+                            @else
+                                <b><i class="material-icons red">highlight_off</i></b>
+                            @endif
+                        </td>
+                        <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModalVinc{{$resp->id}}">
                                 Vincular Aluno
                             </button>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$resp->id}}">
-                                Editar
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$resp->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
                             </button>
                             
                             <!-- Modal -->
@@ -177,7 +199,11 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/admin/responsavel/apagar/{{$resp->id}}" class="btn btn-sm btn-danger">Excluir</a>
+                            @if($resp->ativo==1)
+                                <a href="/admin/responsavel/apagar/{{$resp->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18 red">disabled_by_default</i></a>
+                            @else
+                                <a href="/admin/responsavel/apagar/{{$resp->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Ativar"><i class="material-icons md-18 green">check_box</i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

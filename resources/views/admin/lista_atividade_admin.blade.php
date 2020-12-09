@@ -112,5 +112,5 @@
         </div>
     </div>
     <br>
-    <a href="/admin/listaAtividade" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    <a href="/admin/listaAtividade/{{date("Y")}}" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

@@ -4,6 +4,18 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Produtos</h5>
+            @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <a type="button" class="float-button" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Adicionar Novo Produto">
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
@@ -80,6 +92,7 @@
                         <th>Nome</th>
                         <th>Estoque</th>
                         <th>Categoria</th>
+                        <th>Ativo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -91,8 +104,15 @@
                         <td>{{$prod->estoque}}</td>
                         <td>{{$prod->categoria->nome}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$prod->id}}">
-                                Editar
+                            @if($prod->ativo==1)
+                                <b><i class="material-icons green">check_circle</i></b>
+                            @else
+                                <b><i class="material-icons red">highlight_off</i></b>
+                            @endif
+                        </td>
+                        <td>
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$prod->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
                             </button>
                             <!-- Modal -->
                             <div class="modal fade" id="exampleModal{{$prod->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -117,7 +137,7 @@
                                                         <select class="custom-select" id="categoriaProduto" name="categoriaProduto" required>
                                                             <option value="{{$prod->categoria->id}}">{{$prod->categoria->nome}}</option>
                                                             @foreach ($cats as $cat)
-                                                                @if($cat->id==$prod->categoria->id)
+                                                                @if($cat->id==$prod->categoria->id || $cat->ativo==false)
                                                                 @else
                                                                 <option value="{{$cat->id}}">{{$cat->nome}}</option>
                                                                 @endif
@@ -134,7 +154,11 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/admin/produtos/apagar/{{$prod->id}}" class="btn btn-sm btn-danger">Apagar</a>
+                            @if($prod->ativo==1)
+                                <a href="/admin/produtos/apagar/{{$prod->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18 red">disabled_by_default</i></a>
+                            @else
+                                <a href="/admin/produtos/apagar/{{$prod->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Ativar"><i class="material-icons md-18 green">check_box</i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

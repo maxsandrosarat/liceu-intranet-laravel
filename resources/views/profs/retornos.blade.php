@@ -24,7 +24,7 @@
                         <td>{{$retorno->aluno->name}}</td>
                         <td>{{date("d/m/Y", strtotime($retorno->data_retorno))}}</td>
                         <td>{{$retorno->comentario}}</td>
-                        <td><a type="button" class="btn btn-success" href="/prof/atividade/retorno/download/{{$retorno->id}}"><i class="material-icons md-48">cloud_download</i></a></td>
+                        <td><a type="button" class="badge badge-success" href="/prof/atividade/retorno/download/{{$retorno->id}}"><i class="material-icons md-48">cloud_download</i></a></td>
                     </tr>
                     @endforeach
                 </tbody>

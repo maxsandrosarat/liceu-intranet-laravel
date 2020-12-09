@@ -22,6 +22,8 @@ class CreateQuestaosTable extends Migration
             $table->unsignedBigInteger('disciplina_id');
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
             $table->string('arquivo')->nullable();
+            $table->boolean('conferido')->default(false);
+            $table->longText('comentario')->nullable();
             $table->timestamps();
         });
     }

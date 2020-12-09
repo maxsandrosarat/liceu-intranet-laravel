@@ -9,6 +9,11 @@
                 <p>{{session('mensagem')}}</p>
             </div>
             @endif
+            @if(count($simulados)==0)
+                <div class="alert alert-danger" role="alert">
+                    Sem provas cadastradas!
+                </div>
+            @else
             <form action="/prof/simulados" method="GET">
                 @csrf
                 <label for="ano">Selecione o ano:
@@ -20,12 +25,12 @@
                   </select></label>
                 <input type="submit" class="btn btn-primary" value="Selecionar">
             </form>
-            <h5 class="card-title">Questões para Simulados - {{$ano}}</h5>
+            <h5 class="card-title">Questões para Provas - {{$ano}}</h5>
             <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Código Simulado</th>
+                        <th>Código Prova</th>
                         <th>Descrição</th>
                         <th>Bimestre</th>
                         <th>Ano</th>
@@ -47,12 +52,13 @@
                             @endforeach
                             </ul>
                         </td>
-                        <td><a href="/prof/simulados/painel/{{$sim->id}}" class="btn btn-primary">Anexar</a></td>
+                        <td><a href="/prof/simulados/painel/{{$sim->id}}" class="badge badge-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-48">attach_file</i></a></td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
             </div>
+            @endif
         </div>
     </div>
     <br><br>

@@ -23,7 +23,7 @@
                         <p class="card-text">
                             Consultar as Listas Atividades
                         </p>
-                        <a href="/admin/listaAtividade" class="btn btn-primary">Listas Atividades</a>
+                        <a href="/admin/listaAtividade/{{date("Y")}}" class="btn btn-primary">Listas Atividades</a>
                     </div>
                 </div>
             </div>
@@ -74,11 +74,11 @@
             <div class="d-flex justify-content-center centralizado">
                 <div class="card border-primary text-center" style="width: 300px;">
                     <div class="card-body">
-                        <h5>Questões Simulados</h5>
+                        <h5>Questões de Provas</h5>
                         <p class="card-text">
-                            Cadastrar e Consultar Questões Simulados
+                            Cadastrar e Consultar Questões
                         </p>
-                        <a href="/admin/simulados/{{date("Y")}}" class="btn btn-primary">Simulados</a>
+                        <a href="/admin/simulados/{{date("Y")}}" class="btn btn-primary">Questões</a>
                     </div>
                 </div>
             </div>

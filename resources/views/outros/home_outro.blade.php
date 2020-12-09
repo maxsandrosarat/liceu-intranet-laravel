@@ -27,6 +27,17 @@
                     </div>
                 </div>
             </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 300px;">
+                    <div class="card-body">
+                        <h5>Questões de Provas</h5>
+                        <p class="card-text">
+                            Cadastrar e Consultar Questões
+                        </p>
+                        <a href="/outro/simulados/{{date("Y")}}" class="btn btn-primary">Questões</a>
+                    </div>
+                </div>
+            </div>
         </div>
         </div>
     </div>

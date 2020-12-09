@@ -4,6 +4,18 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Outros</h5>
+            @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             @if(count($errors) > 0)
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert">x</button>
@@ -51,6 +63,7 @@
                         <th>Código</th>
                         <th>Nome</th>
                         <th>Login</th>
+                        <th>Ativo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -61,8 +74,15 @@
                         <td>{{$outro->name}}</td>
                         <td>{{$outro->email}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$outro->id}}">
-                                Editar
+                            @if($outro->ativo==1)
+                                <b><i class="material-icons green">check_circle</i></b>
+                            @else
+                                <b><i class="material-icons red">highlight_off</i></b>
+                            @endif
+                        </td>
+                        <td>
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$outro->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
                             </button>
                             
                             <!-- Modal -->
@@ -144,7 +164,11 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/admin/colaborador/apagar/{{$outro->id}}" class="btn btn-sm btn-danger">Excluir</a>
+                            @if($outro->ativo==1)
+                                <a href="/admin/colaborador/apagar/{{$outro->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18 red">disabled_by_default</i></a>
+                            @else
+                                <a href="/admin/colaborador/apagar/{{$outro->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Ativar"><i class="material-icons md-18 green">check_box</i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

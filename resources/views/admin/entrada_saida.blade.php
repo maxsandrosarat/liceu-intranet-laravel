@@ -4,6 +4,18 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Relatório de Entradas/Saídas</h5>
+            @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <!-- Button trigger modal -->
             <a type="button" class="float-button" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Lançar Entrada e Saída">
                 <i class="material-icons blue md-60">add_circle</i>
@@ -41,7 +53,9 @@
                             <select class="custom-select" id="produtos" name="produto" required>
                                 <option value="">Selecione</option>
                                 @foreach ($prods as $prod)
+                                    @if($prod->ativo==true)
                                     <option value="{{$prod->id}}">{{$prod->nome}} - Estoque: {{$prod->estoque}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             <br><br>
@@ -85,7 +99,7 @@
                 <select class="custom-select" id="produto" name="produto">
                     <option value="">Selecione</option>
                     @foreach ($prods as $prod)
-                        <option value="{{$prod->id}}">{{$prod->nome}}</option>
+                    <option @if($prod->ativo==false) style="color: red;" @endif value="{{$prod->id}}">{{$prod->nome}}</option>
                     @endforeach
                 </select></label>
                 <label for="dataInicio">Data Início

@@ -9,6 +9,7 @@ use App\Turma;
 use App\Atividade;
 use App\Aluno;
 use App\AtividadeExtra;
+use App\AtividadeRetorno;
 use App\Categoria;
 use App\CompraProduto;
 use App\TipoOcorrencia;
@@ -16,6 +17,7 @@ use App\Ocorrencia;
 use App\Conteudo;
 use App\Diario;
 use App\EntradaSaida;
+use App\La;
 use App\ListaAtividade;
 use App\ListaCompra;
 use App\Outro;
@@ -66,7 +68,7 @@ class AdminController extends Controller
     //DISCIPLINAS
     public function indexDisciplinas()
     {
-        $discs = Disciplina::where('ativo',true)->get();
+        $discs = Disciplina::all();
         return view('admin.disciplinas',compact('discs'));
     }
 
@@ -82,19 +84,26 @@ class AdminController extends Controller
     public function apagarDisciplina($id)
     {
         $disc = Disciplina::find($id);
+
         if(isset($disc)){
-            $disc->ativo = false;
-            $disc->save();
-            TurmaDisciplina::where('disciplina_id',"$id")->delete();
-            ProfDisciplina::where('disciplina_id',"$id")->delete();
+            if($disc->ativo==1){
+                $disc->ativo = false;
+                $disc->save();
+                return back()->with('mensagem', 'Disciplina Inativada com Sucesso!');
+            } else {
+                $disc->ativo = true;
+                $disc->save();
+                return back()->with('mensagem', 'Disciplina Ativada com Sucesso!');
+            }
         }
+        
         return back();
     }
 
     //TURMAS
     public function indexTurmas()
     {
-        $turmas = Turma::where('ativo',true)->get();
+        $turmas = Turma::all();
         return view('admin.turmas',compact('turmas'));
     }
 
@@ -106,16 +115,25 @@ class AdminController extends Controller
         $turma->turno = $request->input('turno');
         $turma->ensino = $request->input('ensino');
         $turma->save();
-        return back();
+        return back()->with('mensagem', 'Turma Cadastrada com Sucesso!');
     }
 
     public function apagarTurma($id)
     {
         $turma = Turma::find($id);
+
         if(isset($turma)){
-            $turma->ativo = false;
-            $turma->save();
+            if($turma->ativo==1){
+                $turma->ativo = false;
+                $turma->save();
+                return back()->with('mensagem', 'Turma Inativada com Sucesso!');
+            } else {
+                $turma->ativo = true;
+                $turma->save();
+                return back()->with('mensagem', 'Turma Ativada com Sucesso!');
+            }
         }
+        
         return back();
     }
 
@@ -159,19 +177,19 @@ class AdminController extends Controller
                 }
             }
         }
-        return back();
+        return back()->with('mensagem', 'Disciplinas Cadastradas para Turma com Sucesso!');
     }
 
     public function apagarTurmaDisc($turma_id, $disciplina_id)
     {
         TurmaDisciplina::where('turma_id',"$turma_id")->where('disciplina_id',"$disciplina_id")->delete();
-        return back();
+        return back()->with('mensagem', 'Disciplina Desvinculada da Turma com Sucesso!');
     }
 
     //TIPOS DE OCORRENCIAS
     public function indexTiposOcorrencia()
     {
-        $tipos = TipoOcorrencia::where('ativo',true)->orderBy('codigo')->get();
+        $tipos = TipoOcorrencia::orderBy('codigo')->get();
         return view('admin.tipo_ocorrencia',compact('tipos'));
     }
 
@@ -183,7 +201,7 @@ class AdminController extends Controller
         $tipo->tipo = $request->input('tipo');
         $tipo->pontuacao = $request->input('pontuacao');
         $tipo->save();
-        return back();
+        return back()->with('mensagem', 'Tipo de Ocorrência Cadastrada com Sucesso!');
     }
 
     public function editarTipoOcorrencia(Request $request, $id)
@@ -204,15 +222,22 @@ class AdminController extends Controller
             }
             $tipo->save();
         }
-        return back();
+        return back()->with('mensagem', 'Tipo de Ocorrência Alterada com Sucesso!');
     }
 
     public function apagarTipoOcorrencia($id)
     {
         $tipo = TipoOcorrencia::find($id);
         if(isset($tipo)){
-            $tipo->ativo = false;
-            $tipo->save();
+            if($tipo->ativo==1){
+                $tipo->ativo = false;
+                $tipo->save();
+                return back()->with('mensagem', 'Tipo de Ocorrência Inativada com Sucesso!');
+            } else {
+                $tipo->ativo = true;
+                $tipo->save();
+                return back()->with('mensagem', 'Tipo de Ocorrência Ativada com Sucesso!');
+            }
         }
         return back();
     }
@@ -239,8 +264,8 @@ class AdminController extends Controller
     //PROFESSORES
     public function indexProfs()
     {
-        $profs = Prof::where('ativo',true)->with('disciplinas')->orderBy('name')->paginate(10);
-        $discs = Disciplina::where('ativo',true)->get();
+        $profs = Prof::with('disciplinas')->orderBy('name')->paginate(10);
+        $discs = Disciplina::all();
         $view = "inicial";
         return view('admin.profs', compact('view','profs','discs'));
     }
@@ -259,7 +284,7 @@ class AdminController extends Controller
                     $profDisc->disciplina_id = $disciplina;
                     $profDisc->save();
                 }
-        return back();
+        return back()->with('mensagem', 'Professor(a) Cadastrado(a) com Sucesso!');
     }
 
     public function filtroProfs(Request $request)
@@ -273,9 +298,9 @@ class AdminController extends Controller
                 foreach($profDiscs as $profDisc){
                     $profIds[] = $profDisc->prof_id;
                 }
-                $profs = Prof::whereIn('id', $profIds)->where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
+                $profs = Prof::whereIn('id', $profIds)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
             } else {
-                $profs = Prof::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
+                $profs = Prof::where('name','like',"%$nome%")->orderBy('name')->paginate(100);
             }
         } else {
             if(isset($disc)){
@@ -284,12 +309,12 @@ class AdminController extends Controller
                 foreach($profDiscs as $profDisc){
                     $profIds[] = $profDisc->prof_id;
                 }
-                $profs = Prof::whereIn('id', $profIds)->where('ativo',true)->orderBy('name')->paginate(100);
+                $profs = Prof::whereIn('id', $profIds)->orderBy('name')->paginate(100);
             } else {
                 return redirect('/admin/prof');
             }
         }
-        $discs = Disciplina::where('ativo',true)->get();
+        $discs = Disciplina::all();
         $view = "filtro";
         return view('admin.profs', compact('view','discs','profs'));
     }
@@ -315,15 +340,22 @@ class AdminController extends Controller
                 }
             }
         }
-        return back();
+        return back()->with('mensagem', 'Professor(a) Alterado(a) com Sucesso!');
     }
 
     public function apagarProf($id)
     {
         $prof = Prof::find($id);
         if(isset($prof)){
-            $prof->ativo = false;
-            $prof->save();
+            if($prof->ativo==1){
+                $prof->ativo = false;
+                $prof->save();
+                return back()->with('mensagem', 'Professor(a) Inativado(a) com Sucesso!');
+            } else {
+                $prof->ativo = true;
+                $prof->save();
+                return back()->with('mensagem', 'Professor(a) Ativado(a) com Sucesso!');
+            }
         }
         return back();
     }
@@ -337,8 +369,8 @@ class AdminController extends Controller
     //ALUNOS
     public function indexAlunos()
     {
-        $turmas = Turma::where('ativo',true)->get();
-        $alunos = Aluno::where('ativo',true)->orderBy('name')->paginate(10);
+        $turmas = Turma::all();
+        $alunos = Aluno::orderBy('name')->paginate(10);
         $view = "inicial";
         return view('admin.alunos', compact('view','turmas','alunos'));
     }
@@ -363,7 +395,7 @@ class AdminController extends Controller
         $aluno->foto = $path;
         }
         $aluno->save();
-        return back();
+        return back()->with('success', 'Aluno(a) Cadastrado(a) com Sucesso!');
     }
 
     public function importarAlunoExcel(Request $request)
@@ -378,18 +410,18 @@ class AdminController extends Controller
         $turma = $request->input('turma');
         if(isset($nome)){
             if(isset($turma)){
-                $alunos = Aluno::where('ativo',true)->where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
             } else {
-                $alunos = Aluno::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('name','like',"%$nome%")->orderBy('name')->paginate(50);
             }
         } else {
             if(isset($turma)){
-                $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('turma_id',"$turma")->orderBy('name')->paginate(50);
             } else {
                 return redirect('/admin/aluno');
             }
         }
-        $turmas = Turma::where('ativo',true)->get();
+        $turmas = Turma::all();
         $view = "filtro";
         return view('admin.alunos', compact('view','turmas','alunos'));
     }
@@ -411,15 +443,22 @@ class AdminController extends Controller
             }
             $aluno->save();
         }
-        return back();
+        return back()->with('success', 'Aluno(a) Alterado(a) com Sucesso!');
     }
 
     public function apagarAluno($id)
     {
         $aluno = Aluno::find($id);
         if(isset($aluno)){
-            $aluno->ativo = false;
-            $aluno->save();
+            if($aluno->ativo==1){
+                $aluno->ativo = false;
+                $aluno->save();
+                return back()->with('success', 'Aluno(a) Inativado(a) com Sucesso!');
+            } else {
+                $aluno->ativo = true;
+                $aluno->save();
+                return back()->with('success', 'Aluno(a) Ativado(a) com Sucesso!');
+            }
         }
         return back();
     }
@@ -427,8 +466,8 @@ class AdminController extends Controller
     //RESPONSAVEIS
     public function indexResps()
     {
-        $resps = Responsavel::where('ativo',true)->with('alunos')->orderBy('name')->paginate(10);
-        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
+        $resps = Responsavel::with('alunos')->orderBy('name')->paginate(10);
+        $alunos = Aluno::orderBy('name')->get();
         $view = "inicial";
         return view('admin.responsavel', compact('view','resps','alunos'));
     }
@@ -440,7 +479,7 @@ class AdminController extends Controller
         $resp->email = $request->input('email');
         $resp->password = Hash::make($request->input('password'));
         $resp->save();
-        return back();
+        return back()->with('mensagem', 'Responsável Cadastrado com Sucesso!');
     }
 
     public function filtroResps(Request $request)
@@ -454,9 +493,9 @@ class AdminController extends Controller
                 foreach($respAlunos as $respAluno){
                     $respIds[] = $respAluno->responsavel_id;
                 }
-                $resps = Responsavel::whereIn('id', $respIds)->where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
+                $resps = Responsavel::whereIn('id', $respIds)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
             } else {
-                $resps = Responsavel::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(100);
+                $resps = Responsavel::where('name','like',"%$nome%")->orderBy('name')->paginate(100);
             }
         } else {
             if(isset($aluno)){
@@ -465,12 +504,12 @@ class AdminController extends Controller
                 foreach($respAlunos as $respAluno){
                     $respIds[] = $respAluno->responsavel_id;
                 }
-                $resps = Responsavel::whereIn('id', $respIds)->where('ativo',true)->orderBy('name')->paginate(100);
+                $resps = Responsavel::whereIn('id', $respIds)->orderBy('name')->paginate(100);
             } else {
                 return redirect('/admin/responsavel');
             }
         }
-        $alunos = Aluno::where('ativo',true)->orderBy('name')->get();
+        $alunos = Aluno::orderBy('name')->get();
         $view = "filtro";
         return view('admin.responsavel', compact('view','resps','alunos'));
     }
@@ -486,15 +525,22 @@ class AdminController extends Controller
             }
             $resp->save();
         }
-        return back();
+        return back()->with('mensagem', 'Responsável Alterado com Sucesso!');
     }
 
     public function apagarResp($id)
     {
         $resp = Responsavel::find($id);
         if(isset($resp)){
-            $resp->ativo = false;
-            $resp->save();
+            if($resp->ativo==1){
+                $resp->ativo = false;
+                $resp->save();
+                return back()->with('mensagem', 'Responsável Inativado com Sucesso!');
+            } else {
+                $resp->ativo = true;
+                $resp->save();
+                return back()->with('mensagem', 'Responsável Ativado com Sucesso!');
+            }
         }
         return back();
     }
@@ -518,7 +564,7 @@ class AdminController extends Controller
     //OUTROS(COLABORADOR)
     public function indexOutros()
     {
-        $outros = Outro::where('ativo',true)->orderBy('name')->paginate(10);
+        $outros = Outro::orderBy('name')->paginate(10);
         $view = "inicial";
         return view('admin.outros', compact('view','outros'));
     }
@@ -530,7 +576,7 @@ class AdminController extends Controller
         $outro->email = $request->input('email');
         $outro->password = Hash::make($request->input('password'));
         $outro->save();
-        return back();
+        return back()->with('mensagem', 'Colaborador Cadastrado com Sucesso!');
     }
 
     public function importarOutroExcel(Request $request)
@@ -543,7 +589,7 @@ class AdminController extends Controller
     {
         $nome = $request->input('nome');
         if(isset($nome)){
-                $outros = Outro::where('ativo',true)->where('name','like',"%$nome%")->orderBy('name')->paginate(10);
+                $outros = Outro::where('name','like',"%$nome%")->orderBy('name')->paginate(10);
         } else {
             return back();
         }
@@ -562,15 +608,22 @@ class AdminController extends Controller
             }
             $outro->save();
         }
-        return back();
+        return back()->with('mensagem', 'Colaborador Alterado com Sucesso!');
     }
 
     public function apagarOutro($id)
     {
         $outro = Outro::find($id);
         if(isset($outro)){
-            $outro->ativo = false;
-            $outro->save();
+            if($outro->ativo==1){
+                $outro->ativo = false;
+                $outro->save();
+                return back()->with('mensagem', 'Colaborador Inativado com Sucesso!');
+            } else {
+                $outro->ativo = true;
+                $outro->save();
+                return back()->with('mensagem', 'Colaborador Ativado com Sucesso!');
+            }
         }
         return back();
     }
@@ -578,7 +631,7 @@ class AdminController extends Controller
     //CATEGORIAS
     public function indexCategorias()
     {
-        $cats = Categoria::where('ativo',true)->get();
+        $cats = Categoria::all();
         return view('admin.categorias',compact('cats'));
     }
 
@@ -587,7 +640,7 @@ class AdminController extends Controller
         $cat = new Categoria();
         $cat->nome = $request->input('nomeCategoria');
         $cat->save();
-        return back();
+        return back()->with('mensagem', 'Categoria Cadastrada com Sucesso!');
     }
 
     public function editarCategoria(Request $request, $id)
@@ -597,24 +650,33 @@ class AdminController extends Controller
             $cat->nome = $request->input('nomeCategoria');
             $cat->save();
         }
-        return back();
+        return back()->with('mensagem', 'Categoria Alterada com Sucesso!');
     }
 
     public function apagarCategoria($id)
     {
         $cat = Categoria::find($id);
+
         if(isset($cat)){
-            $cat->ativo = false;
-            $cat->save();
+            if($cat->ativo==1){
+                $cat->ativo = false;
+                $cat->save();
+                return back()->with('mensagem', 'Categoria Inativada com Sucesso!');
+            } else {
+                $cat->ativo = true;
+                $cat->save();
+                return back()->with('mensagem', 'Categoria Ativada com Sucesso!');
+            }
         }
+        
         return back();
     }
 
     //PRODUTOS
     public function indexProdutos()
     {
-        $cats = Categoria::where('ativo',true)->get();
-        $prods = Produto::where('ativo',true)->orderBy('nome')->paginate(10);
+        $cats = Categoria::orderBy('nome')->get();
+        $prods = Produto::orderBy('nome')->paginate(10);
         $view = "inicial";
         return view('admin.produtos', compact('view','cats','prods'));
     }
@@ -626,7 +688,7 @@ class AdminController extends Controller
         $prod->estoque = $request->input('estoqueProduto');
         $prod->categoria_id = $request->input('categoriaProduto');
         $prod->save();
-        return back();
+        return back()->with('mensagem', 'Produto Cadastrado com Sucesso!');
     }
 
     public function filtroProdutos(Request $request)
@@ -635,18 +697,18 @@ class AdminController extends Controller
         $cat = $request->input('categoria');
         if(isset($nomeProd)){
             if(isset($cat)){
-                $prods = Produto::where('ativo',true)->where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
             } else {
-                $prods = Produto::where('ativo',true)->where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(100);
             }
         } else {
             if(isset($cat)){
-                $prods = Produto::where('ativo',true)->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
             } else {
                 return redirect('/admin/produtos');
             }
         }
-        $cats = Categoria::where('ativo',true)->get();
+        $cats = Categoria::orderBy('nome')->get();
         $view = "filtro";
         return view('admin.produtos', compact('view','cats','prods'));
     }
@@ -659,16 +721,25 @@ class AdminController extends Controller
             $prod->categoria_id =$request->input('categoriaProduto');
             $prod->save();
         }
-        return back();
+        return back()->with('mensagem', 'Produto Alterado com Sucesso!');
     }
 
     public function apagarProduto($id)
     {
         $prod = Produto::find($id);
+
         if(isset($prod)){
-            $prod->ativo = false;
-            $prod->save();
+            if($prod->ativo==1){
+                $prod->ativo = false;
+                $prod->save();
+                return back()->with('mensagem', 'Produto Inativado com Sucesso!');
+            } else {
+                $prod->ativo = true;
+                $prod->save();
+                return back()->with('mensagem', 'Produto Ativado com Sucesso!');
+            }
         }
+        
         return back();
     }
 
@@ -676,7 +747,7 @@ class AdminController extends Controller
     public function indexEntradaSaidas()
     {
         $rels = EntradaSaida::orderBy('created_at', 'desc')->paginate(10);
-        $prods = Produto::where('ativo',true)->orderBy('nome')->get();
+        $prods = Produto::orderBy('nome')->get();
         $view = "inicial";
         return view('admin.entrada_saida', compact('view','rels','prods'));
     }
@@ -707,7 +778,11 @@ class AdminController extends Controller
             }
             $prod->save();
         }
-        return back();
+        if($tipo=="entrada"){
+            return back()->with('mensagem', 'Entrada efetuada com Sucesso!');
+        } else {
+            return back()->with('mensagem', 'Saída efetuada com Sucesso!');
+        }
     }
 
     public function filtroEntradaSaidas(Request $request)
@@ -777,7 +852,7 @@ class AdminController extends Controller
                 }
             }
         }
-        $prods = Produto::where('ativo',true)->orderBy('nome')->get();
+        $prods = Produto::orderBy('nome')->get();
         $view = "filtro";
         return view('admin.entrada_saida', compact('view','rels','prods'));
     }
@@ -824,6 +899,16 @@ class AdminController extends Controller
         $produtos = CompraProduto::where('lista_compra_id',"$lista_id")->get();
         $pdf = PDF::loadView('admin.compras_pdf', compact('lista','produtos'));
         return $pdf->setPaper('a4')->stream('ListaCompra'.date("d-m-Y", strtotime($lista->data)).'.pdf');
+    }
+
+    public function apagarListaCompra($id)
+    {
+        $ocorrencia = ListaCompra::find($id);
+        if(isset($ocorrencia)){
+            CompraProduto::where('lista_compra_id',"$id")->delete();
+            $ocorrencia->delete();
+        }
+        return back();
     }
 
     //ATIVIDADES
@@ -974,7 +1059,96 @@ class AdminController extends Controller
         return back();
     }
 
+    public function retornos($atividade_id){
+        $retornos = AtividadeRetorno::where('atividade_id',"$atividade_id")->get();
+        $atividade = Atividade::find($atividade_id);
+        $descricao = $atividade->descricao;
+        return view('admin.retornos', compact('descricao','retornos'));
+    }
+
+    public function downloadRetorno($id)
+    {
+        $retorno = AtividadeRetorno::find($id);
+        $alunoId = $retorno->aluno_id;
+        $atividadeId = $retorno->atividade_id;
+        $aluno = Aluno::find($alunoId);
+        $nomeAluno = $aluno->name;
+        $atividade = Atividade::find($atividadeId);
+        $descricaoAtividade = $atividade->descricao;
+        $turma = Turma::find($atividade->turma_id);
+        $nameFile = $turma->serie."º - ".$descricaoAtividade." - ".$nomeAluno;
+        if(isset($retorno)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($retorno->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return back();
+    }
+
     //LISTAS DE ATIVIDADES
+    public function indexLAs(Request $request){
+        $ano = $request->ano;
+        $meses = DB::table('las')->select(DB::raw("mes"))->groupBy('mes')->orderBy('mes')->get();
+        $las = La::where('ano',"$ano")->get();
+        $anos = DB::table('las')->select(DB::raw("ano"))->groupBy('ano')->get();
+        return view('admin.home_las_admin', compact('ano','anos','meses','las'));
+    }
+
+    public function indexLAsAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $las = La::where('ano',"$ano")->get();
+        $meses = DB::table('las')->select(DB::raw("mes"))->groupBy('mes')->orderBy('mes')->get();
+        $anos = DB::table('las')->select(DB::raw("ano"))->groupBy('ano')->get();
+        return view('admin.home_las_admin',compact('ano','anos','meses','las'));
+    }
+
+    public function novaLA(Request $request){
+        if($request->input('data1')!=""){
+            $la = new La();
+            $la->mes = $request->input('mes');
+            $la->semana = 1;
+            $la->data = $request->input('data1');
+            $la->ano = $request->input('ano');
+            $la->save();
+        }
+        if($request->input('data2')!=""){
+            $la = new La();
+            $la->mes = $request->input('mes');
+            $la->semana = 2;
+            $la->data = $request->input('data2');
+            $la->ano = $request->input('ano');
+            $la->save();
+        }
+        if($request->input('data3')!=""){
+            $la = new La();
+            $la->mes = $request->input('mes');
+            $la->semana = 3;
+            $la->data = $request->input('data3');
+            $la->ano = $request->input('ano');
+            $la->save();
+        }
+        if($request->input('data4')!=""){
+            $la = new La();
+            $la->mes = $request->input('mes');
+            $la->semana = 4;
+            $la->data = $request->input('data4');
+            $la->ano = $request->input('ano');
+            $la->save();
+        }
+        if($request->input('data5')!=""){
+            $la = new La();
+            $la->mes = $request->input('mes');
+            $la->semana = 5;
+            $la->data = $request->input('data5');
+            $la->ano = $request->input('ano');
+            $la->save();
+        }
+        return back();
+    }
+
     public function painelLAs($data){
         $lafund = ListaAtividade::where('dia', "$data")->where('ensino','fund')->count();
         $lamedio = ListaAtividade::where('dia', "$data")->where('ensino','medio')->count();
@@ -1037,17 +1211,7 @@ class AdminController extends Controller
         $serie = $la->serie;
         $discId = $la->disciplina_id;
         $disciplina = Disciplina::find($discId);
-        $nameFile = "";
-        switch ($serie) {
-                case "6": $nameFile = "6º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "7": $nameFile = "7º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "8": $nameFile = "8º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "9": $nameFile = "9º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "1": $nameFile = "1º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "2": $nameFile = "2º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "3": $nameFile = "3º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                default: $nameFile = "";
-        };
+        $nameFile = $serie."º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome;
         if(isset($la)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($la->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -1349,17 +1513,7 @@ class AdminController extends Controller
         $cont = Conteudo::find($id);
         $discId = $cont->disciplina_id;
         $disciplina = Disciplina::find($discId);
-        $nameFile = "";
-        switch ($cont->serie) {
-                case 6: $nameFile = "6º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 7: $nameFile = "7º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 8: $nameFile = "8º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 9: $nameFile = "9º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 1: $nameFile = "1º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 2: $nameFile = "2º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 3: $nameFile = "3º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                default: $nameFile = "";
-        };
+        $nameFile = $cont->serie."º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome;
         if(isset($cont)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -1582,17 +1736,7 @@ class AdminController extends Controller
         $ae = AtividadeExtra::find($id);
         $discId = $ae->disciplina_id;
         $disciplina = Disciplina::find($discId);
-        $nameFile = "";
-        switch ($ae->serie) {
-                case 6: $nameFile = "6º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome; break;
-                case 7: $nameFile = "7º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome; break;
-                case 8: $nameFile = "8º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome; break;
-                case 9: $nameFile = "9º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome; break;
-                case 1: $nameFile = "1º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome; break;
-                case 2: $nameFile = "2º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome; break;
-                case 3: $nameFile = "3º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome; break;
-                default: $nameFile = "";
-        };
+        $nameFile = $ae->serie."º - AE 0".$ae->numero." ".$ae->bimestre."º Bim - ".$disciplina->nome;
         if(isset($ae)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($ae->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -1722,17 +1866,7 @@ class AdminController extends Controller
         $discId = $cont->disciplina_id;
         $disciplina = Disciplina::find($discId);
         $simulado = Simulado::find($cont->simulado_id);
-        $nameFile = "";
-        switch ($cont->serie) {
-                case 6: $nameFile = "6º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
-                case 7: $nameFile = "7º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
-                case 8: $nameFile = "8º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
-                case 9: $nameFile = "9º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
-                case 1: $nameFile = "1º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
-                case 2: $nameFile = "2º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
-                case 3: $nameFile = "3º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome; break;
-                default: $nameFile = "";
-        };
+        $nameFile = $cont->serie."º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome;
         if(isset($cont)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -1743,10 +1877,27 @@ class AdminController extends Controller
     }
 
     public function apagarSimulado($id){
+        $sim = Simulado::find($id);
+        if(isset($sim)){
+            $quests = Questao::where('simulado_id',"$id")->get();
+            foreach($quests as $quest){
+                $questao = Questao::find($quest->id);
+                if($questao->arquivo!=""){
+                    Storage::disk('public')->delete($questao->arquivo);
+                }
+                $questao->delete();
+            }
+            $sim->delete();
+        }
+        return back();
+    }
+
+    public function conferirSimulado(Request $request)
+    {
+        $id = $request->id;
         $cont = Questao::find($id);
-        $arquivo = $cont->arquivo;
-        Storage::disk('public')->delete($arquivo);
-        $cont->arquivo = "";
+        $cont->comentario = $request->comentario;
+        $cont->conferido = true;
         $cont->save();
         return back();
     }

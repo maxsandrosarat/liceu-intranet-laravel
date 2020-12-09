@@ -8,9 +8,12 @@ use App\Categoria;
 use App\CompraProduto;
 use App\Ocorrencia;
 use App\Diario;
+use App\Disciplina;
 use App\EntradaSaida;
 use App\ListaCompra;
 use App\Produto;
+use App\Questao;
+use App\Simulado;
 use PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -290,5 +293,80 @@ class OutroController extends Controller
         $diarios = Diario::where('turma_id',"$turmaId")->where('dia', "$dia")->orderBy('tempo')->get();
         $ocorrencias = Ocorrencia::where('data',"$dia")->get();
         return view('outros.diario_outro', compact('dia','turma','diarios','ocorrencias'));
+    }
+
+    //SIMULADOS
+    public function indexSimulados(Request $request){
+        $ano = $request->input('ano');
+        $turmas = Turma::where('ativo',true)->where('turma','A')->get();
+        $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $simulados = Simulado::where('ano',"$ano")->get();
+        return view('outros.home_simulados',compact('ano','turmas','anos','simulados'));
+    }
+
+    public function indexSimuladosAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $turmas = Turma::where('ativo',true)->where('turma','A')->get();
+        $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $simulados = Simulado::where('ano',"$ano")->get();
+        return view('outros.home_simulados',compact('ano','turmas','anos','simulados'));
+    }
+
+    public function painelSimulados($simId){
+        $simulado = Simulado::find($simId);
+        $ano = $simulado->ano;
+        $fundTurmas = "";
+        $fundDiscs = "";
+        $contFunds = "";
+        $medioTurmas = "";
+        $medioDiscs = "";
+        $contMedios = "";
+        $ensino = "";
+        $validadorFund = Questao::where('simulado_id', "$simId")->where('ensino','fund')->count();
+        if($validadorFund!=0){
+            $ensino = "fund";
+            $fundTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','fund')->select(DB::raw("serie"))->groupBy('serie')->get();
+            $fundDiscs = Disciplina::where('ensino','fund')->get();
+            $contFunds = Questao::where('simulado_id', "$simId")->where('ensino','fund')->orderBy('disciplina_id')->get();
+        }
+        $validadorMedio = Questao::where('simulado_id', "$simId")->where('ensino','medio')->count();
+        if($validadorMedio!=0){
+            $ensino = "medio";
+            $medioTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','medio')->select(DB::raw("serie"))->groupBy('serie')->get();
+            $medioDiscs = Disciplina::where('ensino','medio')->get();
+            $contMedios = Questao::where('simulado_id', "$simId")->where('ensino','medio')->orderBy('disciplina_id')->get();
+        }
+        if($validadorFund!=0 && $validadorMedio!=0){
+            $ensino = "todos";
+        }
+        return view('outros.simulados',compact('ensino','simulado','ano','fundTurmas','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
+    }
+
+    public function downloadSimulado($id)
+    {
+        $cont = Questao::find($id);
+        $discId = $cont->disciplina_id;
+        $disciplina = Disciplina::find($discId);
+        $simulado = Simulado::find($cont->simulado_id);
+        $nameFile = $cont->serie."º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome;
+        if(isset($cont)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return back();
+    }
+
+    public function conferirSimulado(Request $request)
+    {
+        $id = $request->id;
+        $cont = Questao::find($id);
+        $cont->comentario = $request->comentario;
+        $cont->conferido = true;
+        $cont->save();
+        return back();
     }
 }

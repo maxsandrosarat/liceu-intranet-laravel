@@ -17,4 +17,12 @@ class Atividade extends Model
     function aluno(){
         return $this->belongsToMany("App\Aluno", "atividade_retornos");
     }
+
+    public function retornos()
+    {
+        return $this->hasMany('App\AtividadeRetorno')
+            ->select( \DB::raw('aluno_id') )
+            ->groupBy('aluno_id')
+            ->orderBy('aluno_id');
+    }
 }

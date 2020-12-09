@@ -20,7 +20,7 @@
                         <th>Usuário</th>
                         <th>Criação</th>
                         <th>Produtos</th>
-                        <th>PDF</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,7 +31,7 @@
                         <td>{{date("d/m/Y H:i", strtotime($lista->created_at))}}</td>
                         <td>
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal{{$lista->id}}">
+                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal{{$lista->id}}">
                             Produtos
                             </button>
 
@@ -58,7 +58,26 @@
                             </div>
                         </td>
                         <td>
-                            <a target="_blank" href="/admin/listaCompras/pdf/{{$lista->id}}" class="btn btn-sm btn-success">Gerar PDF</a>
+                            <a target="_blank" href="/admin/listaCompras/pdf/{{$lista->id}}" class="badge badge-success">Gerar PDF</a>
+                            <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDelete{{$lista->id}}"><i class="material-icons md-18">delete</i></button></td>
+                            <!-- Modal -->
+                            <div class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$lista->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Lista Nº {{$lista->id}}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>Tem certeza que deseja excluir essa lista?</h5>
+                                            <p>Não será possivel reverter esta ação.</p>
+                                            <a href="/admin/listaCompras/apagar/{{$lista->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     @endforeach

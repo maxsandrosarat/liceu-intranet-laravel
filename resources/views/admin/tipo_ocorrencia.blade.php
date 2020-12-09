@@ -4,6 +4,18 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Tipos de Ocorrências</h5>
+            @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <a type="button" class="float-button" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Adicionar Novo Tipo de Ocorrência">
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
@@ -57,6 +69,7 @@
                         <th>Descrição</th>
                         <th>Tipo</th>
                         <th>Pontuação</th>
+                        <th>Ativo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -68,8 +81,15 @@
                         <td>@if($tipo->tipo=='despontuacao') Despontuação @else Elogio @endif</td>
                         <td>{{$tipo->pontuacao}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$tipo->id}}">
-                                Editar
+                            @if($tipo->ativo==1)
+                                <b><i class="material-icons green">check_circle</i></b>
+                            @else
+                                <b><i class="material-icons red">highlight_off</i></b>
+                            @endif
+                        </td>
+                        <td>
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$tipo->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
                             </button>
                             
                             <div class="modal fade" id="exampleModal{{$tipo->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -109,7 +129,11 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/admin/tiposOcorrencias/apagar/{{$tipo->id}}" class="btn btn-sm btn-danger">Apagar</a>
+                            @if($tipo->ativo==1)
+                                <a href="/admin/tiposOcorrencias/apagar/{{$tipo->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18 red">disabled_by_default</i></a>
+                            @else
+                                <a href="/admin/tiposOcorrencias/apagar/{{$tipo->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Ativar"><i class="material-icons md-18 green">check_box</i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -118,7 +142,6 @@
             </div>
             @endif
         </div>
-
     </div>
     <br>
     <a href="/admin/administrativo" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>

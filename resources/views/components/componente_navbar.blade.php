@@ -68,7 +68,7 @@
                 <a class="nav-link" href="/prof/atividade/disciplinas">Atividades</a>
             </li>
             <li @if($current=="la") class="nav-item active" @else class="nav-item" @endif>
-                <a class="nav-link" href="/prof/listaAtividade">Rotinas Semanais</a>
+                <a class="nav-link" href="/prof/listaAtividade/{{date("Y")}}">Rotinas Semanais</a>
             </li>
             <li @if($current=="diario") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof/diario/disciplinas">Ficha de Sala</a>
@@ -80,7 +80,7 @@
                 <a class="nav-link" href="/prof/conteudos/{{date("Y")}}">Conteúdos</a>
             </li>
             <li @if($current=="simulados") class="nav-item active" @else class="nav-item" @endif>
-                <a class="nav-link" href="/prof/simulados/{{date("Y")}}">Simulados</a>
+                <a class="nav-link" href="/prof/simulados/{{date("Y")}}">Questões</a>
             </li>
             @endauth
 
@@ -94,6 +94,9 @@
             </li>
             <li @if($current=="diario") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/outro/diario">Diário</a>
+            </li>
+            <li @if($current=="simulados") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/outro/simulados/{{date("Y")}}">Questões</a>
             </li>
             @endauth
 

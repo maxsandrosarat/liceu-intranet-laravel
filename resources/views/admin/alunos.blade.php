@@ -43,7 +43,7 @@
                 <select class="custom-select" id="turma" name="turma">
                     <option value="">Selecione uma turma</option>
                     @foreach ($turmas as $turma)
-                        <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                        <option @if($turma->ativo==false) style="color: red;" @endif value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                     @endforeach
                 </select>
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
@@ -60,6 +60,7 @@
                         <th scope="col">Nome</th>
                         <th scope="col">Login</th>
                         <th scope="col">Turma</th>
+                        <th scope="col">Ativo</th>
                         <th scope="col">Ações</th>
                     </tr>
                 </thead>
@@ -70,10 +71,17 @@
                         <td width="120">@if($aluno->foto!="")<img style="border-radius: 20px; margin:0px; padding:0px;" src="/storage/{{$aluno->foto}}" alt="foto_perfil" width="50%">@endif</td>
                         <td>{{$aluno->name}}</td>
                         <td>{{$aluno->email}}</td>
-                        <td>{{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)</td>
+                        <td @if($aluno->turma->ativo==false) style="color: red;" @endif >{{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$aluno->id}}">
-                                Editar
+                            @if($aluno->ativo==1)
+                                <b><i class="material-icons green">check_circle</i></b>
+                            @else
+                                <b><i class="material-icons red">highlight_off</i></b>
+                            @endif
+                        </td>
+                        <td>
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$aluno->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
                             </button>
                             
                             <!-- Modal -->
@@ -138,7 +146,7 @@
                                                         <select class="custom-select" id="turma" name="turma" required>
                                                             <option value="{{$aluno->turma->id}}">{{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                                                             @foreach ($turmas as $turma)
-                                                                @if($aluno->turma->id==$turma->id)
+                                                                @if($aluno->turma->id==$turma->id || $turma->ativo==false)
                                                                 @else
                                                                 <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                                                                 @endif
@@ -168,7 +176,11 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/admin/aluno/apagar/{{$aluno->id}}" class="btn btn-sm btn-danger">Excluir</a>
+                            @if($aluno->ativo==1)
+                                <a href="/admin/aluno/apagar/{{$aluno->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18 red">disabled_by_default</i></a>
+                            @else
+                                <a href="/admin/aluno/apagar/{{$aluno->id}}" class="badge badge-secondary" data-toggle="tooltip" data-placement="right" title="Ativar"><i class="material-icons md-18 green">check_box</i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -289,7 +301,10 @@
                                 <select class="custom-select" id="turma" name="turma" required>
                                     <option value="">Selecione</option>
                                     @foreach ($turmas as $turma)
+                                        @if($turma->ativo==false)
+                                        @else
                                         <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

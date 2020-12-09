@@ -1,32 +1,43 @@
 @extends('layouts.app', ["current"=>"administrativo"])
 
 @section('body')
-    <div class="card border">
-        <div class="card-body">
-            <h5 class="card-title">Lista de Turmas</h5>
-            <a type="button" class="float-button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Adicionar Disciplinas para as Turmas">
-                <i class="material-icons blue md-60">add_circle</i>
-            </a>
-            @if(count($turmaDiscs)==0)
-                <br/><br/>
-                <div class="alert alert-danger" role="alert">
-                    Sem disciplinas para as turmas cadastradas!
+<div class="card border">
+    <div class="card-body">
+        <h5 class="card-title">Lista de Turmas</h5>
+        @if(session('mensagem'))
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>{{session('mensagem')}}</p>
+                        </div>
+                    </div>
                 </div>
-            @else
-            <div class="table-responsive-xl">
-            <table class="table table-striped table-ordered table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Turma</th>
-                        <th>Disciplinas</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($turmaDiscs as $turmaDisc)
-                    <tr>
-                        <td>{{$turmaDisc->serie}}º ANO {{$turmaDisc->turma}} (@if($turmaDisc->turno=='M') Matutino @else @if($turmaDisc->turno=='V') Vespertino @else Noturno @endif @endif)</td>
-                        <td>
+            </div>
+            @endif
+        <a type="button" class="float-button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Adicionar Disciplinas para as Turmas">
+            <i class="material-icons blue md-60">add_circle</i>
+        </a>
+        @if(count($turmaDiscs)==0)
+            <br/><br/>
+            <div class="alert alert-danger" role="alert">
+                Sem disciplinas para as turmas cadastradas!
+            </div>
+        @else
+        <div class="table-responsive-xl">
+        <table class="table table-striped table-ordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Turma</th>
+                    <th>Disciplinas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($turmaDiscs as $turmaDisc)
+                <tr>
+                    <td>{{$turmaDisc->serie}}º ANO {{$turmaDisc->turma}} (@if($turmaDisc->turno=='M') Matutino @else @if($turmaDisc->turno=='V') Vespertino @else Noturno @endif @endif)</td>
+                    <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{$turmaDisc->id}}">
                             Disciplinas
@@ -48,7 +59,7 @@
                                     @else
                                     <ul>
                                         @foreach ($turmaDisc->disciplinas as $disciplina)
-                                        <li>{{$disciplina->nome}} <a href="/admin/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
+                                        <li @if($disciplina->ativo==false) style="color: red;" @endif>{{$disciplina->nome}} <a href="/admin/turmasDiscs/apagar/{{$turmaDisc->id}}/{{$disciplina->id}}" class="btn btn-danger btn-sm">Desvincular</a></li>
                                         <br/>
                                         @endforeach
                                     </ul>
@@ -58,14 +69,13 @@
                             </div>
                             </div>
                         </td>
-                        <td></td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div>
-            @endif
-        </div>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <div>
+        @endif
+    </div>
     <br>
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -117,6 +127,8 @@
         </div>
     </div>
 </div>
+</div>
+</div>
 <br/>
-    <a href="/admin/administrativo" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+<a href="/admin/administrativo" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

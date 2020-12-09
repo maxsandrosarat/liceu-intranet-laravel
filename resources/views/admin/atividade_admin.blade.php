@@ -64,8 +64,9 @@
                                 </div>
                                 <div class="card-body">
                                     <p class="card-text">Visualizações: {{$atividade->visualizacoes}} | Data Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}} <br>@if($atividade->data_publicacao!="")Data Publicação: {{date("d/m/Y H:i", strtotime($atividade->data_publicacao))}} @endif @if($atividade->data_expiracao!="") | Data Expiração: {{date("d/m/Y H:i", strtotime($atividade->data_expiracao))}}@endif</p>
-                                  <a href="{{$atividade->link}}" target="_blank" class="btn btn-sm btn-primary">Link Vídeo-Aula</a>
-                                  <a type="button" class="btn btn-sm btn-success" href="/admin/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <!--<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button>--> <a type="button" class="btn btn-sm btn-danger" href="/admin/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
+                                  @if($atividade->link!="")<a href="{{$atividade->link}}" target="_blank" class="badge badge-primary">Link Vídeo-Aula</a>@endif
+                                  <a type="button" class="badge badge-success" href="/admin/atividade/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="badge badge-danger" href="/admin/atividade/apagar/{{$atividade->id}}"><i class="material-icons md-48">delete</i></a>
+                                  @if($atividade->retorno=="sim") <a href="/admin/atividade/retornos/{{$atividade->id}}" class="btn btn-info btn-sm">Retornos <span class="badge badge-light">{{count($atividade->retornos)}}</span></a> @endif
                                 </div>
                             </div>
                         </td>
@@ -79,33 +80,41 @@
                                     <div class="modal-body">
                                         <form method="POST" action="/admin/atividade/editar/{{$atividade->id}}" enctype="multipart/form-data">
                                         @csrf
-                                        <label for="disciplina" class="col-md-4 col-form-label text-md-right">Disciplina</label>
-                                        <select id="disciplina" name="disciplina" required>
-                                            <option value="{{$atividade->disciplina_id}}">Selecione</option>
+                                        <label for="disciplina">Disciplina</label>
+                                        <select id="disciplina" class="form-control" name="disciplina" required>
+                                            <option value="{{$atividade->disciplina->id}}">{{$atividade->disciplina->nome}} (@if($atividade->disciplina->ensino=='fund') Fundamental @else Médio @endif)</option>
                                             @foreach ($discs as $disc)
-                                            <option value="{{$disc->id}}">{{$disc->nome}}</option>
+                                            @if($disc->id!=$atividade->disciplina->id)
+                                            <option value="{{$disc->id}}">{{$disc->nome}} (@if($disc->ensino=='fund') Fundamental @else Médio @endif)</option>
+                                            @endif
                                             @endforeach
                                         </select>
-                                        <label for="turma" class="col-md-4 col-form-label text-md-right">Turma</label>
-                                        <select id="turma" name="turma" required>
-                                            <option value="{{$atividade->turma_id}}">Selecione</option>
+                                        <label for="turma">Turma</label>
+                                        <select id="turma" class="form-control" name="turma" required>
+                                            <option value="{{$atividade->turma->id}}">{{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}} (@if($atividade->turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                                             @foreach ($turmas as $turma)
+                                            @if($turma->id!=$atividade->turma->id)
                                             <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                         <br/>
                                         <label for="dataPublicacao" class="col-md-4 col-form-label text-md-right">Data Publicação</label>
-                                        <input type="date" name="dataPublicacao" id="dataPublicacao" value="{{$atividade->data_publicacao}}">
+                                        <input type="date" name="dataPublicacao" id="dataPublicacao" value="{{date("Y-m-d", strtotime($atividade->data_publicacao))}}">
+                                        <input type="time" name="horaPublicacao" id="horaPublicacao" value="{{date("H:i", strtotime($atividade->data_publicacao))}}">
                                         <br/>
                                         <label for="dataExpiracao" class="col-md-4 col-form-label text-md-right">Data Expiração</label>
-                                        <input type="date" name="dataExpiracao" id="dataExpiracao" value="{{$atividade->data_expiracao}}">
+                                        <input type="date" name="dataExpiracao" id="dataExpiracao" value="{{date("Y-m-d", strtotime($atividade->data_expiracao))}}" required>
+                                        <input type="time" name="horaExpiracao" id="horaExpiracao" value="{{date("H:i", strtotime($atividade->data_expiracao))}}" required>
                                         <br/>
-                                        <label for="descricao" class="col-md-4 col-form-label text-md-right">Descrição</label>
-                                        <input type="text" name="descricao" id="descricao" value="{{$atividade->descricao}}" required>
+                                        <label for="descricao">Descrição</label>
+                                        <input type="text" class="form-control" name="descricao" id="descricao" value="{{$atividade->descricao}}" required>
                                         <br/>
-                                        <label for="link" class="col-md-4 col-form-label text-md-right">Link da Vídeo-Aula</label>
-                                        <input type="text" name="link" id="link" value="{{$atividade->link}}">
+                                        <label for="link">Link da Vídeo-Aula</label>
+                                        <input type="text" class="form-control" name="link" id="link" value="{{$atividade->link}}">
+                                        <br/>
                                         <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf">
+                                        <br/>
                                         <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                                     </div>
                                     <div class="modal-footer">

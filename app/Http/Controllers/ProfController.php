@@ -8,6 +8,7 @@ use App\AtividadeRetorno;
 use App\Conteudo;
 use App\Diario;
 use App\Disciplina;
+use App\La;
 use App\ListaAtividade;
 use App\ProfDisciplina;
 use App\Turma;
@@ -199,6 +200,24 @@ class ProfController extends Controller
     }
     
     //LISTA DE ATIVIDADES
+    public function indexLAs(Request $request){
+        $ano = $request->ano;
+        $meses = DB::table('las')->select(DB::raw("mes"))->groupBy('mes')->orderBy('mes')->get();
+        $las = La::where('ano',"$ano")->get();
+        $anos = DB::table('las')->select(DB::raw("ano"))->groupBy('ano')->get();
+        return view('profs.home_las', compact('ano','anos','meses','las'));
+    }
+
+    public function indexLAsAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $las = La::where('ano',"$ano")->get();
+        $meses = DB::table('las')->select(DB::raw("mes"))->groupBy('mes')->orderBy('mes')->get();
+        $anos = DB::table('las')->select(DB::raw("ano"))->groupBy('ano')->get();
+        return view('profs.home_las',compact('ano','anos','meses','las'));
+    }
+
     public function painelListaAtividades($data){
         $lafund = ListaAtividade::where('dia', "$data")->where('ensino','fund')->count();
         $lamedio = ListaAtividade::where('dia', "$data")->where('ensino','medio')->count();
@@ -263,17 +282,7 @@ class ProfController extends Controller
         $serie = $la->serie;
         $discId = $la->disciplina_id;
         $disciplina = Disciplina::find($discId);
-        $nameFile = "";
-        switch ($serie) {
-                case "6": $nameFile = "6º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "7": $nameFile = "7º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "8": $nameFile = "8º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "9": $nameFile = "9º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "1": $nameFile = "1º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "2": $nameFile = "2º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                case "3": $nameFile = "3º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome; break;
-                default: $nameFile = "";
-        };
+        $nameFile = $serie."º - LA ".date("d-m-Y", strtotime($la->dia))." - ".$disciplina->nome;
         if(isset($la)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($la->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -611,17 +620,7 @@ class ProfController extends Controller
         $cont = Conteudo::find($id);
         $discId = $cont->disciplina_id;
         $disciplina = Disciplina::find($discId);
-        $nameFile = "";
-        switch ($cont->serie) {
-                case 6: $nameFile = "6º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 7: $nameFile = "7º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 8: $nameFile = "8º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 9: $nameFile = "9º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 1: $nameFile = "1º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 2: $nameFile = "2º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                case 3: $nameFile = "3º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome; break;
-                default: $nameFile = "";
-        };
+        $nameFile = $cont->serie."º - Conteúdo ".$cont->tipo." ".$cont->bimestre."º Bim - ".$disciplina->nome;
         if(isset($cont)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -741,7 +740,7 @@ class ProfController extends Controller
         $discId = $cont->disciplina_id;
         $disciplina = Disciplina::find($discId);
         $simulado = Simulado::find($cont->simulado_id);
-        $nameFile = $cont->serie." - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome;
+        $nameFile = $cont->serie."º - Questões ".$simulado->descricao." ".$simulado->bimestre."º Bim - ".$disciplina->nome;
         if(isset($cont)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);

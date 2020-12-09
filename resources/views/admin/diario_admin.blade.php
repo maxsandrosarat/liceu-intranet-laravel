@@ -51,16 +51,32 @@
                                         Data da Entrega da Tarefa: {{date("d/m/Y", strtotime($diario->entrega_tarefa))}}<br/>
                                         Prof(a). {{$diario->prof->name}}
                                         <br/><br/>
-                                        <a type="button" @if($diario->conferido===0) href="/admin/diario/conferido/{{$diario->id}}" class="btn btn-sm btn-warning" @else class="btn btn-sm btn-success" @endif>
+                                        <a type="button" @if($diario->conferido===0) href="/admin/diario/conferido/{{$diario->id}}" class="badge badge-warning" @else class="badge badge-success" @endif>
                                             <b>@if($diario->conferido===0)<i class="material-icons md-18 red">highlight_off</i> NÃO CONFERIDO @else <i class="material-icons md-18 green">check_circle</i> CONFERIDO @endif</b>
                                         </a>
                                         <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#exampleModal{{$diario->id}}">
+                                        <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$diario->id}}">
                                             <i class="material-icons md-18">edit</i>
                                         </button>
-                                        <a type="button" href="/admin/diario/apagar/{{$diario->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom" title="Excluir Diário">
-                                            <i class="material-icons md-18 white">delete</i>
-                                        </a>
+                                        <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDelete{{$diario->id}}"><i class="material-icons md-18">delete</i></button></td>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$diario->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Diário: {{$diario->tempo}}º Tempo @if($diario->segundo_tempo==1) & {{$diario->outro_tempo}}º Tempo @endif- {{$diario->disciplina->nome}} - Prof(a). {{$diario->prof->name}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h5>Tem certeza que deseja excluir esse diário?</h5>
+                                                        <p>Não será possivel reverter esta ação.</p>
+                                                        <a href="/admin/diario/apagar/{{$diario->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </p></b>
                                     <!-- Modal -->
                                         <div class="modal fade" id="exampleModal{{$diario->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -147,7 +163,7 @@
                                         @if($ocorrencia->observacao=="")
                                         <h6 style="color: red;">Sem observação</h6>
                                         @else
-                                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModalOb{{$ocorrencia->id}}">
+                                        <button type="button" class="badge badge-info" data-toggle="modal" data-target="#exampleModalOb{{$ocorrencia->id}}">
                                             Ver Observação
                                         </button>
                                         @endif
@@ -172,8 +188,8 @@
                                         @else
                                             @if($ocorrencia->aprovado!==NULL)
                                             @else
-                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalOcorrencia{{$ocorrencia->id}}">
-                                            Editar
+                                        <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModalOcorrencia{{$ocorrencia->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                            <i class="material-icons md-18">edit</i>
                                         </button>
                                         
                                         <div class="modal fade" id="exampleModalOcorrencia{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -196,7 +212,7 @@
                                                         <textarea class="form-control" name="observacao" id="observacao" rows="10" cols="40" maxlength="500">{{$ocorrencia->observacao}}</textarea> 
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary btn-sn">Editar</button>
+                                                    <button type="submit" class="badge badge-primary">Editar</button>
                                                 </div>
                                             </form>
                                             </div>
@@ -210,10 +226,10 @@
                                             <b><p style="color: green; font-size: 50%;"><i class="material-icons green">check_circle</i> APROVADO</p></b>
                                         @else
                                             @if($ocorrencia->aprovado!==NULL)
-                                                <b><p style="color: red; font-size: 50%;"><i class="material-icons green">highlight_off</i>REPROVADO</p></b>
+                                                <b><p style="color: red; font-size: 50%;"><i class="material-icons red">highlight_off</i>REPROVADO</p></b>
                                             @else
-                                                <a href="/admin/ocorrencias/aprovar/{{$ocorrencia->id}}" class="btn btn-sm btn-success">Aprovar</a>
-                                                <a href="/admin/ocorrencias/reprovar/{{$ocorrencia->id}}" class="btn btn-sm btn-danger">Reprovar</a>
+                                                <a href="/admin/ocorrencias/aprovar/{{$ocorrencia->id}}" class="badge badge-success">Aprovar</a>
+                                                <a href="/admin/ocorrencias/reprovar/{{$ocorrencia->id}}" class="badge badge-danger">Reprovar</a>
                                             @endif
                                         @endif
                                     </td>
