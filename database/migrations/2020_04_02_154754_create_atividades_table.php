@@ -22,10 +22,12 @@ class CreateAtividadesTable extends Migration
             $table->unsignedBigInteger('disciplina_id');
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
             $table->dateTime('data_publicacao')->nullable();
-            $table->dateTime('data_expiracao')->nullable();
+            $table->dateTime('data_remocao')->nullable();
+            $table->dateTime('data_entrega')->nullable();
             $table->string('descricao')->nullable();
             $table->integer('visualizacoes');
-            $table->string('retorno');
+            $table->string('usuario');
+            $table->boolean('retorno')->default(true);
             $table->string('link')->nullable();
             $table->string('arquivo')->nullable();
             $table->timestamps();

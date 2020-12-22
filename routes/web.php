@@ -266,6 +266,7 @@ Route::group(['prefix' => 'aluno'], function() {
     Route::group(['prefix' => 'atividade'], function() {
         Route::get('/disciplinas', 'AlunoController@disciplinasAtividades');
         Route::get('/{d}', 'AlunoController@painelAtividades');
+        Route::get('/filtro/{id}', 'AlunoController@filtroAtividades');
         Route::get('/download/{id}', 'AlunoController@downloadAtividade');
         Route::post('/retorno/{id}', 'AlunoController@retornoAtividade');
         Route::post('/retorno/editar/{id}', 'AlunoController@editarRetornoAtividade');

@@ -164,11 +164,11 @@
                     @endforeach
                 </tbody>
             </table>
-            @endif
+            <div class="card-footer">
+                {{ $prods->links() }}
+            </div>
         </div>
-        <div class="card-footer">
-            {{ $prods->links() }}
-        </div>
+        @endif
         </div>
     </div>
     <br>

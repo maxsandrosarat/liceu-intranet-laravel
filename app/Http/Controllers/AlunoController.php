@@ -41,51 +41,26 @@ class AlunoController extends Controller
         $dataAtual = date("Y-m-d H:i");
         $turmaId = Auth::user()->turma_id;
         $disciplina = Disciplina::find($discId);
-        $turmaDiscs = TurmaDisciplina::where('turma_id',"$turmaId")->get();
-        $discIds = array();
-        foreach($turmaDiscs as $turmaDisc){
-            $discIds[] = $turmaDisc->disciplina_id;
-        }
-        $discs = Disciplina::whereIn('id',$discIds)->where('ativo',true)->orderBy('nome')->get();
-        $atividades = Atividade::where('turma_id',"$turmaId")->where('disciplina_id',"$discId")->where("data_publicacao",'<=',"$dataAtual")->where("data_expiracao",'>=',"$dataAtual")->orderBy('id','desc')->paginate(9);
-        return view('alunos.atividade_aluno', compact('discs','disciplina','atividades','retornos'));
+        $view = "inicial";
+        $atividades = Atividade::where('turma_id',"$turmaId")->where('disciplina_id',"$discId")->where("data_publicacao",'<=',"$dataAtual")->where("data_remocao",'>=',"$dataAtual")->orderBy('id','desc')->paginate(10);
+        return view('alunos.atividade_aluno', compact('view','disciplina','atividades','retornos'));
     }
 
     public function filtroAtividades(Request $request, $discId)
     {
-        $profId = Auth::user()->id;
+        $alunoId = Auth::user()->id;
+        $retornos = AtividadeRetorno::where('aluno_id',"$alunoId")->get();
+        $dataAtual = date("Y-m-d H:i");
+        $turmaId = Auth::user()->turma_id;
         $disciplina = Disciplina::find($discId);
-        $turma = $request->input('turma');
         $descricao = $request->input('descricao');
-        $data = $request->input('data');
-        if(isset($turma)){
-            if(isset($descricao)){
-                if(isset($data)){
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->get();
-                } else {
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->orderBy('id','desc')->get();
-                }
-            } else {
-                $atividades = Atividade::where('prof_id',"$profId")->where('turma_id',"$turma")->orderBy('id','desc')->get();
-            }
+        if(isset($descricao)){
+            $atividades = Atividade::where('turma_id',"$turmaId")->where('disciplina_id',"$discId")->where('descricao','like',"%$descricao%")->where("data_publicacao",'<=',"$dataAtual")->where("data_remocao",'>=',"$dataAtual")->orderBy('id','desc')->paginate(50);
         } else {
-            if(isset($descricao)){
-                if(isset($data)){
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->get();
-                } else {
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->orderBy('id','desc')->get();
-                }
-            } else {
-                if(isset($data)){
-                    $atividades = Atividade::where('prof_id',"$profId")->where('data_criacao',"$data")->orderBy('id','desc')->get();
-                } else {
-                    $atividades = Atividade::where('prof_id',"$profId")->orderBy('id','desc')->get();
-                }
-            }
+            $atividades = Atividade::where('turma_id',"$turmaId")->where('disciplina_id',"$discId")->where("data_publicacao",'<=',"$dataAtual")->where("data_remocao",'>=',"$dataAtual")->orderBy('id','desc')->paginate(50);
         }
-        $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
         $view = "filtro";
-        return view('profs.atividade_prof', compact('view','disciplina','turmas','atividades'));
+        return view('alunos.atividade_aluno', compact('view','disciplina','atividades','retornos'));
     }
 
     public function downloadAtividade($id)
@@ -121,9 +96,15 @@ class AlunoController extends Controller
     public function editarRetornoAtividade(Request $request, $id)
     {
         $retorno = AtividadeRetorno::find($id);
-        $retorno->comentario = $request->input('comentario');
-        Storage::disk('public')->delete($retorno->arquivo);
-        $retorno->arquivo = $request->file('arquivo')->store('retornosAtividade','public');
+        if($request->input('comentario')==""){
+            $retorno->comentario = NULL;
+        } else {
+            $retorno->comentario = $request->input('comentario');
+        }
+        if($request->input('arquivo')!=""){
+            Storage::disk('public')->delete($retorno->arquivo);
+            $retorno->arquivo = $request->file('arquivo')->store('retornosAtividade','public');
+        }
         $retorno->save();
         return back()->with('success', 'Retorno da Atividade atualizado com Sucesso!');
     }

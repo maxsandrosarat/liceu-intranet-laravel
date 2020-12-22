@@ -133,7 +133,7 @@
                 </div>
             </div>
             @endif
-            <br/><br/>
+            <hr/>
                         <b><h3 class="card-title" style="text-align: center;">Ocorrências do Dia</h3></b>
                         @if(count($ocorrencias)==0)
                             <div class="alert alert-dark" role="alert">

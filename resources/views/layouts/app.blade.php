@@ -13,6 +13,90 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <style >
+        #my-div{
+            -webkit-box-shadow: 9px 7px 5px rgba(50, 50, 50, 0.77);
+            -moz-box-shadow:    9px 7px 5px rgba(50, 50, 50, 0.77);
+            box-shadow:         9px 7px 5px rgba(50, 50, 50, 0.77);
+        }
+        
+        #my-div:hover {
+            background: lightgrey; 
+        }
+        
+        #celulas:hover{
+            background: lightgrey;
+        }
+            
+        a.fill-div {
+            text-decoration: none;
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+        
+        #primeiraColuna{
+            background-color: black;
+            font-size: 150%;
+            font-weight: bold;
+            color: white;
+        }
+        #foto_perfil{
+            border-radius: 20px;
+            width: 100%;
+        }
+        
+        .bd-callout{padding:0 0 0 0.8rem;margin-top:0.5rem;margin-bottom:0;border:1px solid #eee;border-left-width:.25rem;border-radius:.25rem}
+        .bd-callout p:last-child{margin-bottom:0}
+        .bd-callout-info{border-left-color:#5bc0de}
+        .bd-callout-info h4{color:#5bc0de}
+        .bd-callout-success{border-left-color:	#32CD32}
+        .bd-callout-success h4{color: 	#32CD32}
+        .bd-callout-warning{border-left-color:#f0ad4e}
+        .bd-callout-warning h4{color:#f0ad4e}
+        .bd-callout-danger{border-left-color:#d9534f}
+        .bd-callout-danger h4{color:#d9534f}
+        
+        @media screen and (max-width: 480px){
+            h5 {
+                font-size: 90%;
+            }
+            .bd-callout-info h4{
+                color:#5bc0de;
+                font-size: 100%;
+            }
+            .bd-callout-success h4{
+                color: 	#32CD32;
+                font-size: 100%;
+            }
+            .bd-callout-warning h4{
+                color:#f0ad4e;
+                font-size: 100%;
+            }
+            .bd-callout-danger h4{
+                color:#d9534f;
+                font-size: 100%;
+            }
+        
+            .bd-callout-info p{
+                font-size: 90%;
+            }
+            .bd-callout-success p{
+                font-size: 90%;
+            }
+            .bd-callout-warning p{
+                font-size: 90%;
+            }
+            .bd-callout-danger p{
+                font-size: 90%;
+            }
+        
+            #foto_perfil{
+                border-radius: 20px;
+                width: 30%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container-xl">
@@ -28,7 +112,7 @@
             @component('components.componente_footer')
             @endcomponent
     </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script type="text/javascript">

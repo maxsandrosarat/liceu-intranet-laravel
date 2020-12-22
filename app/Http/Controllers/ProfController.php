@@ -45,7 +45,7 @@ class ProfController extends Controller
         $profId = Auth::user()->id;
         $disciplina = Disciplina::find($discId);
         $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
-        $atividades = Atividade::where('prof_id',"$profId")->where('disciplina_id',"$discId")->orderBy('id','desc')->paginate(5);
+        $atividades = Atividade::where('prof_id',"$profId")->where('disciplina_id',"$discId")->orderBy('id','desc')->paginate(10);
         $view = "inicial";
         return view('profs.atividade_prof', compact('view','disciplina','turmas','atividades'));
     }
@@ -63,12 +63,16 @@ class ProfController extends Controller
         if($request->input('dataPublicacao')!=""){
             $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
         }
-        if($request->input('dataExpiracao')!=""){
-            $atividade->data_expiracao = $request->input('dataExpiracao').' '.$request->input('horaExpiracao');
+        if($request->input('dataRemocao')!=""){
+            $atividade->data_remocao = $request->input('dataRemocao').' '.$request->input('horaRemocao');
+        }
+        if($request->input('dataEntrega')!=""){
+            $atividade->data_entrega = $request->input('dataEntrega').' '.$request->input('horaEntrega');
         }
         $atividade->descricao = $request->input('descricao');
         $atividade->link = $request->input('link');
         $atividade->visualizacoes = 0;
+        $atividade->usuario = Auth::user()->name;
         $atividade->arquivo = $path;
         $atividade->save();
         
@@ -85,25 +89,25 @@ class ProfController extends Controller
         if(isset($turma)){
             if(isset($descricao)){
                 if(isset($data)){
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
                 } else {
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
                 }
             } else {
-                $atividades = Atividade::where('prof_id',"$profId")->where('turma_id',"$turma")->orderBy('id','desc')->get();
+                $atividades = Atividade::where('prof_id',"$profId")->where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
             }
         } else {
             if(isset($descricao)){
                 if(isset($data)){
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
                 } else {
-                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('prof_id',"$profId")->where('descricao','like',"%$descricao%")->orderBy('id','desc')->paginate(50);
                 }
             } else {
                 if(isset($data)){
-                    $atividades = Atividade::where('prof_id',"$profId")->where('data_criacao',"$data")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('prof_id',"$profId")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
                 } else {
-                    $atividades = Atividade::where('prof_id',"$profId")->orderBy('id','desc')->get();
+                    $atividades = Atividade::where('prof_id',"$profId")->orderBy('id','desc')->paginate(50);
                 }
             }
         }
@@ -125,11 +129,14 @@ class ProfController extends Controller
         if($request->input('turma')!=""){
             $atividade->turma_id = $request->input('turma');
         }
-        if($request->input('dataPublicacao')!="" && $request->input('horaPublicacao')!=""){
+        if($request->input('dataPublicacao')!=""){
             $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
         }
-        if($request->input('dataExpiracao')!="" && $request->input('horaExpiracao')!=""){
-            $atividade->data_expiracao = $request->input('dataExpiracao').' '.$request->input('horaExpiracao');
+        if($request->input('dataRemocao')!=""){
+            $atividade->data_remocao = $request->input('dataRemocao').' '.$request->input('horaRemocao');
+        }
+        if($request->input('dataEntrega')!=""){
+            $atividade->data_entrega = $request->input('dataEntrega').' '.$request->input('horaEntrega');
         }
         if($request->input('descricao')!=""){
             $atividade->descricao = $request->input('descricao');
@@ -140,7 +147,9 @@ class ProfController extends Controller
         if($path!=""){
             $atividade->arquivo = $path;
         }
+        if($request->input('retorno')!=""){
         $atividade->retorno = $request->input('retorno');
+        }
         $atividade->save();
         
         return back()->with('success', 'Atividade editada com Sucesso!');

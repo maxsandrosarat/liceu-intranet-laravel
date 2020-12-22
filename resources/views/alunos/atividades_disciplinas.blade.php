@@ -22,7 +22,7 @@
                             <td>
                                 <a href="/aluno/atividade/{{$disc->id}}" class="btn btn-primary btn-lg btn-block">{{$disc->nome}}
                                     @foreach ($profs as $prof)
-                                        @if($prof->disciplina_id==$disc->id)<b style="font-size: 80%;">(Prof. {{$prof->prof->name}})</b> @endif
+                                        @if($prof->disciplina->id==$disc->id && $prof->prof->ativo=="1")<b style="font-size: 80%;">(Prof. {{$prof->prof->name}})</b> @endif
                                     @endforeach
                                 </a>
                             </td>

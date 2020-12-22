@@ -19,8 +19,6 @@
             <a type="button" class="float-button" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="bottom" title="Adicionar Nova Categoria">
                 <i class="material-icons blue md-60">add_circle</i>
             </a>
-            
-            @if(count($las)!=0)
             <form action="/admin/listaAtividade" method="GET">
                 @csrf
                 <label for="ano">Selecione o ano: 
@@ -32,7 +30,7 @@
                   </select></label>
                 <input type="submit" class="btn btn-primary" value="Selecionar">
             </form>
-
+            @if(count($las)!=0)
             <div class="table-responsive-xl">
                 <table class="table table-striped table-ordered table-hover">
                     <thead class="thead-dark">

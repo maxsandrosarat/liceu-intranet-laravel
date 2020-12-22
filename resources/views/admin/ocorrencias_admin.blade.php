@@ -59,6 +59,7 @@
                         <th>Disciplina</th>
                         <th>Data</th>
                         <th>Observação</th>
+                        <th>Ações</th>
                         <th>Aprovação</th>
                         <th>Resp. Ciente</th>
                     </tr>
@@ -96,14 +97,52 @@
                             </div>
                         </td>
                         <td>
+                            @if($ocorrencia->aprovado==1) 
+                            @else
+                                @if($ocorrencia->aprovado!==NULL)
+                                @else
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModalOcorrencia{{$ocorrencia->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
+                            </button>
+                            
+                            <div class="modal fade" id="exampleModalOcorrencia{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Editar Ocorrência</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/admin/ocorrencias/editar/{{$ocorrencia->id}}" method="POST">
+                                            @csrf
+                                            <h6><b>Aluno: {{$ocorrencia->aluno->name}}</b></h6>
+                                            <h6><b>Tipo de Ocorrência: {{$ocorrencia->tipo_ocorrencia->codigo}} - {{$ocorrencia->tipo_ocorrencia->descricao}}</b></h6>
+                                            <h6><b>Disciplina: {{$ocorrencia->disciplina->nome}}</b></h6>
+                                            <br/>
+                                            <label for="observacao">Observação</label>
+                                            <textarea class="form-control" name="observacao" id="observacao" rows="10" cols="40" maxlength="500">{{$ocorrencia->observacao}}</textarea> 
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="badge badge-primary">Editar</button>
+                                    </div>
+                                </form>
+                                </div>
+                                </div>
+                            </div>
+                            @endif
+                            @endif
+                        </td>
+                        <td>
                             @if($ocorrencia->aprovado==1)
                                 <b><p style="color: green; font-size: 50%;"><i class="material-icons green">check_circle</i> APROVADO</p></b>
                             @else
                                 @if($ocorrencia->aprovado!==NULL)
                                     <b><p style="color: red; font-size: 50%;"><i class="material-icons red">highlight_off</i>REPROVADO</p></b>
                                 @else
-                                    <a href="/admin/ocorrencias/aprovar/{{$ocorrencia->id}}" class="btn btn-sm btn-success">Aprovar</a>
-                                    <a href="/admin/ocorrencias/reprovar/{{$ocorrencia->id}}" class="btn btn-sm btn-danger">Reprovar</a>
+                                    <a href="/admin/ocorrencias/aprovar/{{$ocorrencia->id}}" class="badge badge-success">Aprovar</a>
+                                    <a href="/admin/ocorrencias/reprovar/{{$ocorrencia->id}}" class="badge badge-danger">Reprovar</a>
                                 @endif
                             @endif
                         </td>
@@ -114,9 +153,9 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
             <div class="card-footer">
                 {{$ocorrencias->links() }}
+            </div>
             </div>
             @endif
         </div> 

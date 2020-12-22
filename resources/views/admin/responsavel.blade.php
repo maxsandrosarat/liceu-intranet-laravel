@@ -209,9 +209,9 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
             <div class="card-footer">
                 {{$resps->links() }}
+            </div>
             </div>
             @endif
         </div>

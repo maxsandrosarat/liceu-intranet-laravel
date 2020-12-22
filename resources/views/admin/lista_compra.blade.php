@@ -83,9 +83,9 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
             <div class="card-footer">
                 {{ $listaProds->links() }}
+            </div>
             </div>
             @endif
         </div>

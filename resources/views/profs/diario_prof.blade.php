@@ -34,11 +34,29 @@
                                 </a>
                             </div>
                             <div class="col" style="text-align: right">
-                                <form action="/prof/diario/apagar" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="ocorrencia" value="{{$diario->id}}" required>
-                                    <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom" title="Excluir Diário"><i class="material-icons md-18 white">delete</i></button>
-                                </form>
+                                <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDeleteDia{{$diario->id}}"><i class="material-icons md-18">delete</i></button></td>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade bd-example-modal-lg" id="exampleModalDeleteDia{{$diario->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Diário Nº {{$diario->id}}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>Tem certeza que deseja excluir esse diário?</h5>
+                                            <p>Não será possivel reverter esta ação.</p>
+                                            <form action="/prof/diario/apagar" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="ocorrencia" value="{{$diario->id}}" required>
+                                                <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom" title="Excluir Diário">Excluir</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <br/>
@@ -245,7 +263,7 @@
                 </div>
             </div>
             @endforeach
-                        <br/><br/>
+                        <hr/>
                         <b><h3 class="card-title" style="text-align: center;">Ocorrências do Dia</h3></b>
                         <a type="button" class="float-button" data-toggle="modal" data-target="#exampleModalNovo" data-toggle="tooltip" data-placement="bottom" title="Lançar Ocorrências">
                             <i class="material-icons blue md-60">add_circle</i>
@@ -352,8 +370,8 @@
                                         @else
                                             @if($ocorrencia->aprovado!==NULL)
                                             @else
-                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal{{$ocorrencia->id}}">
-                                            Editar
+                                        <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$ocorrencia->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                            <i class="material-icons md-18">edit</i>
                                         </button>
                                         
                                         <div class="modal fade" id="exampleModal{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -385,7 +403,7 @@
                                                         <textarea class="form-control" name="observacao" id="observacao" rows="10" cols="40" maxlength="500">{{$ocorrencia->observacao}}</textarea> 
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary btn-sn">Editar</button>
+                                                    <button type="submit" class="btn btn-primary btn-sm">Editar</button>
                                                 </div>
                                             </form>
                                             </div>
@@ -393,11 +411,29 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <form action="/prof/ocorrencias/apagar/{{$ocorrencia->id}}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="ocorrencia" value="{{$ocorrencia->id}}" required>
-                                            <button type="submit" class="btn btn-sm btn-danger">Apagar</button>
-                                        </form>
+                                        <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDelete{{$ocorrencia->id}}"><i class="material-icons md-18">delete</i></button></td>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Ocorrência Nº {{$ocorrencia->id}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h5>Tem certeza que deseja excluir essa ocorrência?</h5>
+                                                        <p>Não será possivel reverter esta ação.</p>
+                                                        <form action="/prof/ocorrencias/apagar/{{$ocorrencia->id}}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="ocorrencia" value="{{$ocorrencia->id}}" required>
+                                                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @endif
                                         @endif
                                     </td>

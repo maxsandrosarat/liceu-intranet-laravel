@@ -16,7 +16,6 @@
                 </div>
             </div>
             @endif
-            @if(count($las)!=0)
             <form action="/prof/listaAtividade" method="GET">
                 @csrf
                 <label for="ano">Selecione o ano: 
@@ -28,7 +27,7 @@
                   </select></label>
                 <input type="submit" class="btn btn-primary" value="Selecionar">
             </form>
-
+            @if(count($las)!=0)
             <div class="table-responsive-xl">
                 <table class="table table-striped table-ordered table-hover">
                     <thead class="thead-dark">

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Atividade extends Model
 {
+    public function prof(){
+        return $this->belongsTo('App\Prof');
+    }
+    
     public function turma(){
         return $this->belongsTo('App\Turma');
     }

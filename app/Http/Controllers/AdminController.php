@@ -913,35 +913,37 @@ class AdminController extends Controller
 
     //ATIVIDADES
     public function painelAtividades(){
+        $profs = Prof::where('ativo',true)->orderBy('name')->get();
         $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
         $turmas = Turma::where('ativo',true)->get();
         $atividades = Atividade::orderBy('id','desc')->paginate(10);
         $view = "inicial";
-        return view('admin.atividade_admin', compact('view','discs','turmas','atividades'));
+        return view('admin.atividade_admin', compact('view','profs','discs','turmas','atividades'));
     }
 
     public function novaAtividade(Request $request)
     {
         $discId = $request->input('disciplina');
-        $profs = DB::table('profs')->select(DB::raw("id"))->where('disciplina_id', "$discId")->get();
-        foreach($profs as $prof){
-            $profId = $prof->id;
-        }
+        $profId = $request->input('prof');
         $path = $request->file('arquivo')->store('atividades','public');
         $atividade = new Atividade();
         $atividade->prof_id = $profId;
-        $atividade->disciplina_id = $request->input('disciplina');
+        $atividade->disciplina_id = $discId;
         $atividade->turma_id = $request->input('turma');
-        $atividade->data_criacao = date("Y/m/d");
         if($request->input('dataPublicacao')!=""){
-            $atividade->data_publicacao = $request->input('dataPublicacao');
+            $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
         }
-        if($request->input('dataExpiracao')!=""){
-            $atividade->data_expiracao = $request->input('dataExpiracao');
+        if($request->input('dataRemocao')!=""){
+            $atividade->data_remocao = $request->input('dataRemocao').' '.$request->input('horaRemocao');
         }
+        if($request->input('dataEntrega')!=""){
+            $atividade->data_entrega = $request->input('dataEntrega').' '.$request->input('horaEntrega');
+        }
+        $atividade->retorno = $request->input('retorno');
         $atividade->descricao = $request->input('descricao');
         $atividade->link = $request->input('link');
         $atividade->visualizacoes = 0;
+        $atividade->usuario = Auth::user()->name;
         $atividade->arquivo = $path;
         $atividade->save();
         
@@ -958,7 +960,7 @@ class AdminController extends Controller
             if(isset($disciplina)){
                 if(isset($descricao)){
                     if(isset($data)){
-                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('turma_id',"$turma")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('turma_id',"$turma")->whereBetween('created_at',["$data"." 00:00", "$data"." 23:59"])->orderBy('id','desc')->paginate(50);
                     } else {
                         $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
                     }
@@ -972,7 +974,7 @@ class AdminController extends Controller
             if(isset($disciplina)){
                 if(isset($descricao)){
                     if(isset($data)){
-                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->whereBetween('created_at',["$data"." 00:00", "$data"." 23:59"])->orderBy('id','desc')->paginate(50);
                     } else {
                         $atividades = Atividade::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->orderBy('id','desc')->paginate(50);
                     }
@@ -982,23 +984,24 @@ class AdminController extends Controller
             } else {
                 if(isset($descricao)){
                     if(isset($data)){
-                        $atividades = Atividade::where('descricao','like',"%$descricao%")->where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                        $atividades = Atividade::where('descricao','like',"%$descricao%")->whereBetween('created_at',["$data"." 00:00", "$data"." 23:59"])->orderBy('id','desc')->paginate(50);
                     } else {
                         $atividades = Atividade::where('descricao','like',"%$descricao%")->orderBy('id','desc')->paginate(50);
                     }
                 } else {
                     if(isset($data)){
-                        $atividades = Atividade::where('data_criacao',"$data")->orderBy('id','desc')->paginate(50);
+                        $atividades = Atividade::whereBetween('created_at',["$data"." 00:00", "$data"." 23:59"])->orderBy('id','desc')->paginate(50);
                     } else {
                         $atividades = Atividade::orderBy('id','desc')->paginate(10);
                     }
                 }
             }
         }
+        $profs = Prof::where('ativo',true)->orderBy('name')->get();
         $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
         $turmas = Turma::where('ativo',true)->get();
         $view = "filtro";
-        return view('admin.atividade_admin', compact('view','discs','turmas','atividades'));
+        return view('admin.atividade_admin', compact('view','profs','discs','turmas','atividades'));
     }
 
     public function editarAtividade(Request $request, $id)
@@ -1015,10 +1018,13 @@ class AdminController extends Controller
             $atividade->turma_id = $request->input('turma');
         }
         if($request->input('dataPublicacao')!=""){
-            $atividade->data_publicacao = $request->input('dataPublicacao');
+            $atividade->data_publicacao = $request->input('dataPublicacao').' '.$request->input('horaPublicacao');
         }
-        if($request->input('dataExpiracao')!=""){
-            $atividade->data_expiracao = $request->input('dataExpiracao');
+        if($request->input('dataRemocao')!=""){
+            $atividade->data_remocao = $request->input('dataRemocao').' '.$request->input('horaRemocao');
+        }
+        if($request->input('dataEntrega')!=""){
+            $atividade->data_entrega = $request->input('dataEntrega').' '.$request->input('horaEntrega');
         }
         if($request->input('descricao')!=""){
             $atividade->descricao = $request->input('descricao');
@@ -1028,6 +1034,9 @@ class AdminController extends Controller
         }
         if($path!=""){
             $atividade->arquivo = $path;
+        }
+        if($request->input('retorno')!=""){
+            $atividade->retorno = $request->input('retorno');
         }
         $atividade->save();
         
