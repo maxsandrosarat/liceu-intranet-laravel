@@ -16,13 +16,29 @@
                 </thead>
                 <tbody>
                     @foreach ($fundDiscs as $fundDisc)
+                    @php
+                        $fundPertence = 0;
+                    @endphp
                     <tr>
                         <td>{{$fundDisc->nome}}</td>
                         @foreach ($fundTurmas as $turma)
+                            @php
+                            $fundPertence = 0;
+                            @endphp
+                            @foreach ($fundDisc->turmas as $turmaFund)
+                                @if($turmaFund->serie==$turma->serie)
+                                    @php
+                                        $fundPertence = 1;
+                                    @endphp
+                                @endif
+                            @endforeach</td>
                             @foreach ($laFunds as $laFund)
                                 @if($laFund->disciplina->nome == $fundDisc->nome && $laFund->serie==$turma->serie)
-                                    @if($laFund->serie==9 && $fundDisc->nome=="Arte" || $laFund->serie==9 && $fundDisc->nome=="Ciências" || $laFund->serie==9 && $fundDisc->nome=="Educação Física" || $laFund->serie!=9 && $fundDisc->nome=="Biologia" || $laFund->serie!=9 && $fundDisc->nome=="Física" || $laFund->serie!=9 && $fundDisc->nome=="Química") <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> @else
-                                        @if($laFund->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$laFund->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/admin/listaAtividade/download/{{$laFund->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$laFund->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-sm btn-danger" href="/admin/listaAtividade/apagar/{{$laFund->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
+                                @if($fundPertence===0) <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> @else
+                                @if($laFund->arquivo=='')
+                                    <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#modal6{{$laFund->id}}"><i class="material-icons md-48">cloud_upload</i></button>  
+                                        @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="badge badge-success" href="/admin/listaAtividade/download/{{$laFund->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#modal6{{$laFund->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="badge badge-danger" href="/admin/listaAtividade/apagar/{{$laFund->id}}"><i class="material-icons md-48">delete</i></a> 
+                                        @endif </td>
                                             <!-- Modal -->
                                             <div class="modal fade" id="modal6{{$laFund->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -69,13 +85,27 @@
                 </thead>
                 <tbody>
                     @foreach ($medioDiscs as $medioDisc)
+                    @php
+                        $medioPertence = 0;
+                    @endphp
                     <tr>
                         <td>{{$medioDisc->nome}}</td>
                         @foreach ($medioTurmas as $turma)
+                            @php
+                                $medioPertence = 0;
+                            @endphp
+                            @foreach ($medioDisc->turmas as $turmaMedio)
+                                @if($turmaMedio->serie==$turma->serie)
+                                    @php
+                                        $medioPertence = 1;
+                                    @endphp
+                                @endif
+                            @endforeach</td>
                             @foreach ($laMedios as $laMedio)
                                 @if($laMedio->disciplina->nome == $medioDisc->nome && $laMedio->serie==$turma->serie)
-                                    @if($laMedio->serie==3 && $medioDisc->nome=="Química I") <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> @else
-                                    @if($laMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$laMedio->id}}"><i class="material-icons md-48">cloud_upload</i></button>  @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="btn btn-sm btn-success" href="/admin/listaAtividade/download/{{$laMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal6{{$laMedio->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="btn btn-sm btn-danger" href="/admin/listaAtividade/apagar/{{$laMedio->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
+                                    @if($medioPertence===0) <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> @else
+                                        @if($laMedio->arquivo=='') <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#modal6{{$laMedio->id}}"><i class="material-icons md-48">cloud_upload</i></button>  
+                                        @else <td style="color:green; text-align: center;"><i class="material-icons md-48 green600">check_circle</i><br/> <a type="button" class="badge badge-success" href="/admin/listaAtividade/download/{{$laMedio->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#modal6{{$laMedio->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="badge badge-danger" href="/admin/listaAtividade/apagar/{{$laMedio->id}}"><i class="material-icons md-48">delete</i></a> @endif </td>
                                             <!-- Modal -->
                                             <div class="modal fade" id="modal6{{$laMedio->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">

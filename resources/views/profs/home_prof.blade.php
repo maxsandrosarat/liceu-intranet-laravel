@@ -71,6 +71,17 @@
                     </div>
                 </div>
             </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 300px;">
+                    <div class="card-body">
+                        <h5>Planejamentos</h5>
+                        <p class="card-text">
+                            Cadastrar e Consultar Planejamentos
+                        </p>
+                        <a href="/prof/planejamentos/{{date("Y")}}" class="btn btn-primary">Planejamentos</a>
+                    </div>
+                </div>
+            </div>
         </div>
         </div>
     </div>

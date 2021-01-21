@@ -8,6 +8,7 @@ use App\Disciplina;
 use App\Turma;
 use App\Atividade;
 use App\Aluno;
+use App\AnexoPlanejamento;
 use App\AtividadeExtra;
 use App\AtividadeRetorno;
 use App\Categoria;
@@ -21,6 +22,7 @@ use App\La;
 use App\ListaAtividade;
 use App\ListaCompra;
 use App\Outro;
+use App\Planejamento;
 use App\Produto;
 use App\Prof;
 use App\ProfDisciplina;
@@ -68,7 +70,7 @@ class AdminController extends Controller
     //DISCIPLINAS
     public function indexDisciplinas()
     {
-        $discs = Disciplina::all();
+        $discs = Disciplina::orderBy('nome')->get();
         return view('admin.disciplinas',compact('discs'));
     }
 
@@ -142,7 +144,7 @@ class AdminController extends Controller
     {
         $turmaDiscs = Turma::where('ativo',true)->with('disciplinas')->get();
         $turmas = Turma::where('ativo',true)->get();
-        $discs = Disciplina::where('ativo',true)->get();
+        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
         return view('admin.turmas_disciplinas',compact('turmaDiscs','turmas','discs'));
     }
 
@@ -1191,8 +1193,20 @@ class AdminController extends Controller
         }
         $fundTurmas = Turma::select('serie')->where('ativo',true)->groupby('serie')->where('ensino','fund')->get();
         $medioTurmas = Turma::select('serie')->where('ativo',true)->groupby('serie')->where('ensino','medio')->get();
-        $fundDiscs = Disciplina::where('ativo',true)->where('ensino','fund')->get();
-        $medioDiscs = Disciplina::where('ativo',true)->where('ensino','medio')->get();
+
+        $anexosFund = ListaAtividade::where('dia', "$data")->where('ensino','fund')->distinct('disciplina_id')->get();
+        $discIdsFund = array();
+        foreach($anexosFund as $anexo){
+            $discIdsFund[] = $anexo->disciplina_id;
+        }
+        $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+
+        $anexosMed = ListaAtividade::where('dia', "$data")->where('ensino','medio')->distinct('disciplina_id')->get();
+        $discIdsMed = array();
+        foreach($anexosMed as $anexo){
+            $discIdsMed[] = $anexo->disciplina_id;
+        }
+        $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
         $laFunds = ListaAtividade::orderBy('disciplina_id')->where('dia', "$data")->where('ensino','fund')->get();
         $laMedios = ListaAtividade::orderBy('disciplina_id')->where('dia', "$data")->where('ensino','medio')->get();
         return view('admin.lista_atividade_admin',compact('data','fundTurmas','medioTurmas','fundDiscs','medioDiscs','laFunds','laMedios'));
@@ -1905,6 +1919,150 @@ class AdminController extends Controller
     {
         $id = $request->id;
         $cont = Questao::find($id);
+        $cont->comentario = $request->comentario;
+        $cont->conferido = true;
+        $cont->save();
+        return back();
+    }
+
+
+    //PLANEJAMENTOS
+    public function indexPlanejamentos(Request $request){
+        $ano = $request->input('ano');
+        $anos = DB::table('planejamentos')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $planejamentos = Planejamento::where('ano',"$ano")->get();
+        return view('admin.home_planejamentos',compact('ano','anos','planejamentos'));
+    }
+
+    public function indexPlanejamentosAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $anos = DB::table('planejamentos')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $planejamentos = Planejamento::where('ano',"$ano")->get();
+        return view('admin.home_planejamentos',compact('ano','anos','planejamentos'));
+    }
+    //DB::table('questao_simulados')->select(DB::raw('id, descricao, bimestre, ano'))->groupByRaw('id, descricao, bimestre, ano')->get();
+    
+    public function gerarPlanejamentos(Request $request){
+        $sim = new Planejamento();
+        $sim->descricao = $request->input('descricao');
+        $sim->ano = $request->input('ano');
+        $sim->save();
+        $turmas = Turma::where('ativo',true)->where('turma','A')->get();
+        $discs = Disciplina::where('ativo',true)->get();
+        foreach($turmas as $turma){
+            $serie = $turma->serie;
+            $ensino = $turma->ensino;
+            foreach($discs as $disc){
+                if($disc->ensino=="fund" && $ensino=="fund"){
+                    $validador = AnexoPlanejamento::where('planejamento_id', "$sim->id")->where('serie', "$serie")->where('ensino', 'fund')->where('disciplina_id', "$disc->id")->count();
+                    if($validador == 0){
+                        $quest = new AnexoPlanejamento();
+                        $quest->planejamento_id = $sim->id;
+                        $quest->serie = $serie;
+                        $quest->ensino = "fund";
+                        $quest->disciplina_id = $disc->id;
+                        $quest->save();
+                    }
+                } else if($disc->ensino=="medio" && $ensino=="medio"){
+                    $validador = AnexoPlanejamento::where('planejamento_id', "$sim->id")->where('serie', "$serie")->where('ensino', 'medio')->where('disciplina_id', "$disc->id")->count();
+                    if($validador == 0){
+                        $quest = new AnexoPlanejamento();
+                        $quest->planejamento_id = $sim->id;
+                        $quest->serie = $serie;
+                        $quest->ensino = "medio";
+                        $quest->disciplina_id = $disc->id;
+                        $quest->save();
+                    }
+                }
+            }
+        }
+        return back()->with('mensagem', 'Campos para anexar os planejamentos gerados com sucesso!');
+    }
+
+    public function painelPlanejamentos($simId){
+        $planejamento = Planejamento::find($simId);
+        $ano = $planejamento->ano;
+        $fundTurmas = "";
+        $fundDiscs = "";
+        $contFunds = "";
+        $medioTurmas = "";
+        $medioDiscs = "";
+        $contMedios = "";
+        $ensino = "";
+        $anexosFund = AnexoPlanejamento::where('planejamento_id',"$simId")->where('ensino','fund')->distinct('disciplina_id')->get();
+        $discIdsFund = array();
+        foreach($anexosFund as $anexo){
+            $discIdsFund[] = $anexo->disciplina_id;
+        }
+        $fundTurmas = DB::table('anexo_planejamentos')->where('planejamento_id', "$simId")->where('ensino','fund')->select(DB::raw("serie"))->groupBy('serie')->get();
+        $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+        $contFunds = AnexoPlanejamento::where('planejamento_id', "$simId")->where('ensino','fund')->orderBy('disciplina_id')->get();
+
+        $anexosMed = AnexoPlanejamento::where('planejamento_id',"$simId")->where('ensino','medio')->distinct('disciplina_id')->get();
+        $discIdsMed = array();
+        foreach($anexosMed as $anexo){
+            $discIdsMed[] = $anexo->disciplina_id;
+        }
+        $medioTurmas = DB::table('anexo_planejamentos')->where('planejamento_id', "$simId")->where('ensino','medio')->select(DB::raw("serie"))->groupBy('serie')->get();
+        $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+        $contMedios = AnexoPlanejamento::where('planejamento_id', "$simId")->where('ensino','medio')->orderBy('disciplina_id')->get();
+        return view('admin.planejamentos',compact('planejamento','ano','fundTurmas','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
+    }
+
+    public function anexarPlanejamento(Request $request, $id)
+    {
+        $path = $request->file('arquivo')->store('anexosPlanejamentos','public');
+        $cont = AnexoPlanejamento::find($id);
+        if($cont->arquivo=="" || $cont->arquivo==null){
+            $cont->arquivo = $path;
+            $cont->save();
+        } else {
+            $arquivo = $cont->arquivo;
+            Storage::disk('public')->delete($arquivo);
+            $cont->arquivo = $path;
+            $cont->save();
+        }
+        return back();
+    }
+
+    public function downloadPlanejamento($id)
+    {
+        $cont = AnexoPlanejamento::find($id);
+        $discId = $cont->disciplina_id;
+        $disciplina = Disciplina::find($discId);
+        $planejamento = Planejamento::find($cont->planejamento_id);
+        $nameFile = $cont->serie."º - Planejamento ".$planejamento->descricao." - ".$disciplina->nome;
+        if(isset($cont)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        }
+        return back();
+    }
+
+    public function apagarPlanejamento($id){
+        $sim = Planejamento::find($id);
+        if(isset($sim)){
+            $quests = AnexoPlanejamento::where('planejamento_id',"$id")->get();
+            foreach($quests as $quest){
+                $questao = AnexoPlanejamento::find($quest->id);
+                if($questao->arquivo!=""){
+                    Storage::disk('public')->delete($questao->arquivo);
+                }
+                $questao->delete();
+            }
+            $sim->delete();
+        }
+        return back();
+    }
+
+    public function conferirPlanejamento(Request $request)
+    {
+        $id = $request->id;
+        $cont = AnexoPlanejamento::find($id);
         $cont->comentario = $request->comentario;
         $cont->conferido = true;
         $cont->save();
