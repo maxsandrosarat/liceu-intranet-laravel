@@ -18,6 +18,8 @@ use App\Ocorrencia;
 use App\Conteudo;
 use App\Diario;
 use App\EntradaSaida;
+use App\Exports\AlunoExport;
+use App\Exports\AlunoExportView;
 use App\La;
 use App\ListaAtividade;
 use App\ListaCompra;
@@ -372,7 +374,7 @@ class AdminController extends Controller
     public function indexAlunos()
     {
         $turmas = Turma::all();
-        $alunos = Aluno::orderBy('name')->paginate(10);
+        $alunos = Aluno::where('ativo',true)->orderBy('name')->paginate(10);
         $view = "inicial";
         return view('admin.alunos', compact('view','turmas','alunos'));
     }
@@ -406,21 +408,32 @@ class AdminController extends Controller
         return back()->with('success', 'Dados importados do Excel com Sucesso!');
     }
 
+    public function exportarAlunoExcel() 
+    {
+        return Excel::download(new AlunoExport, 'alunos.xlsx');
+    }
+
+    public function exportarAlunoExcelView() 
+    {
+        return Excel::download(new AlunoExportView, 'alunos.xlsx');
+    }
+
     public function filtroAluno(Request $request)
     {
         $nome = $request->input('nome');
         $turma = $request->input('turma');
+        $ativo = $request->input('ativo');
         if(isset($nome)){
             if(isset($turma)){
-                $alunos = Aluno::where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('ativo',"$ativo")->where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
             } else {
-                $alunos = Aluno::where('name','like',"%$nome%")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('ativo',"$ativo")->where('name','like',"%$nome%")->orderBy('name')->paginate(50);
             }
         } else {
             if(isset($turma)){
-                $alunos = Aluno::where('turma_id',"$turma")->orderBy('name')->paginate(50);
+                $alunos = Aluno::where('ativo',"$ativo")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
             } else {
-                return redirect('/admin/aluno');
+                $alunos = Aluno::where('ativo',"$ativo")->orderBy('name')->paginate(50);
             }
         }
         $turmas = Turma::all();
@@ -678,7 +691,7 @@ class AdminController extends Controller
     public function indexProdutos()
     {
         $cats = Categoria::orderBy('nome')->get();
-        $prods = Produto::orderBy('nome')->paginate(10);
+        $prods = Produto::where('ativo',true)->orderBy('nome')->paginate(10);
         $view = "inicial";
         return view('admin.produtos', compact('view','cats','prods'));
     }
@@ -697,17 +710,18 @@ class AdminController extends Controller
     {
         $nomeProd = $request->input('nomeProduto');
         $cat = $request->input('categoria');
+        $ativo = $request->input('ativo');
         if(isset($nomeProd)){
             if(isset($cat)){
-                $prods = Produto::where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('ativo',"$ativo")->where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
             } else {
-                $prods = Produto::where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('ativo',"$ativo")->where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(100);
             }
         } else {
             if(isset($cat)){
-                $prods = Produto::where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('ativo',"$ativo")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
             } else {
-                return redirect('/admin/produtos');
+                $prods = Produto::where('ativo',"$ativo")->orderBy('nome')->paginate(100);
             }
         }
         $cats = Categoria::orderBy('nome')->get();

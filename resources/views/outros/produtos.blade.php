@@ -68,6 +68,10 @@
                             <option value="{{$cat->id}}">{{$cat->nome}}</option>
                         @endforeach
                     </select>
+                    <select class="custom-select" id="ativo" name="ativo">
+                        <option value="1">Ativo: Sim</option>
+                        <option value="0">Ativo: Não</option>
+                    </select>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
                 </form>
                 </div>

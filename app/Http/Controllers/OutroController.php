@@ -67,7 +67,7 @@ class OutroController extends Controller
     //PRODUTOS
     public function indexProdutos()
     {
-        $cats = Categoria::where('ativo',true)->get();
+        $cats = Categoria::orderBy('nome')->get();
         $prods = Produto::where('ativo',true)->orderBy('nome')->paginate(10);
         $view = "inicial";
         return view('outros.produtos', compact('view','cats','prods'));
@@ -87,20 +87,21 @@ class OutroController extends Controller
     {
         $nomeProd = $request->input('nomeProduto');
         $cat = $request->input('categoria');
+        $ativo = $request->input('ativo');
         if(isset($nomeProd)){
             if(isset($cat)){
-                $prods = Produto::where('ativo',true)->where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('ativo',"$ativo")->where('nome','like',"%$nomeProd%")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
             } else {
-                $prods = Produto::where('ativo',true)->where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('ativo',"$ativo")->where('nome','like',"%$nomeProd%")->orderBy('nome')->paginate(100);
             }
         } else {
             if(isset($cat)){
-                $prods = Produto::where('ativo',true)->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
+                $prods = Produto::where('ativo',"$ativo")->where('categoria_id',"$cat")->orderBy('nome')->paginate(100);
             } else {
-                return redirect('/outro/produtos');
+                $prods = Produto::where('ativo',"$ativo")->orderBy('nome')->paginate(100);
             }
         }
-        $cats = Categoria::where('ativo',true)->get();
+        $cats = Categoria::orderBy('nome')->get();
         $view = "filtro";
         return view('outros.produtos', compact('view','cats','prods'));
     }

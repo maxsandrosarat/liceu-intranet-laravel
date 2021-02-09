@@ -37,13 +37,13 @@
                         <div class="form-group">
                             <br>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" type="radio" id="entrada" name="tipo" value="entrada">
+                                <input class="form-check-input" type="radio" type="radio" id="entrada" name="tipo" value="entrada" required>
                                 <label class="form-check-label" for="entrada">
                                 Entrada
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" type="radio" id="saida" name="tipo" value="saida">
+                                <input class="form-check-input" type="radio" type="radio" id="saida" name="tipo" value="saida" required>
                                 <label class="form-check-label" for="entrada">
                                 Saída
                                 </label>

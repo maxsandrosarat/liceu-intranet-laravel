@@ -65,6 +65,8 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/editar/{id}', 'AdminController@editarAluno');
         Route::get('/apagar/{id}', 'AdminController@apagarAluno');
         Route::post('/importarExcel', 'AdminController@importarAlunoExcel');
+        Route::get('/exportarExcel', 'AdminController@exportarAlunoExcel');
+        Route::get('/exportarExcelView', 'AdminController@exportarAlunoExcelView');
     });
 
     Route::group(['prefix' => 'responsavel'], function() {

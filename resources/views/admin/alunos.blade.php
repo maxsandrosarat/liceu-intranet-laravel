@@ -4,6 +4,7 @@
     <div class="card border">
         <div class="card-body">
             <h5 class="card-title">Lista de Alunos</h5>
+            <a type="button" class="btn btn-info" href="/admin/aluno/exportarExcelView">Exportar para Excel</a>
             @if(count($errors) > 0)
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert">x</button>
@@ -31,7 +32,7 @@
                         @endif
                         @if($view=="filtro")
                         Sem resultados da busca!
-                        <a href="/admin/aluno/consulta" class="btn btn-success">Voltar</a>
+                        <a href="/admin/aluno" class="btn btn-success">Voltar</a>
                         @endif
                     </div>
             @else
@@ -45,6 +46,10 @@
                     @foreach ($turmas as $turma)
                         <option @if($turma->ativo==false) style="color: red;" @endif value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
                     @endforeach
+                </select>
+                <select class="custom-select" id="ativo" name="ativo">
+                    <option value="1">Ativo: Sim</option>
+                    <option value="0">Ativo: Não</option>
                 </select>
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
             </form>
