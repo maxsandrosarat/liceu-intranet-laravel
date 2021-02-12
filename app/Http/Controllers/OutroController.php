@@ -17,6 +17,7 @@ use App\Simulado;
 use PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class OutroController extends Controller
 {
@@ -328,15 +329,25 @@ class OutroController extends Controller
         $validadorFund = Questao::where('simulado_id', "$simId")->where('ensino','fund')->count();
         if($validadorFund!=0){
             $ensino = "fund";
+            $anexosFund = Questao::where('simulado_id',"$simId")->where('ensino','fund')->distinct('disciplina_id')->get();
+            $discIdsFund = array();
+            foreach($anexosFund as $anexo){
+                $discIdsFund[] = $anexo->disciplina_id;
+            }
             $fundTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','fund')->select(DB::raw("serie"))->groupBy('serie')->get();
-            $fundDiscs = Disciplina::where('ensino','fund')->get();
+            $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
             $contFunds = Questao::where('simulado_id', "$simId")->where('ensino','fund')->orderBy('disciplina_id')->get();
         }
         $validadorMedio = Questao::where('simulado_id', "$simId")->where('ensino','medio')->count();
         if($validadorMedio!=0){
             $ensino = "medio";
+            $anexosMed = Questao::where('simulado_id',"$simId")->where('ensino','medio')->distinct('disciplina_id')->get();
+            $discIdsMed = array();
+            foreach($anexosMed as $anexo){
+                $discIdsMed[] = $anexo->disciplina_id;
+            }
             $medioTurmas = DB::table('questoes')->where('simulado_id', "$simId")->where('ensino','medio')->select(DB::raw("serie"))->groupBy('serie')->get();
-            $medioDiscs = Disciplina::where('ensino','medio')->get();
+            $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
             $contMedios = Questao::where('simulado_id', "$simId")->where('ensino','medio')->orderBy('disciplina_id')->get();
         }
         if($validadorFund!=0 && $validadorMedio!=0){
