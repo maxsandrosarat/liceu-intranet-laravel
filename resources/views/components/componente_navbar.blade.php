@@ -67,9 +67,9 @@
             <li @if($current=="atividade") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof/atividade/disciplinas">Atividades</a>
             </li>
-            <li @if($current=="la") class="nav-item active" @else class="nav-item" @endif>
+            <!--<li @if($current=="la") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof/listaAtividade/{{date("Y")}}">Rotinas Semanais</a>
-            </li>
+            </li>-->
             <li @if($current=="diario") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/prof/diario/disciplinas">Ficha de Sala</a>
             </li>

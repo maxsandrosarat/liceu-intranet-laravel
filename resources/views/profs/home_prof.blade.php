@@ -8,7 +8,7 @@
             <div class="d-flex justify-content-center centralizado">
                 <div class="card border-primary text-center" style="width: 300px;">
                     <div class="card-body">
-                        <h5>Atividades</h5>
+                        <h5>Atividades Complementares</h5>
                         <p class="card-text">
                             Gerenciar as Atividades
                         </p>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center centralizado">
+            <!--<div class="d-flex justify-content-center centralizado">
                 <div class="card border-primary text-center" style="width: 300px;">
                     <div class="card-body">
                         <h5>Rotinas Semanais</h5>
@@ -26,7 +26,7 @@
                         <a href="/prof/listaAtividade/{{date("Y")}}" class="btn btn-primary">LAs</a>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="d-flex justify-content-center centralizado">
                 <div class="card border-primary text-center" style="width: 300px;">
                     <div class="card-body">

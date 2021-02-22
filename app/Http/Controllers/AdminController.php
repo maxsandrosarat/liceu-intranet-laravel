@@ -1061,10 +1061,16 @@ class AdminController extends Controller
 
     public function apagarAtividade($id){
         $atividade = Atividade::find($id);
-        $arquivo = $atividade->arquivo;
-        Storage::disk('public')->delete($arquivo);
         if(isset($atividade)){
+            $retornos = AtividadeRetorno::where('atividade_id',"$id")->get();
+            if(isset($retornos)){
+                foreach ($retornos as $retorno) {
+                    $retorno->delete();
+                    Storage::disk('public')->delete($retorno->arquivo);
+                }
+            }
             $atividade->delete();
+            Storage::disk('public')->delete($atividade->arquivo);
         }
         return redirect('/admin/atividade');
     }
