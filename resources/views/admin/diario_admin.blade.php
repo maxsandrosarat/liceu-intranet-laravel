@@ -161,10 +161,9 @@
                                     <td>{{$ocorrencia->disciplina->nome}}</td>
                                     <td>
                                         @if($ocorrencia->observacao=="")
-                                        <h6 style="color: red;">Sem observação</h6>
                                         @else
                                         <button type="button" class="badge badge-info" data-toggle="modal" data-target="#exampleModalOb{{$ocorrencia->id}}">
-                                            Ver Observação
+                                            <i class="material-icons white">visibility</i>
                                         </button>
                                         @endif
                                         <div class="modal fade" id="exampleModalOb{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -220,6 +219,25 @@
                                         </div>
                                         @endif
                                         @endif
+                                        <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDelete{{$ocorrencia->id}}" data-toggle="tooltip" data-placement="left" title="Excluir"><i class="material-icons md-18">delete</i></button></td>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Ocorrência: {{$ocorrencia->tipo_ocorrencia->codigo}} - {{$ocorrencia->tipo_ocorrencia->descricao}} - {{$ocorrencia->aluno->name}} - {{$ocorrencia->disciplina->nome}} - {{date("d/m/Y", strtotime($ocorrencia->data))}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h5>Tem certeza que deseja excluir essa ocorrência?</h5>
+                                                        <p>Não será possivel reverter esta ação.</p>
+                                                        <a href="/admin/ocorrencias/apagar/{{$ocorrencia->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
                                         @if($ocorrencia->aprovado==1)
@@ -228,8 +246,8 @@
                                             @if($ocorrencia->aprovado!==NULL)
                                                 <b><p style="color: red; font-size: 50%;"><i class="material-icons red">highlight_off</i>REPROVADO</p></b>
                                             @else
-                                                <a href="/admin/ocorrencias/aprovar/{{$ocorrencia->id}}" class="badge badge-success">Aprovar</a>
-                                                <a href="/admin/ocorrencias/reprovar/{{$ocorrencia->id}}" class="badge badge-danger">Reprovar</a>
+                                                <a href="/admin/ocorrencias/aprovar/{{$ocorrencia->id}}" class="badge badge-success" data-toggle="tooltip" data-placement="bottom" title="Aprovar"><i class="material-icons white">thumb_up</i></a>
+                                                <a href="/admin/ocorrencias/reprovar/{{$ocorrencia->id}}" class="badge badge-danger" data-toggle="tooltip" data-placement="bottom" title="Reprovar"><i class="material-icons white">thumb_down</i></a>
                                             @endif
                                         @endif
                                     </td>

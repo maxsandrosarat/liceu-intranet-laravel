@@ -34,7 +34,7 @@
                                 </a>
                             </div>
                             <div class="col" style="text-align: right">
-                                <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDeleteDia{{$diario->id}}"><i class="material-icons md-18">delete</i></button></td>
+                                <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDeleteDia{{$diario->id}}" data-toggle="tooltip" data-placement="left" title="Excluir"><i class="material-icons md-18">delete</i></button></td>
                             </div>
                             <!-- Modal -->
                             <div class="modal fade bd-example-modal-lg" id="exampleModalDeleteDia{{$diario->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -292,7 +292,22 @@
                                                     @foreach ($alunos as $aluno)
                                                 <tr>
                                                     <td><input type="checkbox" name="alunos[]" value="{{$aluno->id}}"></td>
-                                                    <td>{{$aluno->name}}</td>
+                                                    <td><button type="button" class="badge badge-secondary" data-toggle="modal" data-target="#exampleModalFoto{{$aluno->id}}">{{$aluno->name}}</button></td>
+                                                        <!-- Modal -->
+                                                        <div class="modal fade bd-example-modal-lg" id="exampleModalFoto{{$aluno->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                            <div class="modal-body" style="color: black; text-align: center;">
+                                                                @if($aluno->foto!="") <img src="/storage/{{$aluno->foto}}" alt="foto_produto" style="width: 100%"> @else <i class="material-icons md-60">no_photography</i> @endif
+                                                                <hr/>
+                                                                <h6 class="font-italic">
+                                                                {{$aluno->name}} - {{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)
+                                                                </h6>
+                                                                <hr/>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        </div>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -343,10 +358,9 @@
                                     <td>{{$ocorrencia->aluno->name}}</td>
                                     <td>
                                         @if($ocorrencia->observacao=="")
-                                        <h6 style="color: red;">Sem observação</h6>
                                         @else
-                                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModalOb{{$ocorrencia->id}}">
-                                            Ver Observação
+                                        <button type="button" class="badge badge-info" data-toggle="modal" data-target="#exampleModalOb{{$ocorrencia->id}}">
+                                            <i class="material-icons white">visibility</i>
                                         </button>
                                         @endif
                                         <div class="modal fade" id="exampleModalOb{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -411,7 +425,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDelete{{$ocorrencia->id}}"><i class="material-icons md-18">delete</i></button></td>
+                                        <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDelete{{$ocorrencia->id}}" data-toggle="tooltip" data-placement="left" title="Excluir"><i class="material-icons md-18">delete</i></button></td>
                                         <!-- Modal -->
                                         <div class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$ocorrencia->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">

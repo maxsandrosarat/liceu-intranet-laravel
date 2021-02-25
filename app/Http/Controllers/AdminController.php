@@ -1363,29 +1363,29 @@ class AdminController extends Controller
             if(isset($aluno)){
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->orderBy('data','desc')->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->orderBy('data','desc')->paginate(100);
                     }
                 }
             } else {
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", date("Y/m/d")])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", date("Y/m/d")])->orderBy('data','desc')->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->paginate(100);
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->orderBy('data','desc')->paginate(100);
                     }
                 }
             }
@@ -1393,29 +1393,29 @@ class AdminController extends Controller
             if(isset($aluno)){
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->orderBy('data','desc')->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->paginate(100);
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->orderBy('data','desc')->paginate(100);
                     }
                 }
             } else {
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", date("Y/m/d")])->paginate(100);
+                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", date("Y/m/d")])->orderBy('data','desc')->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::whereBetween('data',["", "$dataFim"])->paginate(100);
+                        $ocorrencias = Ocorrencia::whereBetween('data',["", "$dataFim"])->orderBy('data','desc')->paginate(100);
                     } else {
-                        return back();
+                        return redirect('/admin/ocorrencias');
                     }
                 }
             }
