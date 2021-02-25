@@ -211,6 +211,8 @@ Route::group(['prefix' => 'prof'], function() {
     Route::post('/login', 'Auth\ProfLoginController@login')->name('prof.login.submit');
     Route::get('/', 'ProfController@index')->name('prof.dashboard')->middleware('auth:prof');
 
+    Route::get('/templates/download/{nome}', 'ProfController@templates');
+
     Route::group(['prefix' => 'atividade'], function() {
         Route::get('/disciplinas', 'ProfController@disciplinasAtividades');
         Route::get('/{id}', 'ProfController@painelAtividades');

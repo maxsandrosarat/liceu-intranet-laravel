@@ -260,6 +260,12 @@ class AdminController extends Controller
             $extension = pathinfo($path, PATHINFO_EXTENSION);
             $name = $nameFile.".".$extension;
             return response()->download($path, $name);
+        } else if($nome=="mascara"){
+            $nameFile = "mascara";
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix("templates/mascara.docx");
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
         } else {
             return back();
         }

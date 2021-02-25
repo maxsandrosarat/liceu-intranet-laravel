@@ -36,6 +36,19 @@ class ProfController extends Controller
         return view('profs.home_prof');
     }
 
+    //TEMPLATES    
+	public function templates($nome){
+        if($nome=="mascara"){
+            $nameFile = "mascara";
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix("templates/mascara.docx");
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        } else {
+            return back();
+        }
+    }
+
     //ATIVIDADES
     public function disciplinasAtividades(){
         $profId = Auth::user()->id;
