@@ -278,6 +278,7 @@
                                 </button>
                                 </div>
                                 <div class="modal-body">
+                                    <h6>Clique sobre o aluno para ver foto, caso necessário.</h6>
                                     <div class="table-responsive-xl">
                                     <table class="table table-striped table-sm">
                                         <thead class="thead-dark">
@@ -294,8 +295,8 @@
                                                     <td><input type="checkbox" name="alunos[]" value="{{$aluno->id}}"></td>
                                                     <td><button type="button" class="badge badge-secondary" data-toggle="modal" data-target="#exampleModalFoto{{$aluno->id}}">{{$aluno->name}}</button></td>
                                                         <!-- Modal -->
-                                                        <div class="modal fade bd-example-modal-lg" id="exampleModalFoto{{$aluno->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal fade" id="exampleModalFoto{{$aluno->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                             <div class="modal-body" style="color: black; text-align: center;">
                                                                 @if($aluno->foto!="") <img src="/storage/{{$aluno->foto}}" alt="foto_produto" style="width: 100%"> @else <i class="material-icons md-60">no_photography</i> @endif

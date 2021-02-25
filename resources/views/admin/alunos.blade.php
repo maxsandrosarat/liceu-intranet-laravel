@@ -75,8 +75,8 @@
                         <td>{{$aluno->id}}</td>
                         <td width="100"><button type="button" data-toggle="modal" data-target="#exampleModalFoto{{$aluno->id}}">@if($aluno->foto!="")<img style="border-radius: 20px; margin:0px; padding:0px;" src="/storage/{{$aluno->foto}}" alt="foto_perfil" width="50%"> @else <i class="material-icons md-48">no_photography</i> @endif</button></td>
                         <!-- Modal -->
-                        <div class="modal fade bd-example-modal-lg" id="exampleModalFoto{{$aluno->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal fade" id="exampleModalFoto{{$aluno->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
                             <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
