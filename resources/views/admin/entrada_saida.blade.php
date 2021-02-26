@@ -49,6 +49,9 @@
                                 </label>
                             </div>
                             <br>
+                            <label for="data">Selecione a Data
+                            <input class="form-control" type="date" name="data" value="{{date("Y-m-d")}}" required></label>
+                            <br>
                             <label for="produtos">Produto</label>
                             <select class="custom-select" id="produtos" name="produto" required>
                                 <option value="">Selecione</option>
@@ -113,13 +116,14 @@
             <table id="yesprint" class="table table-striped table-ordered table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Código Movimento</th>
-                        <th>Tipo Movimento</th>
-                        <th>Nome Produto</th>
-                        <th>Quantidade</th>
+                        <th>Código</th>
+                        <th>Tipo</th>
+                        <th>Produto</th>
+                        <th>Qtd</th>
                         <th>Requisitante</th>
                         <th>Usuário</th>
-                        <th>Data & Hora</th>
+                        <th>Data</th>
+                        <th>Lançamento</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,6 +135,7 @@
                         <td>{{$rel->quantidade}}</td>
                         <td>{{$rel->requisitante}}</td>
                         <td>{{$rel->usuario}}</td>
+                        <td>{{date("d/m/Y", strtotime($rel->data))}}</td>
                         <td>{{date("d/m/Y H:i", strtotime($rel->created_at))}}</td>
                     </tr>
                     @endforeach

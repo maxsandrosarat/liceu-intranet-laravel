@@ -776,20 +776,17 @@ class AdminController extends Controller
 
     public function novaEntradaSaida(Request $request)
     {
-        $user = Auth::user();
         $tipo = $request->input('tipo');
-        $id = $request->input('produto');
         $qtd = $request->input('qtd');
-        $req = $request->input('req');
-        $prod = Produto::find($id);
+        $prod = Produto::find($request->input('produto'));
         $es = new EntradaSaida();
-        $es->tipo = $tipo;
-        $es->produto_id = $id;
+        $es->tipo = $request->input('tipo');
+        $es->produto_id = $request->input('produto');
         $es->produto_nome = $prod->nome;
-        $es->quantidade = $qtd;
-        $es->requisitante = $req;
-        $es->usuario = $user->name;
-        $es->data = date("Y/m/d");
+        $es->quantidade = $request->input('qtd');
+        $es->requisitante = $request->input('req');
+        $es->usuario = Auth::user()->name;
+        $es->data = $request->input('data');
         $es->save();
         if(isset($prod)){
             if($tipo=="entrada"){
